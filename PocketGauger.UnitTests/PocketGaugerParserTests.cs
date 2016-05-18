@@ -16,6 +16,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
     {
         private PocketGaugerParser _pocketGaugerParser;
 
+        private Stream _stream;
         private IParseContext _parseContext;
         private ILog _logger;
 
@@ -31,13 +32,20 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _logger = null;
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _stream.Close();
+            _stream.Dispose();
+        }
+
         [Test]
         public void ParseFile_fileStreamIsNotAValidZipFile_Throws()
         {
-            var streamThatIsNotAZipFile = new MemoryStream(_fixture.Create<byte[]>());
+            _stream = new MemoryStream(_fixture.Create<byte[]>());
 
             TestDelegate testDelegate =
-                () => _pocketGaugerParser.ParseFile(streamThatIsNotAZipFile, _parseContext, _logger);
+                () => _pocketGaugerParser.ParseFile(_stream, _parseContext, _logger);
 
             Assert.That(testDelegate,
                 Throws.Exception.TypeOf<FormatNotSupportedException>().With.Message.Contains("not a zip file"));
@@ -46,9 +54,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         [Test]
         public void ParseFile_fileStreamZipDoesNotContainGaugingSummary_Throws()
         {
-            var zipStream = CreateZipStream(_fixture.Create<string>());
+            _stream = CreateZipStream(_fixture.Create<string>());
 
-            TestDelegate testDelegate = () => _pocketGaugerParser.ParseFile(zipStream, _parseContext, _logger);
+            TestDelegate testDelegate = () => _pocketGaugerParser.ParseFile(_stream, _parseContext, _logger);
 
             Assert.That(testDelegate,
                 Throws.Exception.TypeOf<FormatNotSupportedException>()
@@ -83,9 +91,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         [Test]
         public void ParseFile_fileStreamZipContainsGaugingSummary_ReturnsEmptyParseResults()
         {
-            var zipStream = CreateZipStream(FileNames.GaugingSummary);
+            _stream = CreateZipStream(FileNames.GaugingSummary);
 
-            var result = _pocketGaugerParser.ParseFile(zipStream, _parseContext, _logger);
+            var result = _pocketGaugerParser.ParseFile(_stream, _parseContext, _logger);
 
             Assert.That(result, Is.Empty);
         }
