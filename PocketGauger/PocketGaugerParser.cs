@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip;
+using System.IO.Compression;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
@@ -14,10 +14,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger
     {
         public ICollection<ParsedResult> ParseFile(Stream fileStream, IParseContext context, ILog logger)
         {
-            using (var zipFile = GetZipFile(fileStream))
-            using (var zipContents = GetZipContents(zipFile))
+            using (var zipArchive = GetZipArchive(fileStream))
+            using (var zipContents = GetZipContents(zipArchive))
             {
-                zipFile.IsStreamOwner = false;
                 if (!zipContents.ContainsKey(FileNames.GaugingSummary))
                 {
                     throw new FormatNotSupportedException(
@@ -28,24 +27,24 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             return new List<ParsedResult>();
         }
 
-        private static ZipFile GetZipFile(Stream fileStream)
+        private static ZipArchive GetZipArchive(Stream fileStream)
         {
             try
             {
-                return new ZipFile(fileStream);
+                return new ZipArchive(fileStream, ZipArchiveMode.Read, leaveOpen:true);
             }
-            catch (ZipException)
+            catch (InvalidDataException)
             {
                 throw new FormatNotSupportedException("fileStream is not a zip file");
             }
         }
 
-        private static PocketGaugerFiles GetZipContents(ZipFile zipFile)
+        private static PocketGaugerFiles GetZipContents(ZipArchive zipArchive)
         {
             var streams = new PocketGaugerFiles();
-            foreach (ZipEntry zipEntry in zipFile)
+            foreach (var zipArchiveEntry in zipArchive.Entries)
             {
-                streams.Add(zipEntry.Name.ToLower(), zipFile.GetInputStream(zipEntry));
+                streams.Add(zipArchiveEntry.Name.ToLower(), zipArchiveEntry.Open());
             }
 
             return streams;
