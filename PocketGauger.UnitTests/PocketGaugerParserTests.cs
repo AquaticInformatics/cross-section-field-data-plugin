@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Reflection;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using log4net;
@@ -89,9 +90,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void ParseFile_fileStreamZipContainsGaugingSummary_ReturnsEmptyParseResults()
+        public void ParseFile_fileStreamZipContainsValidGaugingSummary_ReturnsEmptyParseResults()
         {
-            _stream = CreateZipStream(FileNames.GaugingSummary);
+            const string testPath = @"Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData.PGData.zip";
+            _stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(testPath);
 
             var result = _pocketGaugerParser.ParseFile(_stream, _parseContext, _logger);
 

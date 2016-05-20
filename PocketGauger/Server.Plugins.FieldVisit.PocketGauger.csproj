@@ -44,6 +44,19 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dtos\BankSide.cs" />
+    <Compile Include="Dtos\EntryMethod.cs" />
+    <Compile Include="Dtos\FlowCalculationMethod.cs" />
+    <Compile Include="Dtos\GaugingMethod.cs" />
+    <Compile Include="Dtos\GaugingSummary.cs" />
+    <Compile Include="Dtos\GaugingSummaryItem.cs" />
+    <Compile Include="Dtos\MeterMethod.cs" />
+    <Compile Include="Dtos\RiverState.cs" />
+    <Compile Include="Dtos\VelocityCalculationMethod.cs" />
+    <Compile Include="GaugingSummaryParser.cs" />
+    <Compile Include="Helpers\BooleanHelper.cs" />
+    <Compile Include="Helpers\DateTimeHelper.cs" />
+    <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="PocketGaugerFiles.cs" />
     <Compile Include="FileNames.cs" />
     <Compile Include="PocketGaugerParser.cs" />

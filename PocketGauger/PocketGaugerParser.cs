@@ -22,6 +22,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                     throw new FormatNotSupportedException(
                         Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
                 }
+
+                var gaugingSummary = GaugingSummaryParser.Parse(zipContents[FileNames.GaugingSummary]);
             }
 
             return new List<ParsedResult>();
