@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
@@ -9,7 +11,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 
         public static DateTime Parse(string value)
         {
-            return DateTime.ParseExact(value, Format, CultureInfo.InvariantCulture);
+            try
+            {
+                return DateTime.ParseExact(value, Format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+            }
+            catch (FormatException)
+            {
+                throw new ParsingFailedException(Invariant($"{value} is not a valid DateTime value"));
+            }
         }
 
         public static string Serialize(DateTime dateTime)

@@ -57,11 +57,18 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GaugingSummaryParserTests.cs" />
+    <Compile Include="Helpers\BooleanHelperTests.cs" />
+    <Compile Include="Helpers\DateTimeHelperTests.cs" />
+    <Compile Include="Helpers\EnumHelperTests.cs" />
     <Compile Include="PocketGaugerFilesTests.cs" />
     <Compile Include="PocketGaugerParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\TestHelpers\NUnitExtensions\Common.TestHelpers.NUnitExtensions.csproj">
+      <Project>{F3F1B55A-B551-43BE-973D-E770D7164A88}</Project>
+      <Name>Common.TestHelpers.NUnitExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPlugInCore.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
       <Name>Server.BusinessInterfaces.FieldDataPlugInCore</Name>

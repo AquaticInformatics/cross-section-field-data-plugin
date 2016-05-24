@@ -1,12 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Common.TestHelpers.NUnitExtensions;
 using NUnit.Framework;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 {
+    [TestFixture]
+    [LongRunning]
     public class GaugingSummaryParserTests
     {
         private Stream _testStream;
@@ -22,7 +25,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void Parse_fileStreamIsValidGaugingSummary_ReturnsExpectedDto()
+        public void Parse_FileStreamIsValidGaugingSummary_ReturnsExpectedDto()
         {
             _testStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(TestFilePath);
 
@@ -181,7 +184,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void Parse_fileStreamIsNotValidGaugingSummary_ThrowsParsingFailedException()
+        public void Parse_FileStreamIsNotValidGaugingSummary_ThrowsParsingFailedException()
         {
             _testStream = new MemoryStream();
 

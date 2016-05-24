@@ -1,13 +1,19 @@
-﻿namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
+﻿using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using static System.FormattableString;
+
+namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
     public static class BooleanHelper
     {
-        private const string True = "True";
-        private const string False = "False";
+        public const string True = "True";
+        public const string False = "False";
 
         public static bool Parse(string value)
         {
-            return value == True;
+            if (value == True) return true;
+            if (value == False) return false;
+
+            throw new ParsingFailedException(Invariant($"{value} is not a valid boolean value"));
         }
 
         public static string Serialize(bool value)

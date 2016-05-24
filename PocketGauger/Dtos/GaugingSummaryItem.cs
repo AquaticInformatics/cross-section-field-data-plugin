@@ -46,12 +46,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public double MeanStage { get; set; }
 
         [XmlIgnore]
-        public RiverState RiverState { get; set; }
+        public RiverState? RiverState { get; set; }
 
         [XmlElement("RIVER_STATE")]
-        public int RiverStateProxy
+        public int? RiverStateProxy
         {
-            get { return (int)RiverState; }
+            get { return (int?)RiverState; }
             set { RiverState = EnumHelper.Map<RiverState>(value); }
         }
 
@@ -65,52 +65,52 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public double Flow { get; set; }
 
         [XmlIgnore]
-        public GaugingMethod GaugingMethod { get; set; }
+        public GaugingMethod? GaugingMethod { get; set; }
 
         [XmlElement("GAUGING_METHOD")]
-        public int GaugingMethodProxy
+        public int? GaugingMethodProxy
         {
-            get { return (int)GaugingMethod; }
+            get { return (int?)GaugingMethod; }
             set { GaugingMethod = EnumHelper.Map<GaugingMethod>(value); }
         }
 
         [XmlIgnore]
-        public EntryMethod EntryMethod { get; set; }
+        public EntryMethod? EntryMethod { get; set; }
 
         [XmlElement("ENTRY_METHOD")]
-        public int EntryMethodProxy
+        public int? EntryMethodProxy
         {
-            get { return (int)EntryMethod; }
+            get { return (int?)EntryMethod; }
             set { EntryMethod = EnumHelper.Map<EntryMethod>(value); }
         }
 
         [XmlIgnore]
-        public FlowCalculationMethod FlowCalculationMethod { get; set; }
+        public FlowCalculationMethod? FlowCalculationMethod { get; set; }
 
         [XmlElement("FLOW_CALC_METHOD")]
-        public int FlowCalculationMethodProxy
+        public int? FlowCalculationMethodProxy
         {
-            get { return (int)FlowCalculationMethod; }
+            get { return (int?)FlowCalculationMethod; }
             set { FlowCalculationMethod = EnumHelper.Map<FlowCalculationMethod>(value); }
         }
 
         [XmlIgnore]
-        public VelocityCalculationMethod VelocityCalculationMethod { get; set; }
+        public VelocityCalculationMethod? VelocityCalculationMethod { get; set; }
 
         [XmlElement("VEL_CALC_METHOD")]
-        public int VelocityCalculationMethodProxy 
+        public int? VelocityCalculationMethodProxy 
         {
-            get { return (int)VelocityCalculationMethod; }
+            get { return (int?)VelocityCalculationMethod; }
             set { VelocityCalculationMethod = EnumHelper.Map<VelocityCalculationMethod>(value); }
         }
 
         [XmlIgnore]
-        public MeterMethod CMeterMethod { get; set; }
+        public MeterMethod? CMeterMethod { get; set; }
 
         [XmlElement("CMETER_METHOD")]
-        public int CMeterMethodProxy 
+        public int? CMeterMethodProxy 
         {
-            get { return (int)CMeterMethod; }
+            get { return (int?)CMeterMethod; }
             set { CMeterMethod = EnumHelper.Map<MeterMethod>(value); }
         }
 
@@ -121,13 +121,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public string CounterId { get; set; }
 
         [XmlIgnore]
-        public BankSide StartBank { get; set; }
+        public BankSide? StartBank { get; set; }
 
         [XmlElement("START_BANK")]
-        public int StartBankProxy 
+        public int? StartBankProxy 
         {
-            get { return (int)RiverState; }
-            set { RiverState = EnumHelper.Map<RiverState>(value); }
+            get { return (int?)StartBank; }
+            set { StartBank = EnumHelper.Map<BankSide>(value); }
         }
 
         [XmlElement("RATING_ID")]
