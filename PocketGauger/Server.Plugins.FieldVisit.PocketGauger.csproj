@@ -50,7 +50,12 @@
     <Compile Include="Dtos\GaugingMethod.cs" />
     <Compile Include="Dtos\GaugingSummary.cs" />
     <Compile Include="Dtos\GaugingSummaryItem.cs" />
+    <Compile Include="Dtos\MeterCalibration.cs" />
+    <Compile Include="Dtos\MeterCalibrationItem.cs" />
+    <Compile Include="Dtos\MeterDetails.cs" />
+    <Compile Include="Dtos\MeterDetailsItem.cs" />
     <Compile Include="Dtos\MeterMethod.cs" />
+    <Compile Include="Dtos\MeterType.cs" />
     <Compile Include="Dtos\RiverState.cs" />
     <Compile Include="Dtos\VelocityCalculationMethod.cs" />
     <Compile Include="GaugingSummaryParser.cs" />
