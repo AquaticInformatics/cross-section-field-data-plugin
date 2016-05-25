@@ -24,6 +24,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 }
 
                 var gaugingSummary = GaugingSummaryParser.Parse(zipContents[FileNames.GaugingSummary]);
+                var meters = MeterDetailsParser.Parse(zipContents);
             }
 
             return new List<ParsedResult>();
