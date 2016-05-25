@@ -23,7 +23,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                         Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
                 }
 
-                var gaugingSummary = GaugingSummaryParser.Parse(zipContents[FileNames.GaugingSummary]);
+                var gaugingSummary = GaugingSummaryParser.Parse(zipContents);
                 var meters = MeterDetailsParser.Parse(zipContents);
             }
 

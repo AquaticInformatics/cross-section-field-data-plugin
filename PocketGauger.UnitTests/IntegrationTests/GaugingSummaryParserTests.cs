@@ -1,35 +1,18 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
-using Common.TestHelpers.NUnitExtensions;
 using NUnit.Framework;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 
-namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
+namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
 {
-    [TestFixture]
-    [LongRunning]
-    public class GaugingSummaryParserTests
+    public class GaugingSummaryParserTests : IntegrationTestBase
     {
-        private Stream _testStream;
-        private const string TestFilePath = @"Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData.GF_GAUGING_SUMMARY.xml";
-
-        [TearDown]
-        public void TearDown()
-        {
-            if (_testStream == null) return;
-
-            _testStream.Close();
-            _testStream.Dispose();
-        }
-
         [Test]
-        public void Parse_FileStreamIsValidGaugingSummary_ReturnsExpectedDto()
+        public void Parse_PocketGaugerFilesContainsValidGaugingSummary_ReturnsExpectedDto()
         {
-            _testStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(TestFilePath);
+            AddPocketGaugerFile(FileNames.GaugingSummary);
 
-            var result = GaugingSummaryParser.Parse(_testStream);
+            var result = GaugingSummaryParser.Parse(PocketGaugerFiles);
 
             ValidateItem0(result.GaugingSummaryItems[0]);
             ValidateItem1(result.GaugingSummaryItems[1]);
@@ -184,11 +167,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void Parse_FileStreamIsNotValidGaugingSummary_ThrowsParsingFailedException()
+        public void Parse_PocketGaugerFilesIsMissingGaugingSummary_ThrowsParsingFailedException()
         {
-            _testStream = new MemoryStream();
-
-            TestDelegate testDelegate = () => GaugingSummaryParser.Parse(_testStream);
+            TestDelegate testDelegate = () => GaugingSummaryParser.Parse(PocketGaugerFiles);
 
             Assert.That(testDelegate, Throws.Exception.TypeOf<ParsingFailedException>());
         }

@@ -59,9 +59,9 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="GaugingSummaryParserTests.cs" />
     <Compile Include="IntegrationTests\IntegrationTestBase.cs" />
     <Compile Include="IntegrationTests\MeterDetailsParserTests.cs" />
+    <Compile Include="IntegrationTests\GaugingSummaryParserTests.cs" />
     <Compile Include="Helpers\BooleanHelperTests.cs" />
     <Compile Include="Helpers\DateTimeHelperTests.cs" />
     <Compile Include="Helpers\EnumHelperTests.cs" />
@@ -85,9 +85,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestData\GF_GAUGING_SUMMARY.xml" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="TestData\GF_GAUGING_SUMMARY.XML" />
     <EmbeddedResource Include="TestData\GF_METER_CALIB.XML" />
     <EmbeddedResource Include="TestData\GF_METER_DETAILS.XML" />
     <EmbeddedResource Include="TestData\PGData.zip" />
