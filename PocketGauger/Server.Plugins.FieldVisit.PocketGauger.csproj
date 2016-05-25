@@ -62,6 +62,7 @@
     <Compile Include="Helpers\BooleanHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
+    <Compile Include="Helpers\XmlDeserializerHelper.cs" />
     <Compile Include="PocketGaugerFiles.cs" />
     <Compile Include="FileNames.cs" />
     <Compile Include="PocketGaugerParser.cs" />
