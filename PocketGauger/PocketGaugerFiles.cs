@@ -40,7 +40,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 throw new ParsingFailedException(
                     Invariant($"Zip file does not contain file {fileName}"));
 
-            return XmlDeserializerHelper.Deserialize<TPocketGaugerDto>(fileName, this[fileName]);
+            return XmlDeserializerHelper.Deserialize<TPocketGaugerDto>(this[fileName]);
         }
     }
 }

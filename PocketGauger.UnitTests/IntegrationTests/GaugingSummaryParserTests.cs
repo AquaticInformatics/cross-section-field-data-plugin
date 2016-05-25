@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
@@ -164,14 +163,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
             Assert.That(gaugingSummaryItem.CFactor2, Is.EqualTo(1));
             Assert.That(gaugingSummaryItem.IndexVelocity, Is.EqualTo(0));
             Assert.That(gaugingSummaryItem.UseIndexVelocity, Is.EqualTo(true));
-        }
-
-        [Test]
-        public void Parse_PocketGaugerFilesIsMissingGaugingSummary_ThrowsParsingFailedException()
-        {
-            TestDelegate testDelegate = () => GaugingSummaryParser.Parse(PocketGaugerFiles);
-
-            Assert.That(testDelegate, Throws.Exception.TypeOf<ParsingFailedException>());
         }
     }
 }

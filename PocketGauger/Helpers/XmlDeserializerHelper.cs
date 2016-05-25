@@ -8,9 +8,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
     public static class XmlDeserializerHelper
     {
-        public static TPocketGaugerDto Deserialize<TPocketGaugerDto>(string fileName, Stream fileStream)
+        public static TPocketGaugerDto Deserialize<TPocketGaugerDto>(Stream fileStream)
         {
-            var serializer = new XmlSerializer(typeof(TPocketGaugerDto));
+            var pocketGaugerType = typeof (TPocketGaugerDto);
+            var serializer = new XmlSerializer(pocketGaugerType);
 
             try
             {
@@ -18,7 +19,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
             }
             catch (InvalidOperationException ex)
             {
-                throw new ParsingFailedException(Invariant($"Parsing {fileName} failed"), ex);
+                throw new ParsingFailedException(Invariant($"Parsing {FileNames.FileNameTypeMap[pocketGaugerType]} failed"), ex);
             }
         }
     }

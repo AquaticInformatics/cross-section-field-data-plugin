@@ -8,7 +8,7 @@ using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
 {
     [LongRunning]
-    public class IntegrationTestBase
+    public abstract class IntegrationTestBase
     {
         protected PocketGaugerFiles PocketGaugerFiles { get; private set; }
 
@@ -23,7 +23,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
             PocketGaugerFiles.Add(fileName, GetEmbeddedResource(fileName));
         }
 
-        protected static Stream GetEmbeddedResource(string resourceName)
+        private static Stream GetEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
 
