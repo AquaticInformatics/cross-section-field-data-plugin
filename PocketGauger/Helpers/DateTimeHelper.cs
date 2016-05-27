@@ -13,7 +13,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
         {
             try
             {
-                return DateTime.ParseExact(value, Format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+                return DateTime.ParseExact(value, Format, CultureInfo.InvariantCulture);
             }
             catch (FormatException)
             {

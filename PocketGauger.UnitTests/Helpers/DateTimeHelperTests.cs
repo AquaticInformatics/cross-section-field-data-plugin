@@ -47,7 +47,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
 
             var result = DateTimeHelper.Parse(testValue);
 
-            Assert.That(result.Kind, Is.EqualTo(DateTimeKind.Local));
+            Assert.That(result.Kind, Is.EqualTo(DateTimeKind.Unspecified));
         }
 
         [Test]
