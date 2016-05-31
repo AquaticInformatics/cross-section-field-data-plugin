@@ -10,7 +10,9 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivitie
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using static System.FormattableString;
+using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
@@ -32,10 +34,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 }
 
                 var gaugingSummary = GaugingSummaryParser.Parse(zipContents);
-                var meters = MeterDetailsParser.Parse(zipContents);
+                var meterCalibrations = CreateMeterCalibrations(context, zipContents);
 
                 return CreateParsedResults(context, gaugingSummary);
             }
+        }
+
+        private static IReadOnlyDictionary<string, MeterCalibration> CreateMeterCalibrations(IParseContext context,
+            PocketGaugerFiles zipContents)
+        {
+            var pocketGaugerMeters = MeterDetailsParser.Parse(zipContents);
+            var fieldVisitMeters = new MeterCalibrationMapper(context).Map(pocketGaugerMeters);
+
+            return fieldVisitMeters;
         }
 
         private static ZipArchive GetZipArchive(Stream fileStream)

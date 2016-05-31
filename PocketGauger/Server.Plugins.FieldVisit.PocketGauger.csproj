@@ -63,6 +63,7 @@
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\XmlDeserializerHelper.cs" />
+    <Compile Include="Mappers\MeterCalibrationMapper.cs" />
     <Compile Include="MeterDetailsParser.cs" />
     <Compile Include="PocketGaugerFiles.cs" />
     <Compile Include="FileNames.cs" />
