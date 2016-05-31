@@ -10,6 +10,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 {
     public class MeterCalibrationMapper
     {
+        public static string NonApplicable = "N/A";
         private readonly IParseContext _parseContext;
 
         public MeterCalibrationMapper(IParseContext parseContext)
@@ -38,6 +39,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             {
                 SerialNumber = meterDetailsItem.MeterNumber,
                 Model = meterDetailsItem.ImpellerNumber,
+                Manufacturer = NonApplicable,
                 Configuration = meterDetailsItem.Description,
                 MeterType = ConvertMeterType(meterDetailsItem.MeterType),
             };

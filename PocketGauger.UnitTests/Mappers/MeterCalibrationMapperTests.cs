@@ -40,17 +40,18 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_CorrectlyMapsCalibrationValues()
         {
-            Action<MeterDetailsItem, MeterCalibration> comparer = (detail, calibration) =>
+            Action<MeterCalibration, MeterDetailsItem> comparer = (calibration, detail) =>
             {
-                Assert.That(detail.MeterNumber, Is.EqualTo(calibration.SerialNumber));
-                Assert.That(detail.ImpellerNumber, Is.EqualTo(calibration.Model));
-                Assert.That(detail.Description, Is.EqualTo(calibration.Configuration));
+                Assert.That(calibration.SerialNumber, Is.EqualTo(detail.MeterNumber));
+                Assert.That(calibration.Model, Is.EqualTo(detail.ImpellerNumber));
+                Assert.That(calibration.Configuration, Is.EqualTo(detail.Description));
+                Assert.That(calibration.Manufacturer, Is.EqualTo(MeterCalibrationMapper.NonApplicable));
             };
 
             VerifyCalibration(comparer);
         }
 
-        private void VerifyCalibration(Action<MeterDetailsItem, MeterCalibration> comparer)
+        private void VerifyCalibration(Action<MeterCalibration, MeterDetailsItem> comparer)
         {
             var result = _mapper.Map(_input);
 
@@ -59,7 +60,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var resultMeterCalibrations = result.Values.ToList();
             for (var i = 0; i < _input.Count; i++)
             {
-                comparer(inputMeterDetails[i], resultMeterCalibrations[i]);
+                comparer(resultMeterCalibrations[i], inputMeterDetails[i]);
             }
         }
 
@@ -74,7 +75,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             {
                 {_fixture.Create<string>(), meterDetailsItem}
             };
-            Action<MeterDetailsItem, MeterCalibration> comparer = (detail, calibration) =>
+            Action<MeterCalibration, MeterDetailsItem> comparer = (calibration, detail) =>
             {
                 Assert.That(calibration.MeterType, Is.EqualTo(expectedResultMeterType));
             };
