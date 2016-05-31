@@ -63,23 +63,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             }
         }
 
-        [Test]
-        public void Map_SetsCorrectPropertyValuesToNonApplicable()
-        {
-            Action<MeterDetailsItem, MeterCalibration> comparer = (detail, calibration) =>
-            {
-                Assert.That(calibration.Manufacturer, Is.EqualTo(MeterCalibrationMapper.NonApplicable));
-                Assert.That(calibration.FirmwareVersion, Is.EqualTo(MeterCalibrationMapper.NonApplicable));
-                Assert.That(calibration.SoftwareVersion, Is.EqualTo(MeterCalibrationMapper.NonApplicable));
-            };
-
-            VerifyCalibration(comparer);
-        }
-
         [TestCase(MeterType.ElectroMagneticCurrentMeter, FieldDataMeterType.ElectromagneticVelocityMeter)]
         [TestCase(MeterType.RotatingElementCurrentMeter, FieldDataMeterType.PriceAa)]
         [TestCase(MeterType.AcousticDopplerCurrentProfiler, FieldDataMeterType.Adcp)]
-        [TestCase(null, FieldDataMeterType.Unknown)]
+        [TestCase(null, FieldDataMeterType.Unspecified)]
         public void Map_SetsCorrectMeterType(MeterType? inputMeterType, FieldDataMeterType expectedResultMeterType)
         {
             var meterDetailsItem = _fixture.Build<MeterDetailsItem>().With(m => m.MeterType, inputMeterType).Create();
@@ -141,13 +128,25 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_SetsLastEquationRangeEndToNull()
+        public void Map_SetsLastEquationRangeEndToRangeStartPlus100()
         {
             var result = _mapper.Map(_input);
 
             var lastEquationsForEachCalibration = result.Values.Select(v => v.Equations.Last());
             Assert.That(lastEquationsForEachCalibration,
-                Has.All.Matches<MeterCalibrationEquation>(e => e.RangeEnd == null));
+                Has.All.Matches<MeterCalibrationEquation>(e => e.RangeEnd == e.RangeStart + 100));
+        }
+
+        [Test]
+        public void Map_CalibrationMinRotationSpeedIsNull_EquationRangeStartAndRangeEndAreSetToNull()
+        {
+            _input.Values.ToList().SelectMany(m => m.Calibrations).ToList().ForEach(c => c.MinRotationSpeed = null);
+
+            var result = _mapper.Map(_input);
+
+            var equations = result.Values.SelectMany(c => c.Equations);
+            Assert.That(equations,
+                Has.All.Matches<MeterCalibrationEquation>(e => e.RangeStart == null && e.RangeEnd == null));
         }
     }
 }

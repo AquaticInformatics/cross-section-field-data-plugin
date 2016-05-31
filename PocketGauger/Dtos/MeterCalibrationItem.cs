@@ -9,7 +9,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public string MeterId { get; set; }
 
         [XmlElement("MINROTATIONSPEED")]
-        public double MinRotationSpeed { get; set; }
+        public double? MinRotationSpeed { get; set; }
 
         [XmlElement("FACTOR")]
         public double Factor { get; set; }

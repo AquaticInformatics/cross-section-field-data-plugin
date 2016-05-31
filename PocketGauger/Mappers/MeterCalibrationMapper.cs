@@ -10,7 +10,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 {
     public class MeterCalibrationMapper
     {
-        public static string NonApplicable = "N/A";
         private readonly IParseContext _parseContext;
 
         public MeterCalibrationMapper(IParseContext parseContext)
@@ -39,11 +38,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             {
                 SerialNumber = meterDetailsItem.MeterNumber,
                 Model = meterDetailsItem.ImpellerNumber,
-                Manufacturer = NonApplicable,
                 Configuration = meterDetailsItem.Description,
                 MeterType = ConvertMeterType(meterDetailsItem.MeterType),
-                FirmwareVersion = NonApplicable,
-                SoftwareVersion = NonApplicable
             };
         }
 
@@ -58,7 +54,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 case Dtos.MeterType.RotatingElementCurrentMeter:
                     return MeterType.PriceAa;
                 default:
-                    return MeterType.Unknown;
+                    return MeterType.Unspecified;
             }
         }
 
@@ -80,7 +76,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return new MeterCalibrationEquation
             {
                 RangeStart = pocketGaugerCalibrations[i].MinRotationSpeed,
-                RangeEnd = GetRangeEnd(i, pocketGaugerCalibrations),
+                RangeEnd = GetRangeEnd(pocketGaugerCalibrations, i),
                 Slope = pocketGaugerCalibrations[i].Factor,
                 Intercept = pocketGaugerCalibrations[i].Constant,
                 //todo: will update this to retrive default unit for velocity from parseContext after AQ-18922 is merged
@@ -88,11 +84,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        private static double? GetRangeEnd(int i, IReadOnlyList<MeterCalibrationItem> pocketGaugerCalibrations)
+        private static double? GetRangeEnd(IReadOnlyList<MeterCalibrationItem> pocketGaugerCalibrations, int i)
         {
             var isLastCalibration = i == pocketGaugerCalibrations.Count - 1;
 
-            return isLastCalibration ? (double?) null : pocketGaugerCalibrations[i + 1].MinRotationSpeed;
+            const int lastCalibrationRangeSize = 100;
+            return isLastCalibration
+                ? pocketGaugerCalibrations[i].MinRotationSpeed + lastCalibrationRangeSize
+                : pocketGaugerCalibrations[i + 1].MinRotationSpeed;
         }
     }
 }
