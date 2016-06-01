@@ -49,9 +49,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public RiverState? RiverState { get; set; }
 
         [XmlElement("RIVER_STATE")]
-        public int? RiverStateProxy
+        public string RiverStateProxy
         {
-            get { return (int?)RiverState; }
+            get { return RiverState.ToString(); }
             set { RiverState = EnumHelper.Map<RiverState>(value); }
         }
 
@@ -68,9 +68,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public GaugingMethod? GaugingMethod { get; set; }
 
         [XmlElement("GAUGING_METHOD")]
-        public int? GaugingMethodProxy
+        public string GaugingMethodProxy
         {
-            get { return (int?)GaugingMethod; }
+            get { return GaugingMethod.ToString(); }
             set { GaugingMethod = EnumHelper.Map<GaugingMethod>(value); }
         }
 
@@ -78,9 +78,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public EntryMethod? EntryMethod { get; set; }
 
         [XmlElement("ENTRY_METHOD")]
-        public int? EntryMethodProxy
+        public string EntryMethodProxy
         {
-            get { return (int?)EntryMethod; }
+            get { return EntryMethod.ToString(); }
             set { EntryMethod = EnumHelper.Map<EntryMethod>(value); }
         }
 
@@ -88,9 +88,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public FlowCalculationMethod? FlowCalculationMethod { get; set; }
 
         [XmlElement("FLOW_CALC_METHOD")]
-        public int? FlowCalculationMethodProxy
+        public string FlowCalculationMethodProxy
         {
-            get { return (int?)FlowCalculationMethod; }
+            get { return FlowCalculationMethod.ToString(); }
             set { FlowCalculationMethod = EnumHelper.Map<FlowCalculationMethod>(value); }
         }
 
@@ -98,9 +98,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public VelocityCalculationMethod? VelocityCalculationMethod { get; set; }
 
         [XmlElement("VEL_CALC_METHOD")]
-        public int? VelocityCalculationMethodProxy 
+        public string VelocityCalculationMethodProxy 
         {
-            get { return (int?)VelocityCalculationMethod; }
+            get { return VelocityCalculationMethod.ToString(); }
             set { VelocityCalculationMethod = EnumHelper.Map<VelocityCalculationMethod>(value); }
         }
 
@@ -108,9 +108,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public MeterMethod? CMeterMethod { get; set; }
 
         [XmlElement("CMETER_METHOD")]
-        public int? CMeterMethodProxy 
+        public string CMeterMethodProxy 
         {
-            get { return (int?)CMeterMethod; }
+            get { return CMeterMethod.ToString(); }
             set { CMeterMethod = EnumHelper.Map<MeterMethod>(value); }
         }
 
@@ -124,9 +124,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public BankSide? StartBank { get; set; }
 
         [XmlElement("START_BANK")]
-        public int? StartBankProxy 
+        public string StartBankProxy 
         {
-            get { return (int?)StartBank; }
+            get { return StartBank.ToString(); }
             set { StartBank = EnumHelper.Map<BankSide>(value); }
         }
 
@@ -137,7 +137,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public int MultipleMeterNo { get; set; }
 
         [XmlIgnore]
-        public bool SampleAtSurface;
+        public bool SampleAtSurface { get; set; }
 
         [XmlElement("SAMPLE_AT_SURFACE")]
         public string SampleAtSurfaceProxy
@@ -147,7 +147,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool SampleAt2;
+        public bool SampleAt2 { get; set; }
 
         [XmlElement("SAMPLE_AT_2")]
         public string SampleAt2Proxy
@@ -157,7 +157,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool SampleAt4;
+        public bool SampleAt4 { get; set; }
 
         [XmlElement("SAMPLE_AT_4")]
         public string SampleAt4Proxy
@@ -167,7 +167,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool SampleAt5;
+        public bool SampleAt5 { get; set; }
 
         [XmlElement("SAMPLE_AT_5")]
         public string SampleAt5Proxy
@@ -177,7 +177,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool SampleAt6;
+        public bool SampleAt6 { get; set; }
 
         [XmlElement("SAMPLE_AT_6")]
         public string SampleAt6Proxy
@@ -187,7 +187,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool SampleAt8;
+        public bool SampleAt8 { get; set; }
 
         [XmlElement("SAMPLE_AT_8")]
         public string SampleAt8Proxy
@@ -197,7 +197,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool SampleAtBed;
+        public bool SampleAtBed { get; set; }
 
         [XmlElement("SAMPLE_AT_BED")]
         public string SampleAtBedProxy 
@@ -207,7 +207,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool IntegrationMethod;
+        public bool IntegrationMethod { get; set; }
 
         [XmlElement("INTEGRATION_METHOD")]
         public string IntegrationMethodProxy 
@@ -217,7 +217,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool DistribMethod;
+        public bool DistribMethod { get; set; }
 
         [XmlElement("DISTRIB_METHOD")]
         public string DistribMethodProxy
@@ -227,7 +227,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool WMeanStage;
+        public bool WMeanStage { get; set; }
 
         [XmlElement("W_MEAN_STAGE")]
         public string WMeanStageProxy
@@ -237,7 +237,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         }
 
         [XmlIgnore]
-        public bool NewSite;
+        public bool NewSite { get; set; }
 
         [XmlElement("NEW_SITE")]
         public string NewSiteProxy

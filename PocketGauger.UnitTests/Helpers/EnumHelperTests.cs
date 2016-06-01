@@ -21,7 +21,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
         [Test]
         public void Map_ReturnsValueAsEnum()
         {
-            const int testValue = 1;
+            const string testValue = "1";
 
             var result = EnumHelper.Map<BankSide>(testValue);
 
@@ -31,7 +31,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
         [Test]
         public void Map_TEnumIsNotAnEnum_Throws()
         {
-            TestDelegate testDelegate = () => EnumHelper.Map<DateTime>(_fixture.Create<int>());
+            TestDelegate testDelegate = () => EnumHelper.Map<DateTime>(_fixture.Create<string>());
 
             Assert.That(testDelegate, Throws.Exception.TypeOf<ArgumentException>());
         }
@@ -46,12 +46,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
             Assert.That(result, Is.Null);
         }
 
-        private static int GetIntOutsideOfGaugingMethodRange()
+        private static string GetIntOutsideOfGaugingMethodRange()
         {
             var maximumValueForGaugingMethod =
                 Enum.GetValues(typeof (GaugingMethod)).OfType<GaugingMethod>().Cast<int>().Max();
 
-            return maximumValueForGaugingMethod + 1;
+            var valueOutsideRange = maximumValueForGaugingMethod + 1;
+
+            return valueOutsideRange.ToString();
         }
     }
 }

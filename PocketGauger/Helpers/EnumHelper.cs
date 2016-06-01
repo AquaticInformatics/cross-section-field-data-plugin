@@ -5,7 +5,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
     public static class EnumHelper
     {
-        public static TEnum? Map<TEnum>(int? value) where TEnum : struct
+        public static TEnum? Map<TEnum>(string value) where TEnum : struct
         {
             if (!typeof (TEnum).IsEnum)
             {
@@ -13,10 +13,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
             }
             if (value == null) return null;
 
-            var intValue = value.Value;
-            if (!Enum.IsDefined(typeof (TEnum), intValue)) return null;
+            TEnum enumValue;
+            if (Enum.TryParse(value, out enumValue) && Enum.IsDefined(typeof(TEnum), enumValue))
+                return enumValue;
 
-            return (TEnum) (object) intValue;
+            return default(TEnum?);
         }
     }
 }

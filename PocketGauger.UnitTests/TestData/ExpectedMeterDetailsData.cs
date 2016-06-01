@@ -53,7 +53,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                 ImpellerNumber = "1178-1566",
                 Description = "Valeport",
                 MeterType = MeterType.ElectroMagneticCurrentMeter,
-                MeterTypeProxy = 45,
+                MeterTypeProxy = "45",
                 Calibrations = CreateCalibrationsForSecondMeter()
             };
         }
@@ -95,7 +95,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                 ImpellerNumber = "42",
                 Description = String.Empty,
                 MeterType = MeterType.RotatingElementCurrentMeter,
-                MeterTypeProxy = 44,
+                MeterTypeProxy = "44",
                 Calibrations = CreateCalibrationsForThirdMeter()
             };
         }

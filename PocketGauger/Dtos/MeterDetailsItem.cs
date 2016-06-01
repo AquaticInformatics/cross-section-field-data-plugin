@@ -23,9 +23,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public MeterType? MeterType { get; set; }
 
         [XmlElement("METER_TYPE")]
-        public int? MeterTypeProxy
+        public string MeterTypeProxy
         {
-            get { return (int?)MeterType; }
+            get { return MeterType.ToString(); }
             set { MeterType = EnumHelper.Map<MeterType>(value); }
         }
 
