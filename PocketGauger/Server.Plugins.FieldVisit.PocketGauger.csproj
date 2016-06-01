@@ -44,6 +44,7 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Mappers\DischargeActivityMapper.cs" />
     <Compile Include="Dtos\BankSide.cs" />
     <Compile Include="Dtos\EntryMethod.cs" />
     <Compile Include="Dtos\FlowCalculationMethod.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Mappers\MeterCalibrationMapper.cs" />
     <Compile Include="MeterDetailsParser.cs" />
     <Compile Include="PanelParser.cs" />
+    <Compile Include="Mappers\ParsedResultMapper.cs" />
     <Compile Include="PocketGaugerFiles.cs" />
     <Compile Include="FileNames.cs" />
     <Compile Include="PocketGaugerParser.cs" />

@@ -68,12 +68,15 @@
     <Compile Include="Helpers\EnumHelperTests.cs" />
     <Compile Include="IntegrationTests\PanelParserTests.cs" />
     <Compile Include="Mappers\MeterCalibrationMapperTests.cs" />
+    <Compile Include="Mappers\DischargeActivityMapperTests.cs" />
+    <Compile Include="Mappers\ParsedResultMapperTests.cs" />
     <Compile Include="PocketGaugerFilesTests.cs" />
     <Compile Include="PocketGaugerParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\ExpectedMeterDetailsData.cs" />
     <Compile Include="TestData\ExpectedPanelData.cs" />
     <Compile Include="TestData\ProxyTypeSpecimenBuilder.cs" />
+    <Compile Include="TestData\ParseContextTestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Common\TestHelpers\NUnitExtensions\Common.TestHelpers.NUnitExtensions.csproj">
