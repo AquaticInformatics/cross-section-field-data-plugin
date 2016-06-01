@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- xml created by Hydro-Logic xml converter -->
+<GF_VERTICALS>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">2</VERTICAL_ID>
+    <VERTICAL_NO type="double">1</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">26</PANEL_ID>
+    <DISTANCE type="double">0</DISTANCE>
+    <DEPTH type="double">0</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">0</REVS>
+    <VELOCITY type="double">0</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO3</SITE_ID>
+    <GAUGING_ID type="double">1</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">3</VERTICAL_ID>
+    <VERTICAL_NO type="double">2</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">27</PANEL_ID>
+    <DISTANCE type="double">2.5</DISTANCE>
+    <DEPTH type="double">1</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">100</REVS>
+    <VELOCITY type="double">2</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO3</SITE_ID>
+    <GAUGING_ID type="double">1</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">4</VERTICAL_ID>
+    <VERTICAL_NO type="double">3</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">28</PANEL_ID>
+    <DISTANCE type="double">5</DISTANCE>
+    <DEPTH type="double">2</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">200</REVS>
+    <VELOCITY type="double">4</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO3</SITE_ID>
+    <GAUGING_ID type="double">1</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">5</VERTICAL_ID>
+    <VERTICAL_NO type="double">4</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">29</PANEL_ID>
+    <DISTANCE type="double">7.5</DISTANCE>
+    <DEPTH type="double">1</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">100</REVS>
+    <VELOCITY type="double">2</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO3</SITE_ID>
+    <GAUGING_ID type="double">1</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">6</VERTICAL_ID>
+    <VERTICAL_NO type="double">5</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">30</PANEL_ID>
+    <DISTANCE type="double">10</DISTANCE>
+    <DEPTH type="double">0</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">0</REVS>
+    <VELOCITY type="double">0</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO3</SITE_ID>
+    <GAUGING_ID type="double">1</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">7</VERTICAL_ID>
+    <VERTICAL_NO type="double">1</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">11</PANEL_ID>
+    <DISTANCE type="double">0</DISTANCE>
+    <DEPTH type="double">0</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">0</REVS>
+    <VELOCITY type="double">0</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO4</SITE_ID>
+    <GAUGING_ID type="double">2</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">8</VERTICAL_ID>
+    <VERTICAL_NO type="double">2</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">12</PANEL_ID>
+    <DISTANCE type="double">2.5</DISTANCE>
+    <DEPTH type="double">1</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">100</REVS>
+    <VELOCITY type="double">2</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO4</SITE_ID>
+    <GAUGING_ID type="double">2</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">9</VERTICAL_ID>
+    <VERTICAL_NO type="double">3</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">13</PANEL_ID>
+    <DISTANCE type="double">5</DISTANCE>
+    <DEPTH type="double">2</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">200</REVS>
+    <VELOCITY type="double">4</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO4</SITE_ID>
+    <GAUGING_ID type="double">2</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">10</VERTICAL_ID>
+    <VERTICAL_NO type="double">4</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">14</PANEL_ID>
+    <DISTANCE type="double">7.5</DISTANCE>
+    <DEPTH type="double">1</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">100</REVS>
+    <VELOCITY type="double">2</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO4</SITE_ID>
+    <GAUGING_ID type="double">2</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">11</VERTICAL_ID>
+    <VERTICAL_NO type="double">5</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">15</PANEL_ID>
+    <DISTANCE type="double">10</DISTANCE>
+    <DEPTH type="double">0</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">0</REVS>
+    <VELOCITY type="double">0</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO4</SITE_ID>
+    <GAUGING_ID type="double">2</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">12</VERTICAL_ID>
+    <VERTICAL_NO type="double">1</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">16</PANEL_ID>
+    <DISTANCE type="double">0</DISTANCE>
+    <DEPTH type="double">0</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">0</REVS>
+    <VELOCITY type="double">0</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO5</SITE_ID>
+    <GAUGING_ID type="double">7</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">13</VERTICAL_ID>
+    <VERTICAL_NO type="double">2</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">17</PANEL_ID>
+    <DISTANCE type="double">1</DISTANCE>
+    <DEPTH type="double">1</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">100</REVS>
+    <VELOCITY type="double">2</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO5</SITE_ID>
+    <GAUGING_ID type="double">7</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">14</VERTICAL_ID>
+    <VERTICAL_NO type="double">3</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">18</PANEL_ID>
+    <DISTANCE type="double">2</DISTANCE>
+    <DEPTH type="double">2</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">200</REVS>
+    <VELOCITY type="double">4</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO5</SITE_ID>
+    <GAUGING_ID type="double">7</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">15</VERTICAL_ID>
+    <VERTICAL_NO type="double">4</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">19</PANEL_ID>
+    <DISTANCE type="double">3</DISTANCE>
+    <DEPTH type="double">0</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">0</REVS>
+    <VELOCITY type="double">0</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO5</SITE_ID>
+    <GAUGING_ID type="double">7</GAUGING_ID>
+  </GF_VERTICALSItem>
+  <GF_VERTICALSItem>
+    <VERTICAL_ID type="double">16</VERTICAL_ID>
+    <VERTICAL_NO type="double">5</VERTICAL_NO>
+    <MEASUREMENT_NO type="integer">1</MEASUREMENT_NO>
+    <PANEL_ID type="double">20</PANEL_ID>
+    <DISTANCE type="double">4</DISTANCE>
+    <DEPTH type="double">0</DEPTH>
+    <SAMPLE_FROM_SURFACE type="boolean">True</SAMPLE_FROM_SURFACE>
+    <METER_ID type="text">12345±</METER_ID>
+    <SAMPLE_POSITION type="double">0.6</SAMPLE_POSITION>
+    <EXPOSURE_TIME type="double">50</EXPOSURE_TIME>
+    <REVS type="double">0</REVS>
+    <VELOCITY type="double">0</VELOCITY>
+    <STAGE type="double">-999999999.999</STAGE>
+    <SITE_ID type="text">DEMO5</SITE_ID>
+    <GAUGING_ID type="double">7</GAUGING_ID>
+  </GF_VERTICALSItem>
+</GF_VERTICALS>

@@ -66,11 +66,13 @@
     <Compile Include="Helpers\BooleanHelperTests.cs" />
     <Compile Include="Helpers\DateTimeHelperTests.cs" />
     <Compile Include="Helpers\EnumHelperTests.cs" />
+    <Compile Include="IntegrationTests\PanelParserTests.cs" />
     <Compile Include="Mappers\MeterCalibrationMapperTests.cs" />
     <Compile Include="PocketGaugerFilesTests.cs" />
     <Compile Include="PocketGaugerParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestData\ExpectedMeterDetailsData.cs" />
+    <Compile Include="TestData\ExpectedPanelData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Common\TestHelpers\NUnitExtensions\Common.TestHelpers.NUnitExtensions.csproj">
@@ -94,6 +96,8 @@
     <EmbeddedResource Include="TestData\GF_GAUGING_SUMMARY.XML" />
     <EmbeddedResource Include="TestData\GF_METER_CALIB.XML" />
     <EmbeddedResource Include="TestData\GF_METER_DETAILS.XML" />
+    <EmbeddedResource Include="TestData\GF_PANELS.XML" />
+    <EmbeddedResource Include="TestData\GF_VERTICALS.XML" />
     <EmbeddedResource Include="TestData\PGData.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

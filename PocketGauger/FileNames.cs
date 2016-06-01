@@ -17,7 +17,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger
         {
             { typeof(GaugingSummary), GaugingSummary },
             { typeof(MeterDetails), MeterDetails },
-            { typeof(MeterCalibration), MeterCalibrations }
+            { typeof(MeterCalibration), MeterCalibrations },
+            { typeof(Panels), Panels },
+            { typeof(Verticals), Verticals }
         };
     }
 }

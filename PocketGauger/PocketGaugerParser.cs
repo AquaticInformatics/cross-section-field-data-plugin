@@ -34,6 +34,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 }
 
                 var gaugingSummary = GaugingSummaryParser.Parse(zipContents);
+                var panels = GaugingSummaryParser.Parse(zipContents);
+
                 var meterCalibrations = CreateMeterCalibrations(context, zipContents);
 
                 return CreateParsedResults(context, gaugingSummary);

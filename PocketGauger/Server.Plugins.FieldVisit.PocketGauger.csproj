@@ -56,8 +56,12 @@
     <Compile Include="Dtos\MeterDetailsItem.cs" />
     <Compile Include="Dtos\MeterMethod.cs" />
     <Compile Include="Dtos\MeterType.cs" />
+    <Compile Include="Dtos\PanelItem.cs" />
+    <Compile Include="Dtos\Panels.cs" />
     <Compile Include="Dtos\RiverState.cs" />
     <Compile Include="Dtos\VelocityCalculationMethod.cs" />
+    <Compile Include="Dtos\Verticals.cs" />
+    <Compile Include="Dtos\VerticalItem.cs" />
     <Compile Include="GaugingSummaryParser.cs" />
     <Compile Include="Helpers\BooleanHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
@@ -65,6 +69,7 @@
     <Compile Include="Helpers\XmlDeserializerHelper.cs" />
     <Compile Include="Mappers\MeterCalibrationMapper.cs" />
     <Compile Include="MeterDetailsParser.cs" />
+    <Compile Include="PanelParser.cs" />
     <Compile Include="PocketGaugerFiles.cs" />
     <Compile Include="FileNames.cs" />
     <Compile Include="PocketGaugerParser.cs" />
