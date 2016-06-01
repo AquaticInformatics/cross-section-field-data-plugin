@@ -55,7 +55,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_GaugingSummaryStartDateLocalTime_IsMappedDateTimeOffsetWithLocationUtcOffset()
+        public void Map_GaugingSummaryStartDate_IsMappedDateTimeOffsetWithLocationUtcOffset()
         {
             var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
 
@@ -69,7 +69,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_GaugingSummaryEndDateLocalTime_IsMappedDateTimeOffsetWithLocationUtcOffset()
+        public void Map_GaugingSummaryEndDate_IsMappedDateTimeOffsetWithLocationUtcOffset()
         {
             var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
 
@@ -95,7 +95,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_GaugingSummaryFlowCalculationMethodIsMId_SetMonitoringMethodAsMidSection()
+        public void Map_GaugingSummaryFlowCalculationMethodIsMid_SetMonitoringMethodAsMidSection()
         {
             _gaugingSummaryItem.FlowCalculationMethodProxy = FlowCalculationMethod.Mid.ToString();
 
@@ -135,7 +135,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_GaugingSummaryItem_IsMappedToExpectedDischargeAcitivity()
+        public void Map_GaugingSummaryItem_IsMappedToExpectedDischargeActivity()
         {
             var expectedDischargeActivity = CreateExpectedDischargeActivity();
 

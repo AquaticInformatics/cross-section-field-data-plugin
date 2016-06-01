@@ -58,7 +58,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void CreateParsedResults_IntersectingExistingVisit_ReturnsNewDischargeActivitiyForActivities()
+        public void CreateParsedResults_IntersectingExistingVisit_ReturnsNewDischargeActivityForActivities()
         {
             var fieldVisitCoveringAllTime = Substitute.For<IFieldVisitInfo>();
             fieldVisitCoveringAllTime.StartDate.Returns(DateTimeOffset.MinValue);

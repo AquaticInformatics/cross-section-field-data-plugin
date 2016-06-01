@@ -70,7 +70,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             GageHeightParameter = Substitute.For<IParameter>();
 
             var defaultGageHeightUnit = Substitute.For<IUnit>();
-            DischargeParameter.DefaultUnit.Returns(defaultGageHeightUnit);
+            GageHeightParameter.DefaultUnit.Returns(defaultGageHeightUnit);
 
             var defaultGageHeightMethod = Substitute.For<IMonitoringMethod>();
             defaultGageHeightMethod.MethodCode.Returns(ParametersAndMethodsConstants.DefaultMonitoringMethod);
@@ -100,9 +100,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             var defaultUnit = Substitute.For<IUnit>();
             parameter.DefaultUnit.Returns(defaultUnit);
 
-            var defaultGageHeightMethod = Substitute.For<IMonitoringMethod>();
-            defaultGageHeightMethod.MethodCode.Returns(ParametersAndMethodsConstants.DefaultMonitoringMethod);
-            parameter.MonitoringMethods.Returns(new List<IMonitoringMethod> { defaultGageHeightMethod });
+            var defaultMethod = Substitute.For<IMonitoringMethod>();
+            defaultMethod.MethodCode.Returns(ParametersAndMethodsConstants.DefaultMonitoringMethod);
+            parameter.MonitoringMethods.Returns(new List<IMonitoringMethod> { defaultMethod });
 
             return parameter;
         }

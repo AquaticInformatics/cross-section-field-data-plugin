@@ -96,7 +96,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void ParseFile_ReturnsResultsWithDischargeValues()
+        public void ParseFile_ValidFileStreamZip_ReturnsExpectedNumberOfParsedResults()
         {
             const int expectedNumberOfParsedResults = 3;
 
