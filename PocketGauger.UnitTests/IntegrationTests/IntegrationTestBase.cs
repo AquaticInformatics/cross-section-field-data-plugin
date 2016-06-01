@@ -27,7 +27,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            var path = FormattableString.Invariant($"{typeof(ExpectedTestData).Namespace}.{resourceName.ToUpperInvariant()}");
+            var path = FormattableString.Invariant($"{typeof(ExpectedMeterDetailsData).Namespace}.{resourceName.ToUpperInvariant()}");
 
             return assembly.GetManifestResourceStream(path);
         }

@@ -12,7 +12,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
             AddPocketGaugerFile(FileNames.MeterDetails);
             AddPocketGaugerFile(FileNames.MeterCalibrations);
 
-            var expected = ExpectedTestData.CreateExpectedThreeMeterDetails();
+            var expected = ExpectedMeterDetailsData.CreateExpectedThreeMeterDetails();
 
             var result = MeterDetailsParser.Parse(PocketGaugerFiles);
 

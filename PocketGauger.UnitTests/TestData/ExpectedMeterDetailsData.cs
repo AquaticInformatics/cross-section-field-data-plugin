@@ -4,7 +4,7 @@ using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
 {
-    public class ExpectedTestData
+    public class ExpectedMeterDetailsData
     {
         public static IReadOnlyDictionary<string, MeterDetailsItem> CreateExpectedThreeMeterDetails()
         {
