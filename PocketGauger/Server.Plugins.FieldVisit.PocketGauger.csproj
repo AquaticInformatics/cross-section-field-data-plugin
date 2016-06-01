@@ -72,6 +72,7 @@
     <Compile Include="Helpers\ParseContextExtensions.cs" />
     <Compile Include="Helpers\XmlDeserializerHelper.cs" />
     <Compile Include="Mappers\MeterCalibrationMapper.cs" />
+    <Compile Include="Mappers\PointVelocityMapper.cs" />
     <Compile Include="MeterDetailsParser.cs" />
     <Compile Include="PanelParser.cs" />
     <Compile Include="Mappers\ParsedResultMapper.cs" />

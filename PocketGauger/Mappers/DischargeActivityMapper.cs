@@ -20,6 +20,24 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
         public DischargeActivity Map(ILocationInfo locationInfo, GaugingSummaryItem gaugingSummaryItem)
         {
+            var dischargeActivity = CreateDischargeActivity(locationInfo, gaugingSummaryItem);
+
+            var pointVelocityMapper = new PointVelocityMapper(_context, GetDefaultChannel(locationInfo), gaugingSummaryItem);
+            dischargeActivity.DischargeSubActivities = new List<DischargeSubActivity>
+            {
+                pointVelocityMapper.Map(dischargeActivity)
+            };
+
+            return dischargeActivity;
+        }
+
+        private static IChannelInfo GetDefaultChannel(ILocationInfo locationInfo)
+        {
+            return ChannelHelper.GetDefaultLocationChannel(locationInfo);
+        }
+
+        private DischargeActivity CreateDischargeActivity(ILocationInfo locationInfo, GaugingSummaryItem gaugingSummaryItem)
+        {
             var startTime = CreateLocationBasedDateTimeOffset(gaugingSummaryItem.StartDate, locationInfo);
             var endTime = CreateLocationBasedDateTimeOffset(gaugingSummaryItem.EndDate, locationInfo);
 
