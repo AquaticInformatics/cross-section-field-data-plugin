@@ -19,7 +19,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
         }
 
         [TestCaseSource(nameof(GetTestData))]
-        public void Parse_ValueIsValidDateTime_ReturnsParsedValue(Tuple<string, DateTime> testPair )
+        public void Parse_ValueIsValidDateTime_ReturnsParsedValue(Tuple<string, DateTime> testPair)
         {
             var testValue = testPair.Item1;
 
@@ -67,6 +67,21 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
 
             var expectedResult = testPair.Item1;
             Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        private static readonly TimeSpan UtcOffset = TimeSpan.FromHours(-5);
+
+        private readonly DateTimeOffset _startDate = new DateTimeOffset(2010, 01, 01, 11, 00, 00, UtcOffset);
+        private readonly DateTimeOffset _endDate = new DateTimeOffset(2010, 01, 01, 16, 30, 00, UtcOffset);
+
+        [Test]
+        public void GetMeanTime_ReturnsExpectedMeanOfTwoDates()
+        {
+            var expectedMeanTime = new DateTimeOffset(2010, 01, 01, 13, 45, 00, UtcOffset);
+
+            var result = DateTimeHelper.GetMeanTime(_startDate, _endDate);
+
+            Assert.That(result, Is.EqualTo(expectedMeanTime));
         }
     }
 }

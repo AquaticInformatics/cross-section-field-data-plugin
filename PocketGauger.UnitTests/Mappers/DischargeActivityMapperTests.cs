@@ -77,6 +77,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
+        public void Map_DischargeActivityMeasurementTime_IsMappedDateTimeOffsetWithLocationUtcOffset()
+        {
+            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+
+            AssertDateTimeOffsetIsNotDefault(dischargeActivity.MeasurementTime);
+        }
+
+        [Test]
         public void Map_GaugingSummaryFlowCalculationMethodIsMean_SetMonitoringMethodAsMeanSection()
         {
             _gaugingSummaryItem.FlowCalculationMethodProxy = FlowCalculationMethod.Mean.ToString();
@@ -107,6 +115,26 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
+        public void Map_GaugingSummaryUseIndexVelocityFlagSet_SetsMeanIndexVelocity()
+        {
+            _gaugingSummaryItem.UseIndexVelocityProxy = bool.TrueString;
+
+            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+
+            Assert.That(dischargeActivity.MeanIndexVelocity, Is.EqualTo(_gaugingSummaryItem.IndexVelocity));
+        }
+
+        [Test]
+        public void Map_GaugingSummaryUseIndexVelocityFlagNotSet_SetsMeanIndexVelocityToNull()
+        {
+            _gaugingSummaryItem.UseIndexVelocityProxy = bool.FalseString;
+
+            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+
+            Assert.That(dischargeActivity.MeanIndexVelocity, Is.EqualTo(null));
+        }
+
+        [Test]
         public void Map_GaugingSummaryItem_IsMappedToExpectedDischargeAcitivity()
         {
             var expectedDischargeActivity = CreateExpectedDischargeActivity();
@@ -127,9 +155,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             return new DischargeActivity
             {
                 Party = _gaugingSummaryItem.ObserversName,
+                Discharge = _gaugingSummaryItem.Flow,
                 DischargeUnit = _context.DischargeParameter.DefaultUnit,
+                MeanGageHeight = _gaugingSummaryItem.MeanStage,
                 GageHeightUnit = _context.GageHeightParameter.DefaultUnit,
-                GageHeightMethod = _context.GetDefaultMonitoringMethod()
+                GageHeightMethod = _context.GetDefaultMonitoringMethod(),
+                MeasurementId = _gaugingSummaryItem.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
+                VelocityUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId),
+                ShowInDataCorrection = true,
+                ShowInRatingDevelopment = true
             };
         }
     }

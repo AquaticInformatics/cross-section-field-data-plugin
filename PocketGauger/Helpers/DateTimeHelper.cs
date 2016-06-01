@@ -25,5 +25,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
         {
             return dateTime.ToString(Format);
         }
+
+        public static DateTimeOffset GetMeanTime(DateTimeOffset startTime, DateTimeOffset endTime)
+        {
+            var startTicks = startTime.Ticks;
+            var endTicks = endTime.Ticks;
+
+            var meanTicks = (startTicks + endTicks) / 2;
+
+            return new DateTimeOffset(meanTicks, startTime.Offset);
+        }
     }
 }
