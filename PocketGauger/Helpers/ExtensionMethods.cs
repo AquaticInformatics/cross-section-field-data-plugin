@@ -3,7 +3,7 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
-    public static class ParseContextExtensions
+    public static class ExtensionMethods
     {
         public static IUnit GetParameterDefaultUnit(this IParseContext context, string parameterId)
         {
@@ -12,7 +12,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 
         public static IMonitoringMethod GetDefaultMonitoringMethod(this IParseContext context)
         {
-            return GetMonitoringMethod(context.DischargeParameter, ParametersAndMethodsConstants.DefaultMonitoringMethod);
+            return GetMonitoringMethod(context.AllParameters.First(), ParametersAndMethodsConstants.DefaultMonitoringMethod);
         }
 
         public static IMonitoringMethod GetMonitoringMethod(this IParameter parameter, string monitoringMethod)

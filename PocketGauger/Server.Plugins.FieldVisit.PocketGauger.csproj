@@ -69,7 +69,7 @@
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\ParametersAndMethodsConstants.cs" />
-    <Compile Include="Helpers\ParseContextExtensions.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\XmlDeserializerHelper.cs" />
     <Compile Include="Mappers\MeterCalibrationMapper.cs" />
     <Compile Include="Mappers\PointVelocityMapper.cs" />
