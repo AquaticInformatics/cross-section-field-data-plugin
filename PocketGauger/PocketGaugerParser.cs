@@ -11,6 +11,7 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
+using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using static System.FormattableString;
 using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
 
@@ -18,10 +19,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 {
     public class PocketGaugerParser : IFieldDataPlugIn
     {
-        public const string DefaultNone = "DefaultNone";
-        public const string MidSection = "QMIDSECTION";
-        public const string MeanSection = "QMEANSECTION";
-
         public ICollection<ParsedResult> ParseFile(Stream fileStream, IParseContext context, ILog logger)
         {
             using (var zipArchive = GetZipArchive(fileStream))
@@ -74,29 +71,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             return streams;
         }
 
-        private static List<ParsedResult>  CreateParsedResults(IParseContext context, GaugingSummary gaugingSummary)
+        public List<ParsedResult> CreateParsedResults(IParseContext context, GaugingSummary gaugingSummary)
         {
             var parsedResults = new List<ParsedResult>();
             foreach (var gaugingSummaryItem in gaugingSummary.GaugingSummaryItems)
             {
                 var locationInfo = GetLocationInfoOrThrow(context, gaugingSummaryItem.SiteId);
-                var startDate = CreateLocationBasedDateTimeOffset(gaugingSummaryItem.StartDate, locationInfo);
-                var endDate = CreateLocationBasedDateTimeOffset(gaugingSummaryItem.EndDate, locationInfo);
 
-                var existingFieldVisits = locationInfo.FindLocationFieldVisitsInTimeRange(startDate, endDate);
                 var dischargeActivity = CreateDischargeActivity(locationInfo, gaugingSummaryItem, context);
 
-                ParsedResult parsedResult;
-                if (!existingFieldVisits.Any())
-                {
-                    parsedResult = CreateNewFieldVisit(locationInfo, gaugingSummaryItem, dischargeActivity);
-                }
-                else
-                {
-                    parsedResult = CreateNewDischargeActivityParsedResult(dischargeActivity, existingFieldVisits.First());
-                }
-
-                parsedResults.Add(parsedResult);
+                parsedResults.Add(CreateParsedResult(locationInfo, dischargeActivity));
             }
 
             return parsedResults;
@@ -115,11 +99,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             return locationInfo;
         }
 
-        private static DateTimeOffset CreateLocationBasedDateTimeOffset(DateTime dateTime, ILocationInfo locationInfo)
-        {
-            return new DateTimeOffset(dateTime, TimeSpan.FromHours(locationInfo.UtcOffsetHours));
-        }
-
         private static DischargeActivity CreateDischargeActivity(ILocationInfo locationInfo,
             GaugingSummaryItem gaugingSummaryItem, IParseContext context)
         {
@@ -130,40 +109,51 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 Party = gaugingSummaryItem.ObserversName,
                 DischargeUnit = context.DischargeParameter.DefaultUnit,
                 GageHeightUnit = context.GageHeightParameter.DefaultUnit,
-                DischargeMethod =
-                    GetDischargeMonitoringMethod(gaugingSummaryItem.FlowCalculationMethod,
-                        context.DischargeParameter.MonitoringMethods),
-                GageHeightMethod =
-                    context.GageHeightParameter.MonitoringMethods.First(m => m.MethodCode == DefaultNone)
+                DischargeMethod = GetDischargeMonitoringMethod(gaugingSummaryItem.FlowCalculationMethod, context),
+                GageHeightMethod = context.GetDefaultMonitoringMethod()
             };
         }
 
-        private static IMonitoringMethod GetDischargeMonitoringMethod(FlowCalculationMethod? gaugingMethod,
-            IEnumerable<IMonitoringMethod> dischargeMethods)
+        private static DateTimeOffset CreateLocationBasedDateTimeOffset(DateTime dateTime, ILocationInfo locationInfo)
+        {
+            return new DateTimeOffset(dateTime, TimeSpan.FromHours(locationInfo.UtcOffsetHours));
+        }
+
+        private static IMonitoringMethod GetDischargeMonitoringMethod(FlowCalculationMethod? gaugingMethod, IParseContext context)
         {
             switch (gaugingMethod)
             {
                 case FlowCalculationMethod.Mean:
-                    return dischargeMethods.Single(m => m.MethodCode == MidSection);
+                    return context.DischargeParameter.GetMonitoringMethod(ParametersAndMethodsConstants.MeanSectionMonitoringMethod);
                 case FlowCalculationMethod.Mid:
-                    return dischargeMethods.Single(m => m.MethodCode == MeanSection);
+                    return context.DischargeParameter.GetMonitoringMethod(ParametersAndMethodsConstants.MidSectionMonitoringMethod);
                 default:
-                    return dischargeMethods.Single(m => m.MethodCode == DefaultNone);
+                    return context.GetDefaultMonitoringMethod();
             }
         }
+        private static ParsedResult CreateParsedResult(ILocationInfo locationInfo, DischargeActivity dischargeActivity)
+        {
+            var existingFieldVisits = locationInfo.FindLocationFieldVisitsInTimeRange(dischargeActivity.StartTime, dischargeActivity.EndTime);
 
-        private static NewFieldVisit CreateNewFieldVisit(ILocationInfo locationInfo,
-            GaugingSummaryItem gaugingSummaryItem, DischargeActivity dischargeActivity)
+            if (existingFieldVisits.Any())
+            {
+                return CreateNewDischargeActivityParsedResult(dischargeActivity, existingFieldVisits.First());
+            }
+
+            return CreateNewFieldVisit(locationInfo, dischargeActivity);
+        }
+
+        private static NewFieldVisit CreateNewFieldVisit(ILocationInfo locationInfo, DischargeActivity dischargeActivity)
         {
             return new NewFieldVisit
             {
                 Location = locationInfo,
                 FieldVisit = new BusinessInterfaces.FieldDataPlugInCore.DataModel.FieldVisit
                 {
-                    StartDate = CreateLocationBasedDateTimeOffset(gaugingSummaryItem.StartDate, locationInfo),
-                    EndDate = CreateLocationBasedDateTimeOffset(gaugingSummaryItem.EndDate, locationInfo),
-                    Party = gaugingSummaryItem.ObserversName,
-                    DischargeActivities = new [] { dischargeActivity}
+                    StartDate = dischargeActivity.StartTime,
+                    EndDate = dischargeActivity.EndTime,
+                    Party = dischargeActivity.Party,
+                    DischargeActivities = new[] { dischargeActivity }
                 }
             };
         }

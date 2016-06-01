@@ -9,6 +9,7 @@ using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
 using FieldDataMeterType = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterType;
@@ -24,6 +25,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private MeterCalibrationMapper _mapper;
 
         private IReadOnlyDictionary<string, MeterDetailsItem> _input;
+        private IUnit _velocityDefaultUnit;
 
         [SetUp]
         public void SetUp()
@@ -32,9 +34,21 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _fixture.Register<IReadOnlyList<MeterCalibrationItem>>(() => _fixture.Create<List<MeterCalibrationItem>>());
 
             _parseContext = Substitute.For<IParseContext>();
+            SetupVelocityParameter();
             _mapper = new MeterCalibrationMapper(_parseContext);
 
             _input = _fixture.Create<Dictionary<string, MeterDetailsItem>>();
+        }
+
+        private void SetupVelocityParameter()
+        {
+            var velocityParameter = Substitute.For<IParameter>();
+            velocityParameter.Id.Returns(ParametersAndMethodsConstants.VelocityParameterId);
+
+            _velocityDefaultUnit = Substitute.For<IUnit>();
+            velocityParameter.DefaultUnit.Returns(_velocityDefaultUnit);
+
+            _parseContext.AllParameters.ReturnsForAnyArgs(new List<IParameter> { velocityParameter });
         }
 
         [Test]
@@ -97,7 +111,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                         e =>
                             e.RangeStart == calibration.MinRotationSpeed &&
                             DoubleHelper.AreEqual(e.Slope, calibration.Factor) &&
-                            DoubleHelper.AreEqual(e.Intercept, calibration.Constant));
+                            DoubleHelper.AreEqual(e.Intercept, calibration.Constant) && 
+                            e.InterceptUnit == _velocityDefaultUnit);
             }
         }
 

@@ -14,6 +14,7 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
+using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
@@ -58,6 +59,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             SetUpLocation(fieldVisitsToReturn);
             SetUpDischargeParameter();
             SetUpGageHeightParameter();
+            SetUpOtherParameters();
         }
 
         private void SetUpLocation(IEnumerable<IFieldVisitInfo> fieldVisitsToReturn)
@@ -65,6 +67,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _locationInfo = Substitute.For<ILocationInfo>();
             _locationInfo.FindLocationFieldVisitsInTimeRange(Arg.Any<DateTimeOffset>(), Arg.Any<DateTimeOffset>())
                 .Returns(fieldVisitsToReturn);
+
+            var channel = Substitute.For<IChannelInfo>();
+            _locationInfo.Channels.ReturnsForAnyArgs(new List<IChannelInfo> { channel });
             _parseContext.FindLocationByIdentifier(Arg.Any<string>()).Returns(_locationInfo);
         }
 
@@ -76,14 +81,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _dischargeParameter.DefaultUnit.Returns(defaultDischargeUnit);
 
             var midSectionMethod = Substitute.For<IMonitoringMethod>();
-            midSectionMethod.MethodCode.Returns(PocketGaugerParser.MidSection);
+            midSectionMethod.MethodCode.Returns(ParametersAndMethodsConstants.MidSectionMonitoringMethod);
             var meanSectionMethod = Substitute.For<IMonitoringMethod>();
-            meanSectionMethod.MethodCode.Returns(PocketGaugerParser.MeanSection);
+            meanSectionMethod.MethodCode.Returns(ParametersAndMethodsConstants.MeanSectionMonitoringMethod);
             var defaultDischargeMethod = Substitute.For<IMonitoringMethod>();
-            defaultDischargeMethod.MethodCode.Returns(PocketGaugerParser.DefaultNone);
+            defaultDischargeMethod.MethodCode.Returns(ParametersAndMethodsConstants.DefaultMonitoringMethod);
 
             _dischargeParameter.MonitoringMethods.Returns(new[]
-            {midSectionMethod, meanSectionMethod, defaultDischargeMethod});
+                {midSectionMethod, meanSectionMethod, defaultDischargeMethod});
 
             _parseContext.DischargeParameter.Returns(_dischargeParameter);
         }
@@ -96,10 +101,38 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _dischargeParameter.DefaultUnit.Returns(defaultGageHeightUnit);
 
             var defaultGageHeightMethod = Substitute.For<IMonitoringMethod>();
-            defaultGageHeightMethod.MethodCode.Returns(PocketGaugerParser.DefaultNone);
+            defaultGageHeightMethod.MethodCode.Returns(ParametersAndMethodsConstants.DefaultMonitoringMethod);
             _gageHeightParameter.MonitoringMethods.Returns(new List<IMonitoringMethod> {defaultGageHeightMethod});
 
             _parseContext.GageHeightParameter.Returns(_gageHeightParameter);
+        }
+
+        private void SetUpOtherParameters()
+        {
+            var parameters = new List<IParameter>
+            {
+                CreateMockParameter(ParametersAndMethodsConstants.AreaParameterId),
+                CreateMockParameter(ParametersAndMethodsConstants.VelocityParameterId),
+                CreateMockParameter(ParametersAndMethodsConstants.DistanceToGageParameterId),
+                CreateMockParameter(ParametersAndMethodsConstants.WidthParameterId)
+            };
+
+            _parseContext.AllParameters.ReturnsForAnyArgs(parameters);
+        }
+
+        private static IParameter CreateMockParameter(string parameterId)
+        {
+            var parameter = Substitute.For<IParameter>();
+            parameter.Id.Returns(parameterId);
+
+            var defaultUnit = Substitute.For<IUnit>();
+            parameter.DefaultUnit.Returns(defaultUnit);
+
+            var defaultGageHeightMethod = Substitute.For<IMonitoringMethod>();
+            defaultGageHeightMethod.MethodCode.Returns(ParametersAndMethodsConstants.DefaultMonitoringMethod);
+            parameter.MonitoringMethods.Returns(new List<IMonitoringMethod> { defaultGageHeightMethod });
+
+            return parameter;
         }
 
         [TearDown]
@@ -188,8 +221,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             foreach (var dischargeActivity in dischargeActivityResults)
             {
                 Assert.That(dischargeActivity.DischargeUnit, Is.EqualTo(_dischargeParameter.DefaultUnit));
-                Assert.That(dischargeActivity.DischargeMethod,Is.EqualTo(
-                    _dischargeParameter.MonitoringMethods.Single(m => m.MethodCode == PocketGaugerParser.MidSection)));
+                Assert.That(dischargeActivity.DischargeMethod.MethodCode, Is.EqualTo(
+                    _dischargeParameter.MonitoringMethods.Single(m => m.MethodCode == ParametersAndMethodsConstants.MeanSectionMonitoringMethod).MethodCode));
             }
         }
 
@@ -206,8 +239,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             foreach (var dischargeActivity in GetAllResultDischargeActivities(results))
             {
                 Assert.That(dischargeActivity.GageHeightUnit, Is.EqualTo(_gageHeightParameter.DefaultUnit));
-                Assert.That(dischargeActivity.GageHeightMethod,Is.EqualTo(
-                    _gageHeightParameter.MonitoringMethods.Single(m => m.MethodCode == PocketGaugerParser.DefaultNone)));
+                Assert.That(dischargeActivity.GageHeightMethod.MethodCode, Is.EqualTo(
+                    _gageHeightParameter.MonitoringMethods.Single(m => m.MethodCode == ParametersAndMethodsConstants.DefaultMonitoringMethod).MethodCode));
             }
         }
 

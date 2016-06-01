@@ -3,6 +3,7 @@ using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
 using MeterType = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterType;
 
@@ -60,7 +61,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
         }
 
-        private static IEnumerable<MeterCalibrationEquation> CreateCalibrationEquations(
+        private IEnumerable<MeterCalibrationEquation> CreateCalibrationEquations(
             MeterDetailsItem meterDetailsItem)
         {
             var orderedCalibrations = meterDetailsItem.Calibrations.OrderBy(c => c.MinRotationSpeed).ToList();
@@ -72,7 +73,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
         }
 
-        private static MeterCalibrationEquation CreateCalibrationEquation(
+        private MeterCalibrationEquation CreateCalibrationEquation(
             IReadOnlyList<MeterCalibrationItem> pocketGaugerCalibrations, int i)
         {
             return new MeterCalibrationEquation
@@ -81,8 +82,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 RangeEnd = GetRangeEnd(pocketGaugerCalibrations, i),
                 Slope = pocketGaugerCalibrations[i].Factor,
                 Intercept = pocketGaugerCalibrations[i].Constant,
-                //todo: will update this to retrive default unit for velocity from parseContext after AQ-18922 is merged
-                InterceptUnit = null
+                InterceptUnit = _parseContext.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId)
             };
         }
 
