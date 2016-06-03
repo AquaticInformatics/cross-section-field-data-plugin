@@ -75,6 +75,7 @@
     <Compile Include="PocketGaugerFilesTests.cs" />
     <Compile Include="PocketGaugerParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestData\ExpectedGaugingSummaryData.cs" />
     <Compile Include="TestData\ExpectedMeterDetailsData.cs" />
     <Compile Include="TestData\ExpectedPanelData.cs" />
     <Compile Include="TestData\ParameterRegistrar.cs" />
