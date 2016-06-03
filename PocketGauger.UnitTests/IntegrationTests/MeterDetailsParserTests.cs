@@ -6,6 +6,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
 {
     public class MeterDetailsParserTests : IntegrationTestBase
     {
+        private MeterDetailsParser _meterDetailsParser;
+
+        [TestFixtureSetUp]
+        public void SetUp()
+        {
+            _meterDetailsParser = new MeterDetailsParser();
+        }
+
         [Test]
         public void Parse_PocketGaugerFilesContainsMeterFiles_ReturnsExpectedDto()
         {
@@ -14,7 +22,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
 
             var expected = ExpectedMeterDetailsData.CreateExpectedThreeMeterDetails();
 
-            var result = MeterDetailsParser.Parse(PocketGaugerFiles);
+            var result = _meterDetailsParser.Parse(PocketGaugerFiles);
 
             result.ShouldAllBeEquivalentTo(expected);
         }

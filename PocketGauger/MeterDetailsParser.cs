@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
-    public class MeterDetailsParser
+    public class MeterDetailsParser : IMeterDetailsParser
     {
-        public static IReadOnlyDictionary<string, MeterDetailsItem> Parse(PocketGaugerFiles pocketGaugerFiles)
+        public IReadOnlyDictionary<string, MeterDetailsItem> Parse(PocketGaugerFiles pocketGaugerFiles)
         {
             var meterDetails = pocketGaugerFiles.ParseType<MeterDetails>();
             var meterCalibrations = pocketGaugerFiles.ParseType<MeterCalibration>();

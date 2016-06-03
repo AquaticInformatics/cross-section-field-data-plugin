@@ -60,6 +60,7 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GaugingSummaryAssemblerTests.cs" />
     <Compile Include="IntegrationTests\IntegrationTestBase.cs" />
     <Compile Include="IntegrationTests\MeterDetailsParserTests.cs" />
     <Compile Include="IntegrationTests\GaugingSummaryParserTests.cs" />

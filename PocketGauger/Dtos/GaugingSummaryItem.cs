@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 
@@ -268,7 +269,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         public double RatingDeviation { get; set; }
 
         [XmlElement("GAUGING_ID")]
-        public double GaugingId { get; set; }
+        public string GaugingId { get; set; }
 
         [XmlElement("GSTATUS")]
         public int GStatus { get; set; }
@@ -304,5 +305,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
             get { return BooleanHelper.Serialize(UseIndexVelocity); }
             set { UseIndexVelocity = BooleanHelper.Parse(value); }
         }
+
+        [XmlIgnore]
+        public MeterDetailsItem MeterDetailsItem { get; set; }
+
+        [XmlIgnore]
+        public IReadOnlyCollection<PanelItem> PanelItems { get; set; }
     }
 }

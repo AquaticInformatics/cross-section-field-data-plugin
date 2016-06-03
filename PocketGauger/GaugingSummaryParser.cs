@@ -1,12 +1,13 @@
 ﻿using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
-    public static class GaugingSummaryParser
+    public class GaugingSummaryParser : IGaugingSummaryParser
     {
-        public static GaugingSummary Parse(PocketGaugerFiles pocketGaugerFiles)
+        public GaugingSummary Parse(PocketGaugerFiles pocketGaugerFiles)
         {
             return pocketGaugerFiles.ParseType<GaugingSummary>();
         }
-    }
+   }
 }

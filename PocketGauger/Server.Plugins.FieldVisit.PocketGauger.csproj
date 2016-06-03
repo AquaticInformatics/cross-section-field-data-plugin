@@ -44,7 +44,11 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="GaugingSummaryAssembler.cs" />
     <Compile Include="Helpers\ChannelHelper.cs" />
+    <Compile Include="Interfaces\IGaugingSummaryParser.cs" />
+    <Compile Include="Interfaces\IMeterDetailsParser.cs" />
+    <Compile Include="Interfaces\IPanelParser.cs" />
     <Compile Include="Mappers\DischargeActivityMapper.cs" />
     <Compile Include="Dtos\BankSide.cs" />
     <Compile Include="Dtos\EntryMethod.cs" />

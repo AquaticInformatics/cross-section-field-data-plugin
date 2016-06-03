@@ -5,25 +5,25 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
 {
     public class ExpectedPanelData
     {
-        public static IReadOnlyDictionary<string, PanelItem> CreateExpectedPanels()
+        public static IReadOnlyCollection<PanelItem> CreateExpectedPanels()
         {
-            return new Dictionary<string, PanelItem>()
+            return new List<PanelItem>()
             {
-                {"11", CreateFirstPanel()},
-                {"12", CreateSecondPanel()},
-                {"13", CreateThirdPanel()},
-                {"14", CreateFourthPanel()},
-                {"15", CreateFifthPanel()},
-                {"16", CreateSixthPanel()},
-                {"17", CreateSeventhPanel()},
-                {"18", CreateEighthPanel()},
-                {"19", CreateNinthPanel()},
-                {"20", CreateTenthPanel()},
-                {"26", CreateEleventhPanel()},
-                {"27", CreateTwelfthPanel()},
-                {"28", CreateThirteenthPanel()},
-                {"29", CreateFourteenthPanel()},
-                {"30", CreateFifteenthPanel()}
+                CreateFirstPanel(),
+                CreateSecondPanel(),
+                CreateThirdPanel(),
+                CreateFourthPanel(),
+                CreateFifthPanel(),
+                CreateSixthPanel(),
+                CreateSeventhPanel(),
+                CreateEighthPanel(),
+                CreateNinthPanel(),
+                CreateTenthPanel(),
+                CreateEleventhPanel(),
+                CreateTwelfthPanel(),
+                CreateThirteenthPanel(),
+                CreateFourteenthPanel(),
+                CreateFifteenthPanel()
             };
         }
 

@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
-    public class PanelParser
+    public class PanelParser : IPanelParser
     {
-        public static IReadOnlyDictionary<string, PanelItem> Parse(PocketGaugerFiles pocketGaugerFiles)
+        public IReadOnlyCollection<PanelItem> Parse(PocketGaugerFiles pocketGaugerFiles)
         {
             var panels = pocketGaugerFiles.ParseType<Panels>();
             var verticals = pocketGaugerFiles.ParseType<Verticals>();
 
             AssignVerticals(panels, verticals);
 
-            return panels.PanelItems.ToDictionary(panel => panel.PanelId, panel => panel);
+            return panels.PanelItems;
         }
 
         private static void AssignVerticals(Panels panels, Verticals verticals)
