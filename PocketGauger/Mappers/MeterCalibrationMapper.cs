@@ -4,12 +4,13 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
 using MeterType = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterType;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 {
-    public class MeterCalibrationMapper
+    public class MeterCalibrationMapper : IMeterCalibrationMapper
     {
         public static string NonApplicable = "N/A";
         private readonly IParseContext _parseContext;
@@ -19,19 +20,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             _parseContext = parseContext;
         }
 
-        public IReadOnlyDictionary<string, MeterCalibration> Map(
-            IReadOnlyDictionary<string, MeterDetailsItem> meterDetails)
+        public MeterCalibration Map(MeterDetailsItem meterDetailsItem)
         {
-            var fieldDataMeters = new Dictionary<string, MeterCalibration>();
-            foreach (var keyValuePair in meterDetails)
-            {
-                var calibration = CreateCalibration(keyValuePair.Value);
-                calibration.Equations = CreateCalibrationEquations(keyValuePair.Value).ToList();
+            var calibration = CreateCalibration(meterDetailsItem);
+            calibration.Equations = CreateCalibrationEquations(meterDetailsItem).ToList();
 
-                fieldDataMeters.Add(keyValuePair.Key, calibration);
-            }
-
-            return fieldDataMeters;
+            return calibration;
         }
 
         private MeterCalibration CreateCalibration(MeterDetailsItem meterDetailsItem)
@@ -46,7 +40,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        public MeterType ConvertMeterType(Dtos.MeterType? meterType)
+        private MeterType ConvertMeterType(Dtos.MeterType? meterType)
         {
             switch (meterType)
             {

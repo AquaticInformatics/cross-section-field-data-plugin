@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Common.Utils;
 using FluentAssertions;
@@ -11,7 +10,6 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
-using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
 using FieldDataMeterType = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterType;
 using MeterType = Server.Plugins.FieldVisit.PocketGauger.Dtos.MeterType;
 
@@ -24,7 +22,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private IParseContext _parseContext;
         private MeterCalibrationMapper _mapper;
 
-        private IReadOnlyDictionary<string, MeterDetailsItem> _input;
+        private MeterDetailsItem _input;
         private IUnit _velocityDefaultUnit;
 
         [SetUp]
@@ -37,7 +35,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             SetupVelocityParameter();
             _mapper = new MeterCalibrationMapper(_parseContext);
 
-            _input = _fixture.Create<Dictionary<string, MeterDetailsItem>>();
+            _input = _fixture.Create<MeterDetailsItem>();
         }
 
         private void SetupVelocityParameter()
@@ -54,28 +52,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_CorrectlyMapsCalibrationValues()
         {
-            Action<MeterCalibration, MeterDetailsItem> comparer = (calibration, detail) =>
-            {
-                Assert.That(calibration.SerialNumber, Is.EqualTo(detail.MeterNumber));
-                Assert.That(calibration.Model, Is.EqualTo(detail.ImpellerNumber));
-                Assert.That(calibration.Configuration, Is.EqualTo(detail.Description));
-                Assert.That(calibration.Manufacturer, Is.EqualTo(MeterCalibrationMapper.NonApplicable));
-            };
-
-            VerifyCalibration(comparer);
-        }
-
-        private void VerifyCalibration(Action<MeterCalibration, MeterDetailsItem> comparer)
-        {
             var result = _mapper.Map(_input);
-
-            result.Keys.ShouldAllBeEquivalentTo(_input.Keys);
-            var inputMeterDetails = _input.Values.ToList();
-            var resultMeterCalibrations = result.Values.ToList();
-            for (var i = 0; i < _input.Count; i++)
-            {
-                comparer(resultMeterCalibrations[i], inputMeterDetails[i]);
-            }
+            
+            Assert.That(result.SerialNumber, Is.EqualTo(_input.MeterNumber));
+            Assert.That(result.Model, Is.EqualTo(_input.ImpellerNumber));
+            Assert.That(result.Configuration, Is.EqualTo(_input.Description));
+            Assert.That(result.Manufacturer, Is.EqualTo(MeterCalibrationMapper.NonApplicable));
         }
 
         [TestCase(MeterType.ElectroMagneticCurrentMeter, FieldDataMeterType.ElectromagneticVelocityMeter)]
@@ -85,16 +67,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         public void Map_SetsCorrectMeterType(MeterType? inputMeterType, FieldDataMeterType expectedResultMeterType)
         {
             var meterDetailsItem = _fixture.Build<MeterDetailsItem>().With(m => m.MeterType, inputMeterType).Create();
-            _input = new Dictionary<string, MeterDetailsItem>
-            {
-                {_fixture.Create<string>(), meterDetailsItem}
-            };
-            Action<MeterCalibration, MeterDetailsItem> comparer = (calibration, detail) =>
-            {
-                Assert.That(calibration.MeterType, Is.EqualTo(expectedResultMeterType));
-            };
 
-            VerifyCalibration(comparer);
+            var result = _mapper.Map(meterDetailsItem);
+
+            Assert.That(result.MeterType, Is.EqualTo(expectedResultMeterType));
         }
 
         [Test]
@@ -102,9 +78,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var result = _mapper.Map(_input);
 
-            var inputCalibrations = _input.Values.SelectMany(i => i.Calibrations).ToList();
-            var resultEquations = result.Values.SelectMany(r => r.Equations).ToList();
-            foreach (var calibration in inputCalibrations)
+            var inputCalibration = _input.Calibrations;
+            var resultEquations = result.Equations;
+            foreach (var calibration in inputCalibration)
             {
                 resultEquations.Should()
                     .ContainSingle(
@@ -121,10 +97,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var result = _mapper.Map(_input);
 
-            foreach (var meterCalibration in result.Values)
-            {
-                Assert.That(meterCalibration.Equations, Is.Ordered.By("RangeStart"));
-            }
+            Assert.That(result.Equations, Is.Ordered.By("RangeStart"));
         }
 
         [Test]
@@ -132,14 +105,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var result = _mapper.Map(_input);
 
-            var resultValues = result.Values.ToList();
-            foreach (var calibration in resultValues)
+            var equations = result.Equations.ToList();
+            for (var i = 0; i < equations.Count - 1; i++)
             {
-                var equations = calibration.Equations.ToList();
-                for (var i = 0; i < calibration.Equations.Count - 1; i++)
-                {
-                    Assert.That(equations[i].RangeEnd, Is.EqualTo(equations[i + 1].RangeStart));
-                }
+                Assert.That(equations[i].RangeEnd, Is.EqualTo(equations[i + 1].RangeStart));
             }
         }
 
@@ -148,20 +117,18 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var result = _mapper.Map(_input);
 
-            var lastEquationsForEachCalibration = result.Values.Select(v => v.Equations.Last());
-            Assert.That(lastEquationsForEachCalibration,
-                Has.All.Matches<MeterCalibrationEquation>(e => e.RangeEnd == e.RangeStart + 100));
+            var lastEquation = result.Equations.Last();
+            Assert.That(lastEquation.RangeEnd, Is.EqualTo(lastEquation.RangeStart + 100));
         }
 
         [Test]
         public void Map_CalibrationMinRotationSpeedIsNull_EquationRangeStartAndRangeEndAreSetToNull()
         {
-            _input.Values.ToList().SelectMany(m => m.Calibrations).ToList().ForEach(c => c.MinRotationSpeed = null);
+            _input.Calibrations.ToList().ForEach(c => c.MinRotationSpeed = null);
 
             var result = _mapper.Map(_input);
 
-            var equations = result.Values.SelectMany(c => c.Equations);
-            Assert.That(equations,
+            Assert.That(result.Equations,
                 Has.All.Matches<MeterCalibrationEquation>(e => e.RangeStart == null && e.RangeEnd == null));
         }
     }

@@ -29,7 +29,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 }
 
                 var gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
-                var meterCalibrations = CreateMeterCalibrations(context, gaugingSummary);
 
                 return CreateParsedResults(context, gaugingSummary);
             }
@@ -61,15 +60,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger
         private static GaugingSummaryAssembler CreateGaugingSummaryAssembler()
         {
             return new GaugingSummaryAssembler(new GaugingSummaryParser(), new MeterDetailsParser(), new PanelParser());
-        }
-
-        private static IReadOnlyDictionary<string, MeterCalibration> CreateMeterCalibrations(IParseContext context,
-            GaugingSummary gaugingSummary)
-        {
-            var meterDetailsItems = gaugingSummary.GaugingSummaryItems.Select(g => g.MeterDetailsItem);
-            var fieldVisitMeters = new MeterCalibrationMapper(context).Map(meterDetailsItems.ToList());
-
-            return fieldVisitMeters;
         }
 
         public List<ParsedResult> CreateParsedResults(IParseContext context, GaugingSummary gaugingSummary)
