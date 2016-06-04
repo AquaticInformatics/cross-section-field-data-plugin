@@ -73,6 +73,7 @@
     <Compile Include="Mappers\DischargeActivityMapperTests.cs" />
     <Compile Include="Mappers\ParsedResultMapperTests.cs" />
     <Compile Include="Mappers\PointVelocityMapperTests.cs" />
+    <Compile Include="Mappers\VerticalMapperTests.cs" />
     <Compile Include="PocketGaugerFilesTests.cs" />
     <Compile Include="PocketGaugerParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

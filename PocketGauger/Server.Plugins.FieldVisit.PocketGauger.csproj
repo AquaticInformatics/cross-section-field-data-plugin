@@ -50,6 +50,7 @@
     <Compile Include="Interfaces\IMeterCalibrationMapper.cs" />
     <Compile Include="Interfaces\IMeterDetailsParser.cs" />
     <Compile Include="Interfaces\IPanelParser.cs" />
+    <Compile Include="Interfaces\IVerticalMapper.cs" />
     <Compile Include="Mappers\DischargeActivityMapper.cs" />
     <Compile Include="Dtos\BankSide.cs" />
     <Compile Include="Dtos\EntryMethod.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\XmlDeserializerHelper.cs" />
     <Compile Include="Mappers\MeterCalibrationMapper.cs" />
+    <Compile Include="Mappers\VerticalMapper.cs" />
     <Compile Include="Mappers\PointVelocityMapper.cs" />
     <Compile Include="MeterDetailsParser.cs" />
     <Compile Include="PanelParser.cs" />

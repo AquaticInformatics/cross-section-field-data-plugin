@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
@@ -10,8 +9,6 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
-using static System.FormattableString;
-using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
@@ -64,7 +61,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
         public List<ParsedResult> CreateParsedResults(IParseContext context, GaugingSummary gaugingSummary)
         {
-            var parsedResultMapper = new ParsedResultMapper(context, new DischargeActivityMapper(context));
+            var meterCalibrationMapper = new MeterCalibrationMapper(context);
+            var verticalMapper = new VerticalMapper(meterCalibrationMapper);
+            var dischargeActivityMapper = new DischargeActivityMapper(context, verticalMapper);
+            var parsedResultMapper = new ParsedResultMapper(context, dischargeActivityMapper);
+
             return parsedResultMapper.CreateParsedResults(gaugingSummary);
        }
     }

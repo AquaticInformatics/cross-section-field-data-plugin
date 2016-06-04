@@ -21,7 +21,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             _summaryItem = summaryItem;
         }
 
-        public DischargeSubActivity Map(DischargeActivity dischargeActivity)
+        public PointVelocityDischarge Map(DischargeActivity dischargeActivity)
         {
             return new PointVelocityDischarge
             {

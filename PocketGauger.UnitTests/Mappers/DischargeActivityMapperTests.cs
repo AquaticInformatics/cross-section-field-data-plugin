@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
 
@@ -21,7 +25,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private IParseContext _context;
         private ILocationInfo _locationInfo;
 
-        private DischargeActivityMapper _mapper;
+        private DischargeActivityMapper _dischargeActivityMapper;
+        private IVerticalMapper _verticalMapper;
         private GaugingSummaryItem _gaugingSummaryItem;
 
         private const int LocationUtcOffset = 3;
@@ -36,8 +41,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _context = new ParseContextTestHelper().CreateMockParseContext();
 
             SetupMockLocationInfo();
+            SetupMockVerticalMapper();
 
-            _mapper = new DischargeActivityMapper(_context);
+            _dischargeActivityMapper = new DischargeActivityMapper(_context, _verticalMapper);
         }
 
         [SetUp]
@@ -55,10 +61,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _locationInfo.UtcOffsetHours.ReturnsForAnyArgs(LocationUtcOffset);
         }
 
+        private void SetupMockVerticalMapper()
+        {
+            _verticalMapper = Substitute.For<IVerticalMapper>();
+            _verticalMapper.Map(null, null).ReturnsForAnyArgs(new List<Vertical>());
+        }
+
         [Test]
         public void Map_GaugingSummaryStartDate_IsMappedDateTimeOffsetWithLocationUtcOffset()
         {
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             AssertDateTimeOffsetIsNotDefault(dischargeActivity.StartTime);
         }
@@ -72,7 +84,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_GaugingSummaryEndDate_IsMappedDateTimeOffsetWithLocationUtcOffset()
         {
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             AssertDateTimeOffsetIsNotDefault(dischargeActivity.EndTime);
         }
@@ -80,7 +92,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_DischargeActivityMeasurementTime_IsMappedDateTimeOffsetWithLocationUtcOffset()
         {
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             AssertDateTimeOffsetIsNotDefault(dischargeActivity.MeasurementTime);
         }
@@ -90,7 +102,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _gaugingSummaryItem.FlowCalculationMethodProxy = FlowCalculationMethod.Mean.ToString();
 
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             Assert.That(dischargeActivity.DischargeMethod.MethodCode, Is.EqualTo(ParametersAndMethodsConstants.MeanSectionMonitoringMethod));
         }
@@ -100,7 +112,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _gaugingSummaryItem.FlowCalculationMethodProxy = FlowCalculationMethod.Mid.ToString();
 
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             Assert.That(dischargeActivity.DischargeMethod.MethodCode, Is.EqualTo(ParametersAndMethodsConstants.MidSectionMonitoringMethod));
         }
@@ -110,7 +122,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _gaugingSummaryItem.FlowCalculationMethodProxy = _fixture.Create<string>();
 
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             Assert.That(dischargeActivity.DischargeMethod.MethodCode, Is.EqualTo(ParametersAndMethodsConstants.DefaultMonitoringMethod));
         }
@@ -120,7 +132,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _gaugingSummaryItem.UseIndexVelocityProxy = bool.TrueString;
 
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             Assert.That(dischargeActivity.MeanIndexVelocity, Is.EqualTo(_gaugingSummaryItem.IndexVelocity));
         }
@@ -130,7 +142,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _gaugingSummaryItem.UseIndexVelocityProxy = bool.FalseString;
 
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             Assert.That(dischargeActivity.MeanIndexVelocity, Is.EqualTo(null));
         }
@@ -140,7 +152,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var expectedDischargeActivity = CreateExpectedDischargeActivity();
 
-            var dischargeActivity = _mapper.Map(_locationInfo, _gaugingSummaryItem);
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
             dischargeActivity.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
                 .Excluding(activity => activity.StartTime)
@@ -166,6 +178,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true
             };
+        }
+
+        [Test]
+        public void Map_RetrievesVerticalsFromVerticalMapper()
+        {
+            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
+
+            var expectedPointVelocityDischarge =
+                dischargeActivity.DischargeSubActivities.Single() as PointVelocityDischarge;
+            _verticalMapper.Received().Map(_gaugingSummaryItem, expectedPointVelocityDischarge);
         }
     }
 }

@@ -10,6 +10,7 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
+using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
 using FieldDataMeterType = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterType;
 using MeterType = Server.Plugins.FieldVisit.PocketGauger.Dtos.MeterType;
 
@@ -29,7 +30,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         public void SetUp()
         {
             _fixture = new Fixture();
-            _fixture.Register<IReadOnlyList<MeterCalibrationItem>>(() => _fixture.Create<List<MeterCalibrationItem>>());
+            CollectionRegistrar.Register(_fixture);
 
             _parseContext = Substitute.For<IParseContext>();
             SetupVelocityParameter();

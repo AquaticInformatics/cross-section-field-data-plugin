@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 {
     public class DischargeActivityMapper
     {
         private readonly IParseContext _context;
+        private readonly IVerticalMapper _verticalMapper;
 
-        public DischargeActivityMapper(IParseContext context)
+        public DischargeActivityMapper(IParseContext context, IVerticalMapper verticalMapper)
         {
             _context = context;
+            _verticalMapper = verticalMapper;
         }
 
         public DischargeActivity Map(ILocationInfo locationInfo, GaugingSummaryItem gaugingSummaryItem)
@@ -25,10 +29,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             var pointVelocityMapper = new PointVelocityMapper(_context, GetDefaultChannel(locationInfo), gaugingSummaryItem);
             dischargeActivity.DischargeSubActivities = new List<DischargeSubActivity>
             {
-                pointVelocityMapper.Map(dischargeActivity)
+                CreatePointVelocitySubActivity(pointVelocityMapper, dischargeActivity, gaugingSummaryItem)
             };
 
             return dischargeActivity;
+        }
+
+        private DischargeSubActivity CreatePointVelocitySubActivity(PointVelocityMapper pointVelocityMapper,
+            DischargeActivity dischargeActivity, GaugingSummaryItem gaugingSummaryItem)
+        {
+            var pointVelocitySubActivity = pointVelocityMapper.Map(dischargeActivity);
+            pointVelocitySubActivity.Verticals = _verticalMapper.Map(gaugingSummaryItem, pointVelocitySubActivity).ToList();
+
+            return pointVelocitySubActivity;
         }
 
         private static IChannelInfo GetDefaultChannel(ILocationInfo locationInfo)
