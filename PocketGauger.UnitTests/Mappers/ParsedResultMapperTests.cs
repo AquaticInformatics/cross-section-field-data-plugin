@@ -27,6 +27,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         public void SetupForEachTest()
         {
             _fixture = new Fixture();
+            CollectionRegistrar.Register(_fixture);
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
 
             _parseContextTestHelper = new ParseContextTestHelper();

@@ -34,6 +34,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _fixture = new Fixture();
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
             ParameterRegistrar.Register(_fixture);
+            CollectionRegistrar.Register(_fixture);
 
             _context = new ParseContextTestHelper().CreateMockParseContext();
 

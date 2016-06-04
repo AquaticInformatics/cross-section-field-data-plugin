@@ -79,6 +79,7 @@
     <Compile Include="TestData\ExpectedGaugingSummaryData.cs" />
     <Compile Include="TestData\ExpectedMeterDetailsData.cs" />
     <Compile Include="TestData\ExpectedPanelData.cs" />
+    <Compile Include="TestData\CollectionRegistrar.cs" />
     <Compile Include="TestData\ParameterRegistrar.cs" />
     <Compile Include="TestData\ProxyTypeSpecimenBuilder.cs" />
     <Compile Include="TestData\ParseContextTestHelper.cs" />
