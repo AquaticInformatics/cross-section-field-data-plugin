@@ -33,11 +33,18 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return new MeterCalibration
             {
                 SerialNumber = meterDetailsItem.MeterNumber,
-                Model = meterDetailsItem.ImpellerNumber,
+                Model = GetModel(meterDetailsItem),
                 Manufacturer = NonApplicable,
                 Configuration = meterDetailsItem.Description,
                 MeterType = ConvertMeterType(meterDetailsItem.MeterType),
             };
+        }
+
+        private static string GetModel(MeterDetailsItem meterDetailsItem)
+        {
+            return string.IsNullOrEmpty(meterDetailsItem.ImpellerNumber)
+                ? NonApplicable
+                : meterDetailsItem.ImpellerNumber;
         }
 
         private MeterType ConvertMeterType(Dtos.MeterType? meterType)

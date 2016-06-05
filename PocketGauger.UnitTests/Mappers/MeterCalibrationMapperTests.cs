@@ -132,5 +132,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             Assert.That(result.Equations,
                 Has.All.Matches<MeterCalibrationEquation>(e => e.RangeStart == null && e.RangeEnd == null));
         }
+
+        [Test]
+        public void Map_ImpellerNumberIsNull_ModelIsSetToNonApplicable()
+        {
+            _input.ImpellerNumber = null;
+
+            var result = _mapper.Map(_input);
+
+            Assert.That(result.Model, Is.EqualTo(MeterCalibrationMapper.NonApplicable));
+        }
     }
 }
