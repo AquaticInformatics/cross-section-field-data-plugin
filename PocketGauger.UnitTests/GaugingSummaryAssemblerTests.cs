@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
@@ -39,8 +38,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         {
             _fixture = new Fixture();
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
-            _fixture.Register<IReadOnlyList<MeterCalibrationItem>>(() => _fixture.Create<List<MeterCalibrationItem>>());
-            _fixture.Register<IReadOnlyList<PanelItem>>(() => _fixture.Create<List<PanelItem>>());
+            CollectionRegistrar.Register(_fixture);
         }
 
         private void SetUpMeterDetailsParser()

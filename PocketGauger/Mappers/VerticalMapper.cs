@@ -21,44 +21,35 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             var verticals = new List<Vertical>();
             foreach (var panelItem in gaugingSummaryItem.PanelItems)
             {
-                var vertical = CreateVertical(gaugingSummaryItem.PanelItems.ToList(), panelItem);
-                vertical.Segment = CreateSegment(panelItem, gaugingSummaryItem.PanelItems.ToList());
+                var vertical = CreateVertical(panelItem);
+                vertical.Segment = CreateSegment(gaugingSummaryItem.PanelItems.ToList(), panelItem);
                 vertical.VelocityObservation = CreateVelocityObservation(pointVelocityDischarge, panelItem, gaugingSummaryItem);
 
                 verticals.Add(vertical);
             }
 
-            SetTotalDischargeValues(verticals);
+            SetVerticalTypeForFirstAndLastVertical(verticals);
+            SetTotalDischargePortion(verticals);
 
             return verticals;
         }
 
-        private static Vertical CreateVertical(IList<PanelItem> panelItems, PanelItem panelItem)
+        private static Vertical CreateVertical(PanelItem panelItem)
         {
             return new Vertical
             {
                 SequenceNumber = panelItem.VerticalNumber,
-                VerticalType = GetVerticalType(panelItems, panelItem),
+                VerticalType = VerticalType.MidRiver,
                 MeasurementConditionData = new OpenWaterData(),
                 FlowDirection = FlowDirectionType.Normal,
                 TaglinePosition = panelItem.Distance,
                 SoundedDepth = panelItem.Depth,
                 IsSoundedDepthEstimated = false,
-                EffectiveDepth = panelItem.Depth,
+                EffectiveDepth = panelItem.Depth
             };
         }
 
-        private static VerticalType GetVerticalType(IList<PanelItem> panels, PanelItem panel)
-        {
-            var index = panels.IndexOf(panel);
-
-            if (index == 0) return VerticalType.StartEdgeNoWaterBefore;
-            if (index == panels.Count - 1) return VerticalType.EndEdgeNoWaterAfter;
-
-            return VerticalType.MidRiver;
-        }
-
-        private static Segment CreateSegment(PanelItem panelItem, IList<PanelItem> panelItems)
+        private static Segment CreateSegment(IList<PanelItem> panelItems, PanelItem panelItem)
         {
             return new Segment
             {
@@ -68,7 +59,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 Discharge = panelItem.Flow,
                 IsDischargeEstimated = false
             };
-
         }
 
         private static double CalculateSegmentWidth(IList<PanelItem> panelItems, PanelItem panelItem)
@@ -97,7 +87,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
         private static List<VelocityDepthObservation> CreateObservations(IEnumerable<VerticalItem> verticalItems)
         {
-            return verticalItems.Select(verticalItem => new VelocityDepthObservation
+            return verticalItems.Select(CreateVelocityDepthObservation).ToList();
+        }
+
+        private static VelocityDepthObservation CreateVelocityDepthObservation(VerticalItem verticalItem)
+        {
+            return new VelocityDepthObservation
             {
                 Depth = verticalItem.Depth,
                 RevolutionCount = (int) verticalItem.Revs,
@@ -105,10 +100,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 Velocity = verticalItem.Velocity,
                 DepthMultiplier = 1,
                 Weighting = 1
-            }).ToList();
+            };
         }
 
-        private static void SetTotalDischargeValues(IReadOnlyCollection<Vertical> verticals)
+        private static void SetVerticalTypeForFirstAndLastVertical(IReadOnlyCollection<Vertical> verticals)
+        {
+            if (!verticals.Any())
+                return;
+
+            verticals.First().VerticalType = VerticalType.StartEdgeNoWaterBefore;
+            verticals.Last().VerticalType = VerticalType.EndEdgeNoWaterAfter;
+        }
+
+        private static void SetTotalDischargePortion(IReadOnlyCollection<Vertical> verticals)
         {
             var totalDischarge = verticals.Sum(v => v.Segment.Discharge);
             if (totalDischarge == 0) return;

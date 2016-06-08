@@ -28,7 +28,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return calibration;
         }
 
-        private MeterCalibration CreateCalibration(MeterDetailsItem meterDetailsItem)
+        private static MeterCalibration CreateCalibration(MeterDetailsItem meterDetailsItem)
         {
             return new MeterCalibration
             {
@@ -47,7 +47,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 : meterDetailsItem.ImpellerNumber;
         }
 
-        private MeterType ConvertMeterType(Dtos.MeterType? meterType)
+        private static MeterType ConvertMeterType(Dtos.MeterType? meterType)
         {
             switch (meterType)
             {

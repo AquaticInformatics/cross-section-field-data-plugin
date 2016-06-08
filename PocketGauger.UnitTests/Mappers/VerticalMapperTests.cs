@@ -105,9 +105,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private static readonly List<Tuple<double[], double[]>> GetSegmentWidthTestCases =
             new List<Tuple<double[], double[]>>
             {
-                new Tuple<double[], double[]>(new double[] {2, 3, 4}, new double[] {2, 1, 1}),
-                new Tuple<double[], double[]>(new double[] {400, 600, 1100}, new double[] {400, 200, 500}),
-                new Tuple<double[], double[]>(new[] {50.23, 55.5, 60.1111}, new[] {50.23, 5.27, 4.6111})
+                Tuple.Create(new double[] {2, 3, 4}, new double[] {2, 1, 1}),
+                Tuple.Create(new double[] {400, 600, 1100}, new double[] {400, 200, 500}),
+                Tuple.Create(new[] {50.23, 55.5, 60.1111}, new[] {50.23, 5.27, 4.6111})
             };
 
         [TestCaseSource(nameof(GetSegmentWidthTestCases))]
@@ -178,12 +178,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private static readonly List<Tuple<double[], double[]>> GetTotalDischargePortionTestCases =
             new List<Tuple<double[], double[]>>
             {
-                new Tuple<double[], double[]>(new double[] {2, 3, 4},
-                    new[] {22.222222222222221, 33.333333333333329, 44.444444444444443}),
-                new Tuple<double[], double[]>(new double[] {400, 600, 1100},
-                    new[] {19.047619047619047, 28.571428571428569, 52.380952380952387}),
-                new Tuple<double[], double[]>(new[] {50.23, 55.5, 60.1111},
-                    new[] {30.288028721468923, 33.465769341857964, 36.246201936673124})
+                Tuple.Create(new double[] {2, 3, 4}, new[] {22.222222222222221, 33.333333333333329, 44.444444444444443}),
+                Tuple.Create(new double[] {400, 600, 1100}, new[] {19.047619047619047, 28.571428571428569, 52.380952380952387}),
+                Tuple.Create(new[] {50.23, 55.5, 60.1111}, new[] {30.288028721468923, 33.465769341857964, 36.246201936673124})
             };
 
         [TestCaseSource(nameof(GetTotalDischargePortionTestCases))]
