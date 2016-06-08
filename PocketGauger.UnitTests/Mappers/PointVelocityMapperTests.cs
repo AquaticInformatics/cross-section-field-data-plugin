@@ -10,6 +10,7 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivi
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
 
@@ -22,7 +23,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private ILocationInfo _locationInfo;
         private IChannelInfo _channelInfo;
 
-        private PointVelocityMapper _mapper;
+        private IPointVelocityMapper _mapper;
         private GaugingSummaryItem _gaugingSummaryItem;
         private DischargeActivity _dischargeActivity;
 
@@ -31,10 +32,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [TestFixtureSetUp]
         public void SetupForAllTests()
         {
-            _fixture = new Fixture();
-            _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
-            ParameterRegistrar.Register(_fixture);
-            CollectionRegistrar.Register(_fixture);
+            SetupAutoFixture();
 
             _context = new ParseContextTestHelper().CreateMockParseContext();
 
@@ -44,15 +42,22 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             _gaugingSummaryItem = _fixture.Create<GaugingSummaryItem>();
 
-            _mapper = new PointVelocityMapper(_context, _channelInfo, _gaugingSummaryItem);
+            _mapper = new PointVelocityMapper(_context);
+        }
+
+        private void SetupAutoFixture()
+        {
+            _fixture = new Fixture();
+            _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
+            ParameterRegistrar.Register(_fixture);
+            CollectionRegistrar.Register(_fixture);
         }
 
         private void SetupMockLocationInfo()
         {
             _locationInfo = Substitute.For<ILocationInfo>();
 
-            var channel = Substitute.For<IChannelInfo>();
-            _locationInfo.Channels.ReturnsForAnyArgs(new List<IChannelInfo> { channel });
+            _locationInfo.Channels.ReturnsForAnyArgs(new List<IChannelInfo> { _channelInfo });
             _locationInfo.UtcOffsetHours.ReturnsForAnyArgs(LocationUtcOffset);
         }
 
@@ -78,7 +83,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private PointVelocityDischarge MapPointVelocityActivity()
         {
-            return _mapper.Map(_dischargeActivity) as PointVelocityDischarge;
+            return _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
         }
 
         [TestCase(ParametersAndMethodsConstants.MeanSectionMonitoringMethod, PointVelocityMethodType.MeanSection)]
@@ -115,7 +120,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             SetSampleFlags(sampleFlags);
 
-            _mapper = new PointVelocityMapper(_context, _channelInfo, _gaugingSummaryItem);
+            _mapper = new PointVelocityMapper(_context);
 
             var pointVelocityActivity = MapPointVelocityActivity();
 

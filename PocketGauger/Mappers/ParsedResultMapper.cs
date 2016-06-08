@@ -6,15 +6,16 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivitie
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 {
     public class ParsedResultMapper
     {
         private readonly IParseContext _context;
-        private readonly DischargeActivityMapper _dischargeActivityMapper;
+        private readonly IDischargeActivityMapper _dischargeActivityMapper;
 
-        public ParsedResultMapper(IParseContext context, DischargeActivityMapper dischargeActivityMapper)
+        public ParsedResultMapper(IParseContext context, IDischargeActivityMapper dischargeActivityMapper)
         {
             _context = context;
             _dischargeActivityMapper = dischargeActivityMapper;

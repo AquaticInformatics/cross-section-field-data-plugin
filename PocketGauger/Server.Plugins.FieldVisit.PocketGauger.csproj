@@ -46,10 +46,12 @@
     </Compile>
     <Compile Include="GaugingSummaryAssembler.cs" />
     <Compile Include="Helpers\ChannelHelper.cs" />
+    <Compile Include="Interfaces\IDischargeActivityMapper.cs" />
     <Compile Include="Interfaces\IGaugingSummaryParser.cs" />
     <Compile Include="Interfaces\IMeterCalibrationMapper.cs" />
     <Compile Include="Interfaces\IMeterDetailsParser.cs" />
     <Compile Include="Interfaces\IPanelParser.cs" />
+    <Compile Include="Interfaces\IPointVelocityMapper.cs" />
     <Compile Include="Interfaces\IVerticalMapper.cs" />
     <Compile Include="Mappers\DischargeActivityMapper.cs" />
     <Compile Include="Dtos\BankSide.cs" />

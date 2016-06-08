@@ -5,7 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
@@ -22,7 +22,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private IParseContext _parseContext;
         private ParseContextTestHelper _parseContextTestHelper;
         private ParsedResultMapper _mapper;
-        private IVerticalMapper _verticalMapper;
+        private IDischargeActivityMapper _dischargeActivityMapper;
 
         private GaugingSummary _gaugingSummary;
 
@@ -36,10 +36,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _parseContextTestHelper = new ParseContextTestHelper();
             _parseContext = _parseContextTestHelper.CreateMockParseContext();
 
-            _verticalMapper = Substitute.For<IVerticalMapper>();
-            _verticalMapper.Map(null, null).ReturnsForAnyArgs(new List<Vertical>());
+            _dischargeActivityMapper = Substitute.For<IDischargeActivityMapper>();
+            _dischargeActivityMapper.Map(null, null).ReturnsForAnyArgs(new DischargeActivity());
 
-            _mapper = new ParsedResultMapper(_parseContext, new DischargeActivityMapper(_parseContext, _verticalMapper));
+            _mapper = new ParsedResultMapper(_parseContext, _dischargeActivityMapper);
 
             _gaugingSummary = _fixture.Build<GaugingSummary>()
                 .With(summary => summary.GaugingSummaryItems, _fixture.CreateMany<GaugingSummaryItem>().ToList())

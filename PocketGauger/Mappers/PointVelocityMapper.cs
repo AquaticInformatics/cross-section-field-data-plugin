@@ -5,37 +5,36 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivi
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
+using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 {
-    public class PointVelocityMapper
+    public class PointVelocityMapper : IPointVelocityMapper
     {
         private readonly IParseContext _context;
-        private readonly IChannelInfo _channelInfo;
-        private readonly GaugingSummaryItem _summaryItem;
 
-        public PointVelocityMapper(IParseContext context, IChannelInfo channelInfo, GaugingSummaryItem summaryItem)
+        public PointVelocityMapper(IParseContext context)
         {
             _context = context;
-            _channelInfo = channelInfo;
-            _summaryItem = summaryItem;
         }
 
-        public PointVelocityDischarge Map(DischargeActivity dischargeActivity)
+        public PointVelocityDischarge Map(IChannelInfo channelInfo, GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
         {
+            var channelMeasurement = CreateChannelMeasurement(channelInfo, summaryItem, dischargeActivity);
+
             return new PointVelocityDischarge
             {
-                Area = _summaryItem.Area,
+                Area = summaryItem.Area,
                 AreaUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.AreaParameterId),
-                ChannelMeasurement = CreateChannelMeasurement(dischargeActivity),
+                ChannelMeasurement = channelMeasurement,
                 DischargeMethod = MapPointVelocityMethod(dischargeActivity.DischargeMethod),
                 MeasurementConditions = MeasurementCondition.OpenWater,
-                StartPoint = MapStartPoint(_summaryItem.StartBank),
+                StartPoint = MapStartPoint(summaryItem.StartBank),
                 TaglinePointUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId),
                 DistanceToMeterUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId),
-                VelocityAverage = _summaryItem.MeanVelocity,
+                VelocityAverage = summaryItem.MeanVelocity,
                 VelocityAverageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId),
-                VelocityObservationMethod = CalculateVelocityObservationMethod(_summaryItem),
+                VelocityObservationMethod = CalculateVelocityObservationMethod(summaryItem),
                 MeanObservationDuration = null, //TODO: AQ-19204 determine from verticals
                 Width = null, //TODO: AQ-19204 Calculate from sum of all segment widths.
                 WidthUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.WidthParameterId),
@@ -45,18 +44,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        private DischargeChannelMeasurement CreateChannelMeasurement(DischargeActivity dischargeActivity)
+        private DischargeChannelMeasurement CreateChannelMeasurement(IChannelInfo channelInfo, GaugingSummaryItem summaryItem, 
+            DischargeActivity dischargeActivity)
         {
-            var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod();
+            var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod(summaryItem);
 
             return new DischargeChannelMeasurement
             {
                 StartTime = dischargeActivity.StartTime,
                 EndTime = dischargeActivity.EndTime,
-                Discharge = _summaryItem.Flow,
-                Channel = _channelInfo,
-                Comments = _summaryItem.Comments,
-                Party = _summaryItem.ObserversName,
+                Discharge = summaryItem.Flow,
+                Channel = channelInfo,
+                Comments = summaryItem.Comments,
+                Party = summaryItem.ObserversName,
                 DischargeUnit = _context.DischargeParameter.DefaultUnit,
                 MonitoringMethod = dischargeActivity.DischargeMethod,
                 MeterSuspension = meterSuspensionAndDeploymentMethod.Key,
@@ -65,16 +65,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        private KeyValuePair<MeterSuspensionType, DeploymentMethodType> MapMeterSuspensionAndDeploymentMethod()
+        private static KeyValuePair<MeterSuspensionType, DeploymentMethodType> MapMeterSuspensionAndDeploymentMethod(GaugingSummaryItem summaryItem)
         {
-            switch (_summaryItem.GaugingMethod)
+            switch (summaryItem.GaugingMethod)
             {
                 case GaugingMethod.BridgeWithRods:
-                    return CreateMeterSuspensionWithBridgeDeployment(MeterSuspensionType.RoundRod);
+                    return CreateMeterSuspensionWithBridgeDeployment(summaryItem, MeterSuspensionType.RoundRod);
                 case GaugingMethod.BridgeWithWinch:
-                    return CreateMeterSuspensionWithBridgeDeployment(MeterSuspensionType.PackReel);
+                    return CreateMeterSuspensionWithBridgeDeployment(summaryItem, MeterSuspensionType.PackReel);
                 case GaugingMethod.BridgeWithHandlines:
-                    return CreateMeterSuspensionWithBridgeDeployment(MeterSuspensionType.Handline);
+                    return CreateMeterSuspensionWithBridgeDeployment(summaryItem, MeterSuspensionType.Handline);
                 case GaugingMethod.BoatWithRods:
                     return CreateMeterSuspensionWithBoatDeployment(MeterSuspensionType.RoundRod);
                 case GaugingMethod.BoatWithWinch:
@@ -99,17 +99,17 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 deploymentMethodType);
         }
 
-        private KeyValuePair<MeterSuspensionType, DeploymentMethodType> CreateMeterSuspensionWithBridgeDeployment(
-            MeterSuspensionType meterSuspensionType)
+        private static KeyValuePair<MeterSuspensionType, DeploymentMethodType> CreateMeterSuspensionWithBridgeDeployment(
+            GaugingSummaryItem summaryItem, MeterSuspensionType meterSuspensionType)
         {
-            var bridgeDeploymentMethod = DetermineBridgeDeploymentMethod();
+            var bridgeDeploymentMethod = DetermineBridgeDeploymentMethod(summaryItem);
 
             return CreateMeterSuspensionAndDeploymentPair(meterSuspensionType, bridgeDeploymentMethod);
         }
 
-        private DeploymentMethodType DetermineBridgeDeploymentMethod()
+        private static DeploymentMethodType DetermineBridgeDeploymentMethod(GaugingSummaryItem summaryItem)
         {
-            var startPoint = MapStartPoint(_summaryItem.StartBank);
+            var startPoint = MapStartPoint(summaryItem.StartBank);
 
             switch (startPoint)
             {
