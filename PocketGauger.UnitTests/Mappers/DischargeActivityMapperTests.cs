@@ -185,9 +185,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
 
-            var expectedPointVelocityDischarge =
-                dischargeActivity.DischargeSubActivities.Single() as PointVelocityDischarge;
-            _verticalMapper.Received().Map(_gaugingSummaryItem, expectedPointVelocityDischarge);
+            var expectedChannelMeasurement =
+                dischargeActivity.DischargeSubActivities.Single().ChannelMeasurement;
+            _verticalMapper.Received().Map(_gaugingSummaryItem, expectedChannelMeasurement);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
@@ -17,14 +17,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             _meterCalibrationMapper = meterCalibrationMapper;
         }
 
-        public List<Vertical> Map(GaugingSummaryItem gaugingSummaryItem, PointVelocityDischarge pointVelocityDischarge)
+        public List<Vertical> Map(GaugingSummaryItem gaugingSummaryItem, DischargeChannelMeasurement channelMeasurement)
         {
             var verticals = new List<Vertical>();
             foreach (var panelItem in gaugingSummaryItem.PanelItems)
             {
                 var vertical = CreateVertical(panelItem);
                 vertical.Segment = CreateSegment(gaugingSummaryItem.PanelItems.ToList(), panelItem);
-                vertical.VelocityObservation = CreateVelocityObservation(pointVelocityDischarge, panelItem, gaugingSummaryItem);
+                vertical.VelocityObservation = CreateVelocityObservation(
+                    channelMeasurement, panelItem, gaugingSummaryItem.MeterDetailsItem);
 
                 verticals.Add(vertical);
             }
@@ -73,16 +74,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return panelItem.Distance - previousPanelItem.Distance;
         }
 
-        private VelocityObservation CreateVelocityObservation(PointVelocityDischarge pointVelocityDischarge,
-            PanelItem panelItem, GaugingSummaryItem gaugingSummaryItem)
+        private VelocityObservation CreateVelocityObservation(DischargeChannelMeasurement channelMeasurement,
+            PanelItem panelItem, MeterDetailsItem meterDetails)
         {
             var observations = CreateObservations(panelItem.Verticals);
 
             return new VelocityObservation
             {
-                MeterCalibration = _meterCalibrationMapper.Map(gaugingSummaryItem.MeterDetailsItem),
+                MeterCalibration = _meterCalibrationMapper.Map(meterDetails),
                 VelocityObservationMethod = DetermineVelocityObservationMethodFromVerticals(panelItem.Verticals),
-                DeploymentMethod = pointVelocityDischarge.ChannelMeasurement.DeploymentMethod,
+                DeploymentMethod = channelMeasurement.DeploymentMethod,
                 MeanVelocity = panelItem.MeanVelocity,
                 Observations = observations
             };

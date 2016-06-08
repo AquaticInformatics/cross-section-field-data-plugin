@@ -39,7 +39,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             DischargeActivity dischargeActivity, GaugingSummaryItem gaugingSummaryItem)
         {
             var pointVelocitySubActivity = pointVelocityMapper.Map(dischargeActivity);
-            pointVelocitySubActivity.Verticals = _verticalMapper.Map(gaugingSummaryItem, pointVelocitySubActivity).ToList();
+            pointVelocitySubActivity.Verticals = _verticalMapper.Map(gaugingSummaryItem, pointVelocitySubActivity.ChannelMeasurement).ToList();
 
             return pointVelocitySubActivity;
         }

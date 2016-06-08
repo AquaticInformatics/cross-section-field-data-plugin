@@ -6,7 +6,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
@@ -25,30 +24,33 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private IMeterCalibrationMapper _meterCalibrationMapper;
 
         private GaugingSummaryItem _gaugingSummaryItem;
-        private PointVelocityDischarge _pointVelocityDischarge;
+        private DischargeChannelMeasurement _channelMeasurement;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            _fixture = new Fixture();
-            CollectionRegistrar.Register(_fixture);
-            _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
-            _gaugingSummaryItem = _fixture.Create<GaugingSummaryItem>();
-
-            SetUpPointVelocityDischarge();
+            SetupAutoFixture();
+            SetUpDischargeChannelMeasurement();
             SetUpMeterCalibrationMapper();
+
+            _gaugingSummaryItem = _fixture.Create<GaugingSummaryItem>();
 
             _verticalMapper = new VerticalMapper(_meterCalibrationMapper);
         }
 
-        private void SetUpPointVelocityDischarge()
+        private void SetupAutoFixture()
         {
-            _pointVelocityDischarge = new PointVelocityDischarge();
-            var dischargeChannelMeasurement = new DischargeChannelMeasurement
+            _fixture = new Fixture();
+            CollectionRegistrar.Register(_fixture);
+            _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
+        }
+
+        private void SetUpDischargeChannelMeasurement()
+        {
+            _channelMeasurement = new DischargeChannelMeasurement
             {
                 DeploymentMethod = _fixture.Create<DeploymentMethodType>()
             };
-            _pointVelocityDischarge.ChannelMeasurement = dischargeChannelMeasurement;
         }
 
         private void SetUpMeterCalibrationMapper()
@@ -61,7 +63,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_SetsCorrectVerticalProperties()
         {
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             var inputPanels = _gaugingSummaryItem.PanelItems.ToList();
             for (var i = 0; i < inputPanels.Count; i++)
@@ -79,7 +81,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_SetsCorrectVerticalType()
         {
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             Assert.That(result.First().VerticalType == VerticalType.StartEdgeNoWaterBefore);
             var midRiverVerticals = result.Skip(1).Take(result.Count - 2);
@@ -90,7 +92,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_SetsCorrectSegmentProperties()
         {
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             var inputPanels = _gaugingSummaryItem.PanelItems.ToList();
             for (var i = 0; i < inputPanels.Count; i++)
@@ -120,7 +122,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 _gaugingSummaryItem.PanelItems.ToList()[i].Distance = inputPanelDistances[i];
             }
 
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             for (var i = 0; i < expectedSegmentWidths.Length; i++)
             {
@@ -131,12 +133,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_SetsCorrectVelocityObservationProperties()
         {
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             for (var i = 0; i < _gaugingSummaryItem.PanelItems.Count; i++)
             {
                 Assert.That(result[i].VelocityObservation.DeploymentMethod,
-                    Is.EqualTo(_pointVelocityDischarge.ChannelMeasurement.DeploymentMethod));
+                    Is.EqualTo(_channelMeasurement.DeploymentMethod));
                 Assert.That(result[i].VelocityObservation.MeanVelocity,
                     Is.EqualTo(_gaugingSummaryItem.PanelItems.ToList()[i].MeanVelocity));
             }
@@ -145,7 +147,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_RetrievesMeterCalibrationMapperFromMapper()
         {
-            _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             _meterCalibrationMapper.Received().Map(_gaugingSummaryItem.MeterDetailsItem);
         }
@@ -153,7 +155,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_SetsCorrectVelocityDepthObservationProperties()
         {
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             var panelItems = _gaugingSummaryItem.PanelItems.ToList();
             for (var i = 0; i < panelItems.Count; i++)
@@ -191,7 +193,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var expectedVelocityObservationMethod = testData.Item2;
             _gaugingSummaryItem.PanelItems.First().Verticals = _fixture.CreateMany<VerticalItem>(velocityObservationCount).ToList();
 
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             AssertVelocityObservationMethodIsExpected(result, expectedVelocityObservationMethod);
         }
@@ -212,7 +214,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             _gaugingSummaryItem.PanelItems.First().Verticals = _fixture.CreateMany<VerticalItem>(unknownObservationCount).ToList();
 
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             AssertVelocityObservationMethodIsExpected(result, null);
         }
@@ -249,7 +251,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             _gaugingSummaryItem.PanelItems.First().Verticals = verticals;
 
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             AssertVelocityObservationMethodIsExpected(result, expectedVelocityObservationMethod);
         }
@@ -267,7 +269,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             _gaugingSummaryItem.PanelItems.First().Verticals = verticals;
 
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             AssertVelocityObservationMethodIsExpected(result, PointVelocityObservationType.Surface);
         }
@@ -281,7 +283,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             };
 
         [TestCaseSource(nameof(GetTotalDischargePortionTestCases))]
-        public void Map_CalculatesCorrectTotalDischargePortionValues(Tuple<double[], double[]> testData )
+        public void Map_CalculatesCorrectTotalDischargePortionValues(Tuple<double[], double[]> testData)
         {
             var inputDischargeValues = testData.Item1;
             var panelItems = _gaugingSummaryItem.PanelItems.ToList();
@@ -290,7 +292,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 panelItems[i].Flow = inputDischargeValues[i];
             }
 
-            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             var expectedTotalDischargePortionValues = testData.Item2;
             for (var i = 0; i < result.Count; i++)
