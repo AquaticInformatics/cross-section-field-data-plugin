@@ -135,8 +135,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             for (var i = 0; i < _gaugingSummaryItem.PanelItems.Count; i++)
             {
-                Assert.That(result[i].VelocityObservation.VelocityObservationMethod,
-                    Is.EqualTo(_pointVelocityDischarge.VelocityObservationMethod));
                 Assert.That(result[i].VelocityObservation.DeploymentMethod,
                     Is.EqualTo(_pointVelocityDischarge.ChannelMeasurement.DeploymentMethod));
                 Assert.That(result[i].VelocityObservation.MeanVelocity,
@@ -173,6 +171,105 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                     Assert.That(resultObservation.Weighting, Is.EqualTo(1));
                 }
             }
+        }
+
+        private static readonly List<Tuple<int, PointVelocityObservationType>> MultipleVelocityObservationTestCases =
+            new List<Tuple<int, PointVelocityObservationType>>
+            {
+                Tuple.Create(2, PointVelocityObservationType.OneAtPointTwoAndPointEight),
+                Tuple.Create(3, PointVelocityObservationType.OneAtPointTwoPointSixAndPointEight),
+                Tuple.Create(5, PointVelocityObservationType.FivePoint),
+                Tuple.Create(6, PointVelocityObservationType.SixPoint),
+                Tuple.Create(11, PointVelocityObservationType.ElevenPoint)
+            };
+
+        [TestCaseSource(nameof(MultipleVelocityObservationTestCases))]
+        public void Map_VerticalWithExpectedNumberOfObservations_SetsExpectedVelocityObservationType(
+            Tuple<int, PointVelocityObservationType> testData)
+        {
+            var velocityObservationCount = testData.Item1;
+            var expectedVelocityObservationMethod = testData.Item2;
+            _gaugingSummaryItem.PanelItems.First().Verticals = _fixture.CreateMany<VerticalItem>(velocityObservationCount).ToList();
+
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+
+            AssertVelocityObservationMethodIsExpected(result, expectedVelocityObservationMethod);
+        }
+
+        private static void AssertVelocityObservationMethodIsExpected(IEnumerable<Vertical> result,
+            PointVelocityObservationType? expectedVelocityObservationMethod)
+        {
+            var velocityObservationMethod = result.First().VelocityObservation.VelocityObservationMethod;
+
+            Assert.That(velocityObservationMethod, Is.EqualTo(expectedVelocityObservationMethod));
+        }
+
+        [Test]
+        public void Map_UnknownVelocityObservationCount_SetsVelocityObservationTypeToNull()
+        {
+            var expectedObservationCounts = new HashSet<int>(MultipleVelocityObservationTestCases.Select(tuple => tuple.Item1));
+            var unknownObservationCount = CreateValueNotInSet(expectedObservationCounts);
+
+            _gaugingSummaryItem.PanelItems.First().Verticals = _fixture.CreateMany<VerticalItem>(unknownObservationCount).ToList();
+
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+
+            AssertVelocityObservationMethodIsExpected(result, null);
+        }
+
+        private TValueToCreate CreateValueNotInSet<TValueToCreate>(ISet<TValueToCreate> expectedObservationCounts)
+        {
+            TValueToCreate value;
+
+            do
+            {
+                value = _fixture.Create<TValueToCreate>();
+            } while (expectedObservationCounts.Contains(value));
+
+            return value;
+        }
+
+        private static readonly List<Tuple<double, PointVelocityObservationType>> DepthValueToVelocityObservationTestCases =
+            new List<Tuple<double, PointVelocityObservationType>>
+            {
+                Tuple.Create(0.5, PointVelocityObservationType.OneAtPointFive),
+                Tuple.Create(0.6, PointVelocityObservationType.OneAtPointSix)
+            };
+
+        [TestCaseSource(nameof(DepthValueToVelocityObservationTestCases))]
+        public void Map_VerticalWithSingleObservation_SetsExpectedVelocityObservationType(
+            Tuple<double, PointVelocityObservationType> testData)
+        {
+            var observationDepth = testData.Item1;
+            var expectedVelocityObservationMethod = testData.Item2;
+            var verticals = _fixture.Build<VerticalItem>()
+                .With(item => item.SamplePosition, observationDepth)
+                .CreateMany(1)
+                .ToList();
+
+            _gaugingSummaryItem.PanelItems.First().Verticals = verticals;
+
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+
+            AssertVelocityObservationMethodIsExpected(result, expectedVelocityObservationMethod);
+        }
+
+        [Test]
+        public void Map_VerticalWithSingleObservationWithNonPoint5Or6SampleDepth_SetsVelocityObservationTypeToSurface()
+        {
+            var expectedObservationCounts = new HashSet<double>(DepthValueToVelocityObservationTestCases.Select(tuple => tuple.Item1));
+            var nonPointFiveOrSixDepth = CreateValueNotInSet(expectedObservationCounts);
+
+            var verticals = _fixture.Build<VerticalItem>()
+                .With(item => item.SamplePosition, nonPointFiveOrSixDepth)
+                .CreateMany(1)
+                .ToList();
+
+            _gaugingSummaryItem.PanelItems.First().Verticals = verticals;
+
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _pointVelocityDischarge);
+
+            AssertVelocityObservationMethodIsExpected(result, PointVelocityObservationType.Surface);
         }
 
         private static readonly List<Tuple<double[], double[]>> GetTotalDischargePortionTestCases =
