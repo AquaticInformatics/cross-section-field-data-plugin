@@ -9,6 +9,7 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
+using Server.Plugins.FieldVisit.PocketGauger.Parsers;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {

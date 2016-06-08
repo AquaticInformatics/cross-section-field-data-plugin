@@ -3,7 +3,7 @@ using System.Linq;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 
-namespace Server.Plugins.FieldVisit.PocketGauger
+namespace Server.Plugins.FieldVisit.PocketGauger.Parsers
 {
     public class MeterDetailsParser : IMeterDetailsParser
     {

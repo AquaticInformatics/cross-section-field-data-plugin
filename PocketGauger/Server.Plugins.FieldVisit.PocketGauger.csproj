@@ -70,7 +70,7 @@
     <Compile Include="Dtos\VelocityCalculationMethod.cs" />
     <Compile Include="Dtos\Verticals.cs" />
     <Compile Include="Dtos\VerticalItem.cs" />
-    <Compile Include="GaugingSummaryParser.cs" />
+    <Compile Include="Parsers\GaugingSummaryParser.cs" />
     <Compile Include="Helpers\BooleanHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
@@ -80,8 +80,8 @@
     <Compile Include="Mappers\MeterCalibrationMapper.cs" />
     <Compile Include="Mappers\VerticalMapper.cs" />
     <Compile Include="Mappers\PointVelocityMapper.cs" />
-    <Compile Include="MeterDetailsParser.cs" />
-    <Compile Include="PanelParser.cs" />
+    <Compile Include="Parsers\MeterDetailsParser.cs" />
+    <Compile Include="Parsers\PanelParser.cs" />
     <Compile Include="Mappers\ParsedResultMapper.cs" />
     <Compile Include="PocketGaugerFiles.cs" />
     <Compile Include="FileNames.cs" />
