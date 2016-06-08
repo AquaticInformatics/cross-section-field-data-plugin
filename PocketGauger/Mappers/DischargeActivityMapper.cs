@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
@@ -14,13 +13,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
     public class DischargeActivityMapper : IDischargeActivityMapper
     {
         private readonly IParseContext _context;
-        private readonly IVerticalMapper _verticalMapper;
         private readonly IPointVelocityMapper _pointVelocityMapper;
 
-        public DischargeActivityMapper(IParseContext context, IVerticalMapper verticalMapper, IPointVelocityMapper pointVelocityMapper)
+        public DischargeActivityMapper(IParseContext context, IPointVelocityMapper pointVelocityMapper)
         {
             _context = context;
-            _verticalMapper = verticalMapper;
             _pointVelocityMapper = pointVelocityMapper;
         }
 
@@ -45,10 +42,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         private DischargeSubActivity CreatePointVelocitySubActivity(IChannelInfo channel, GaugingSummaryItem gaugingSummary,
             DischargeActivity dischargeActivity)
         {
-            var pointVelocitySubActivity = _pointVelocityMapper.Map(channel, gaugingSummary, dischargeActivity);
-            pointVelocitySubActivity.Verticals = _verticalMapper.Map(gaugingSummary, pointVelocitySubActivity.ChannelMeasurement).ToList();
-
-            return pointVelocitySubActivity;
+            return _pointVelocityMapper.Map(channel, gaugingSummary, dischargeActivity);
         }
 
         private DischargeActivity CreateDischargeActivity(ILocationInfo locationInfo, GaugingSummaryItem gaugingSummary)

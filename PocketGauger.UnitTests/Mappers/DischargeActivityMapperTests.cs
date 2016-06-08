@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -9,7 +8,6 @@ using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
@@ -24,7 +22,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private IFixture _fixture;
         private IParseContext _context;
         private ILocationInfo _locationInfo;
-        private IVerticalMapper _mockVerticalMapper;
         private IPointVelocityMapper _mockPointVelocityMapper;
         private GaugingSummaryItem _gaugingSummaryItem;
 
@@ -42,10 +39,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _context = new ParseContextTestHelper().CreateMockParseContext();
 
             SetupMockLocationInfo();
-            SetupMockVerticalMapper();
             SetupMockPointVelocityMapper();
 
-            _dischargeActivityMapper = new DischargeActivityMapper(_context, _mockVerticalMapper, _mockPointVelocityMapper);
+            _dischargeActivityMapper = new DischargeActivityMapper(_context, _mockPointVelocityMapper);
         }
 
         [SetUp]
@@ -61,12 +57,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var channel = Substitute.For<IChannelInfo>();
             _locationInfo.Channels.ReturnsForAnyArgs(new List<IChannelInfo> { channel });
             _locationInfo.UtcOffsetHours.ReturnsForAnyArgs(LocationUtcOffset);
-        }
-
-        private void SetupMockVerticalMapper()
-        {
-            _mockVerticalMapper = Substitute.For<IVerticalMapper>();
-            _mockVerticalMapper.Map(null, null).ReturnsForAnyArgs(new List<Vertical>());
         }
 
         private void SetupMockPointVelocityMapper()
@@ -186,16 +176,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true
             };
-        }
-
-        [Test]
-        public void Map_RetrievesVerticalsFromVerticalMapper()
-        {
-            var dischargeActivity = _dischargeActivityMapper.Map(_locationInfo, _gaugingSummaryItem);
-
-            var expectedChannelMeasurement =
-                dischargeActivity.DischargeSubActivities.Single().ChannelMeasurement;
-            _mockVerticalMapper.Received().Map(_gaugingSummaryItem, expectedChannelMeasurement);
         }
     }
 }

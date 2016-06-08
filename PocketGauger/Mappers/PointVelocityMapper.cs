@@ -12,15 +12,18 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
     public class PointVelocityMapper : IPointVelocityMapper
     {
         private readonly IParseContext _context;
+        private readonly IVerticalMapper _verticalMapper;
 
-        public PointVelocityMapper(IParseContext context)
+        public PointVelocityMapper(IParseContext context, IVerticalMapper verticalMapper)
         {
             _context = context;
+            _verticalMapper = verticalMapper;
         }
 
         public PointVelocityDischarge Map(IChannelInfo channelInfo, GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
         {
             var channelMeasurement = CreateChannelMeasurement(channelInfo, summaryItem, dischargeActivity);
+            var verticals = _verticalMapper.Map(summaryItem, channelMeasurement);
 
             return new PointVelocityDischarge
             {
@@ -40,7 +43,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 WidthUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.WidthParameterId),
                 AscendingSegmentDisplayOrder = true, //TODO: AQ-19204 determine from verticals
                 MaximumSegmentDischarge = null, //TODO: AQ-19204 determine from verticals
-                Verticals = new List<Vertical>() //TODO: AQ-19204 Create verticals
+                Verticals = verticals
             };
         }
 

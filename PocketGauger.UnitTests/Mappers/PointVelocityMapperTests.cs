@@ -23,6 +23,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private ILocationInfo _locationInfo;
         private IChannelInfo _channelInfo;
 
+        private IVerticalMapper _mockVerticalMapper;
         private IPointVelocityMapper _mapper;
         private GaugingSummaryItem _gaugingSummaryItem;
         private DischargeActivity _dischargeActivity;
@@ -37,12 +38,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _context = new ParseContextTestHelper().CreateMockParseContext();
 
             SetupMockLocationInfo();
+            SetupMockVerticalMapper();
 
             _channelInfo = Substitute.For<IChannelInfo>();
 
             _gaugingSummaryItem = _fixture.Create<GaugingSummaryItem>();
 
-            _mapper = new PointVelocityMapper(_context);
+            _mapper = new PointVelocityMapper(_context, _mockVerticalMapper);
+        }
+
+        private void SetupMockVerticalMapper()
+        {
+            _mockVerticalMapper = Substitute.For<IVerticalMapper>();
+            _mockVerticalMapper.Map(null, null).ReturnsForAnyArgs(new List<Vertical>());
         }
 
         private void SetupAutoFixture()
@@ -119,8 +127,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             Tuple<bool, bool, bool, bool, bool, bool, bool> sampleFlags, PointVelocityObservationType expectedVelocityObservationMethod)
         {
             SetSampleFlags(sampleFlags);
-
-            _mapper = new PointVelocityMapper(_context);
 
             var pointVelocityActivity = MapPointVelocityActivity();
 
@@ -259,6 +265,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 MonitoringMethod = _dischargeActivity.DischargeMethod,
                 DistanceToGageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId)
             };
+        }
+
+        [Test]
+        public void Map_RetrievesVerticalsFromVerticalMapper()
+        {
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            _mockVerticalMapper.Received().Map(_gaugingSummaryItem, pointVelocityDischarge.ChannelMeasurement);
         }
     }
 }

@@ -64,8 +64,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger
         {
             var meterCalibrationMapper = new MeterCalibrationMapper(context);
             var verticalMapper = new VerticalMapper(meterCalibrationMapper);
-            var pointVelocityMapper = new PointVelocityMapper(context);
-            var dischargeActivityMapper = new DischargeActivityMapper(context, verticalMapper, pointVelocityMapper);
+            var pointVelocityMapper = new PointVelocityMapper(context, verticalMapper);
+            var dischargeActivityMapper = new DischargeActivityMapper(context, pointVelocityMapper);
             var parsedResultMapper = new ParsedResultMapper(context, dischargeActivityMapper);
 
             return parsedResultMapper.CreateParsedResults(gaugingSummary);
