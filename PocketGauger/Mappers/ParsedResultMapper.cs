@@ -43,7 +43,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             if (locationInfo == null)
             {
                 throw new ParsingFailedException(
-                    FormattableString.Invariant($"Location with identifier: {locationIdentifier} does not exist"));
+                    FormattableString.Invariant($"Location with identifier: {locationIdentifier} does not exist"))
+                {
+                    UnknownLocation = locationIdentifier
+                };
             }
 
             return locationInfo;

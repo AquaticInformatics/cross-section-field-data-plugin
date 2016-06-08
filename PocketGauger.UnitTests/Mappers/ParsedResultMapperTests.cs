@@ -57,6 +57,20 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
+        public void CreateParsedResults_SiteIdDoesNotMatchExistingLocation_SetsUnknownLocationPropertyInException()
+        {
+            var expectedUnknownLocation = _gaugingSummary.GaugingSummaryItems.First().SiteId;
+
+            _parseContext.FindLocationByIdentifier(expectedUnknownLocation).Returns((ILocationInfo)null);
+
+            TestDelegate testDelegate = () => _mapper.CreateParsedResults(_gaugingSummary);
+
+            var exception = Assert.Throws<ParsingFailedException>(testDelegate);
+
+            Assert.That(exception.UnknownLocation, Is.EqualTo(expectedUnknownLocation));
+        }
+
+        [Test]
         public void CreateParsedResults_SiteIdMatchesExistingLocation_RetrievesFieldVisitsForThatLocation()
         {
             _mapper.CreateParsedResults(_gaugingSummary);
