@@ -104,30 +104,30 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             }
         }
 
-        private static readonly List<Tuple<double[], double[]>> GetSegmentWidthTestCases =
-            new List<Tuple<double[], double[]>>
+        private static readonly List<Tuple<double, double, double>> GetSegmentWidthTestCases =
+            new List<Tuple<double, double, double>>
             {
-                Tuple.Create(new double[] {2, 3, 4}, new double[] {2, 1, 1}),
-                Tuple.Create(new double[] {400, 600, 1100}, new double[] {400, 200, 500}),
-                Tuple.Create(new[] {50.23, 55.5, 60.1111}, new[] {50.23, 5.27, 4.6111})
+                Tuple.Create(6d, 3d, 2d),
+                Tuple.Create(0.129, 0.41, 0.3146341463414634),
+                Tuple.Create(0.033, 0.12, 0.275),
+                Tuple.Create(60.1111, 0d, 0d)
             };
 
         [TestCaseSource(nameof(GetSegmentWidthTestCases))]
-        public void Map_CalculatesCorrectSegmentWidth(Tuple<double[], double[]> testData)
+        public void Map_CalculatesCorrectSegmentWidth(Tuple<double, double, double> testData)
         {
-            var inputPanelDistances = testData.Item1;
-            var expectedSegmentWidths = testData.Item2;
-            for (var i = 0; i < inputPanelDistances.Length; i++)
-            {
-                _gaugingSummaryItem.PanelItems.ToList()[i].Distance = inputPanelDistances[i];
-            }
+            var area = testData.Item1;
+            var depth = testData.Item2;
+            var expectedWidth = testData.Item3;
+
+            var panelItem = _gaugingSummaryItem.PanelItems.First();
+            panelItem.Area = area;
+            panelItem.Depth = depth;
 
             var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
+            var firstVertical = result.First();
 
-            for (var i = 0; i < expectedSegmentWidths.Length; i++)
-            {
-                Assert.That(DoubleHelper.AreEqual(result[i].Segment.Width, expectedSegmentWidths[i]));
-            }
+            Assert.That(DoubleHelper.AreEqual(firstVertical.Segment.Width, expectedWidth));
         }
 
         [Test]

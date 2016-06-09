@@ -23,7 +23,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             foreach (var panelItem in gaugingSummaryItem.PanelItems)
             {
                 var vertical = CreateVertical(panelItem);
-                vertical.Segment = CreateSegment(gaugingSummaryItem.PanelItems.ToList(), panelItem);
+                vertical.Segment = CreateSegment(panelItem);
                 vertical.VelocityObservation = CreateVelocityObservation(
                     channelMeasurement, panelItem, gaugingSummaryItem.MeterDetailsItem);
 
@@ -51,11 +51,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        private static Segment CreateSegment(IList<PanelItem> panelItems, PanelItem panelItem)
+        private static Segment CreateSegment(PanelItem panelItem)
         {
             return new Segment
             {
-                Width = CalculateSegmentWidth(panelItems, panelItem),
+                Width = CalculateSegmentWidth(panelItem),
                 Area = panelItem.Area,
                 Velocity = panelItem.MeanVelocity,
                 Discharge = panelItem.Flow,
@@ -63,15 +63,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        private static double CalculateSegmentWidth(IList<PanelItem> panelItems, PanelItem panelItem)
+        private static double CalculateSegmentWidth(PanelItem panelItem)
         {
-            if (panelItems.First() == panelItem)
-            {
-                return panelItem.Distance;
-            }
+            if (IsEqual(panelItem.Depth, 0))
+                return 0;
 
-            var previousPanelItem = panelItems[panelItems.IndexOf(panelItem) - 1];
-            return panelItem.Distance - previousPanelItem.Distance;
+            return Math.Abs(panelItem.Area/panelItem.Depth);
         }
 
         private VelocityObservation CreateVelocityObservation(DischargeChannelMeasurement channelMeasurement,
