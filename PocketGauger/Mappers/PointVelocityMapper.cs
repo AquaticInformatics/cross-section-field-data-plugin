@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
@@ -38,11 +39,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 VelocityAverage = summaryItem.MeanVelocity,
                 VelocityAverageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId),
                 VelocityObservationMethod = CalculateVelocityObservationMethod(summaryItem),
-                MeanObservationDuration = null, //TODO: AQ-19204 determine from verticals
-                Width = null, //TODO: AQ-19204 Calculate from sum of all segment widths.
+                MeanObservationDuration = CalculateMeanObservationDuration(verticals),
+                Width = CalculateTotalWidth(verticals),
                 WidthUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.WidthParameterId),
-                AscendingSegmentDisplayOrder = true, //TODO: AQ-19204 determine from verticals
-                MaximumSegmentDischarge = null, //TODO: AQ-19204 determine from verticals
+                AscendingSegmentDisplayOrder = IsAscendingDisplayOrder(verticals),
+                MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals),
                 Verticals = verticals
             };
         }
@@ -184,6 +185,49 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 default:
                     return PointVelocityMethodType.Unknown;
             }
+        }
+
+        private static double? CalculateMeanObservationDuration(IReadOnlyCollection<Vertical> verticals)
+        {
+            if (!verticals.Any())
+                return null;
+
+            var observationsWithInterval = verticals
+                .SelectMany(vertical => vertical.VelocityObservation.Observations)
+                .Where(observation => observation.ObservationInterval.HasValue)
+                .ToList();
+
+            if (!observationsWithInterval.Any())
+                return null;
+
+            return observationsWithInterval.Average(observation => observation.ObservationInterval);
+        }
+
+        private static double? CalculateTotalWidth(IReadOnlyCollection<Vertical> verticals)
+        {
+            if (!verticals.Any())
+                return null;
+
+            return verticals.Sum(vertical => vertical.Segment.Width);
+        }
+
+        private static bool IsAscendingDisplayOrder(IReadOnlyCollection<Vertical> verticals)
+        {
+            if (!verticals.Any())
+                return true;
+
+            var firstVertical = verticals.First();
+            var lastVertical = verticals.Last();
+
+            return firstVertical.TaglinePosition < lastVertical.TaglinePosition;
+        }
+
+        private static double? CalculateMaximumSegmentDischarge(IReadOnlyCollection<Vertical> verticals)
+        {
+            if (!verticals.Any())
+                return null;
+
+            return verticals.Max(vertical => vertical.Segment.TotalDischargePortion);
         }
     }
 }

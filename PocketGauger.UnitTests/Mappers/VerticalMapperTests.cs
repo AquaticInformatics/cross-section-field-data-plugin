@@ -209,26 +209,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_UnknownVelocityObservationCount_SetsVelocityObservationTypeToNull()
         {
-            var expectedObservationCounts = new HashSet<int>(MultipleVelocityObservationTestCases.Select(tuple => tuple.Item1));
-            var unknownObservationCount = CreateValueNotInSet(expectedObservationCounts);
+            const int unknownObservationCount = 15;
 
             _gaugingSummaryItem.PanelItems.First().Verticals = _fixture.CreateMany<VerticalItem>(unknownObservationCount).ToList();
 
             var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
 
             AssertVelocityObservationMethodIsExpected(result, null);
-        }
-
-        private TValueToCreate CreateValueNotInSet<TValueToCreate>(ISet<TValueToCreate> expectedObservationCounts)
-        {
-            TValueToCreate value;
-
-            do
-            {
-                value = _fixture.Create<TValueToCreate>();
-            } while (expectedObservationCounts.Contains(value));
-
-            return value;
         }
 
         private static readonly List<Tuple<double, PointVelocityObservationType>> DepthValueToVelocityObservationTestCases =
@@ -259,8 +246,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_VerticalWithSingleObservationWithNonPoint5Or6SampleDepth_SetsVelocityObservationTypeToSurface()
         {
-            var expectedObservationCounts = new HashSet<double>(DepthValueToVelocityObservationTestCases.Select(tuple => tuple.Item1));
-            var nonPointFiveOrSixDepth = CreateValueNotInSet(expectedObservationCounts);
+            const double nonPointFiveOrSixDepth = 10;
 
             var verticals = _fixture.Build<VerticalItem>()
                 .With(item => item.SamplePosition, nonPointFiveOrSixDepth)

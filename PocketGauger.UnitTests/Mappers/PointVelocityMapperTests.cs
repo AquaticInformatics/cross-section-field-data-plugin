@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -59,6 +60,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
             ParameterRegistrar.Register(_fixture);
             CollectionRegistrar.Register(_fixture);
+            _fixture.Register<MeasurementConditionData>(() => new OpenWaterData());
         }
 
         private void SetupMockLocationInfo()
@@ -273,6 +275,173 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
 
             _mockVerticalMapper.Received().Map(_gaugingSummaryItem, pointVelocityDischarge.ChannelMeasurement);
+        }
+
+        [Test]
+        public void Map_EmptyVerticalsList_SetsMeanObservationDurationAsNull()
+        {
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            
+            Assert.That(pointVelocityDischarge.MeanObservationDuration, Is.Null);
+        }
+
+        [Test]
+        public void Map_VelocityObservationWithIntervals_CalculatedMeanObservationDurationAsExpected()
+        {
+            const double observationIntervalOffset = 50;
+            const double expectedMeanDuration = 100;
+
+            var observations = CreateVelocityObservationWithEquallySpacedInterval(observationIntervalOffset);
+
+            var velocityObservations = _fixture.Build<VelocityObservation>()
+                .With(observation => observation.Observations, observations)
+                .Create();
+
+            var verticals = _fixture.Build<Vertical>()
+                .With(vertical => vertical.VelocityObservation, velocityObservations)
+                .CreateMany(1);
+
+            SetupVerticalMapperToReturn(verticals);
+
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.MeanObservationDuration, Is.EqualTo(expectedMeanDuration));
+        }
+
+        private void SetupVerticalMapperToReturn(IEnumerable<Vertical> verticals)
+        {
+            _mockVerticalMapper.Map(Arg.Any<GaugingSummaryItem>(), Arg.Any<DischargeChannelMeasurement>())
+                .Returns(verticals.ToList());
+        }
+
+        private ICollection<VelocityDepthObservation> CreateVelocityObservationWithEquallySpacedInterval(double intervalForEachObservation)
+        {
+            var observations = new List<VelocityDepthObservation>();
+
+            for (var i = 1; i <= 3; i++)
+            {
+                var observation = _fixture.Build<VelocityDepthObservation>()
+                    .With(obs => obs.ObservationInterval, i * intervalForEachObservation)
+                    .Create();
+
+                observations.Add(observation);
+            }
+
+            return observations;
+        }
+
+        [Test]
+        public void Map_VelocityObservationWithoutIntervals_CalculatesMeanObservationDurationAsExpected()
+        {
+            var observations = _fixture.Build<VelocityDepthObservation>()
+                .Without(obs => obs.ObservationInterval)
+                .CreateMany()
+                .ToList();
+
+            var velocityObservations = _fixture.Build<VelocityObservation>()
+                .With(observation => observation.Observations, observations)
+                .Create();
+
+            var verticals = _fixture.Build<Vertical>()
+                .With(vertical => vertical.VelocityObservation, velocityObservations)
+                .CreateMany(1);
+
+            SetupVerticalMapperToReturn(verticals);
+
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.MeanObservationDuration, Is.EqualTo(null));
+        }
+
+        [Test]
+        public void Map_EmptyVerticalsList_SetsWidthToNull()
+        {
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.Width, Is.Null);
+        }
+
+        [Test]
+        public void Map_PointVelocityWithVerticals_CalculatesWidthAsExpected()
+        {
+            const double segmentWidth = 25;
+            const double expectedTotalWidth = 75;
+
+            var segment = _fixture.Build<Segment>()
+                .With(seg => seg.Width, segmentWidth)
+                .Create();
+
+            var verticals = _fixture.Build<Vertical>()
+                .With(vertical => vertical.Segment, segment)
+                .CreateMany();
+
+            SetupVerticalMapperToReturn(verticals);
+
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.Width, Is.EqualTo(expectedTotalWidth));
+        }
+
+        [Test]
+        public void Map_EmptyVerticalsList_SetsAscendingDisplayOrderToTrue()
+        {
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.True);
+        }
+
+        [Test]
+        public void Map_TaglinePositionForFirstVerticalIsSmallerThanThatOfLastVertical_SetsAscendingDisplayOrderToTrue()
+        {
+            var verticals = _fixture.CreateMany<Vertical>(2).ToList();
+            verticals.First().TaglinePosition = 0;
+            verticals.Last().TaglinePosition = 10;
+
+            SetupVerticalMapperToReturn(verticals);
+
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.True);
+        }
+
+        [Test]
+        public void Map_TaglinePositionForFirstVerticalIsLargerThanThatOfLastVertical_SetsAscendingDisplayOrderToFalse()
+        {
+            var verticals = _fixture.CreateMany<Vertical>(2).ToList();
+            verticals.First().TaglinePosition = 10;
+            verticals.Last().TaglinePosition = 0;
+
+            SetupVerticalMapperToReturn(verticals);
+
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.False);
+        }
+
+        [Test]
+        public void Map_EmptyVerticalsList_SetsMaximumSegmentDischargeToNull()
+        {
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.MaximumSegmentDischarge, Is.Null);
+        }
+
+        [Test]
+        public void Map_PointVelocityWithVerticals_SetsMaximumSegmentDischargeToVerticalWithLargestTotalDischargePortion()
+        {
+            var verticals = _fixture.CreateMany<Vertical>().ToList();
+            
+            SetupVerticalMapperToReturn(verticals);
+
+            var expectedMaximumSegmentDischarge = verticals
+                .OrderBy(vertical => vertical.Segment.TotalDischargePortion)
+                .Last()
+                .Segment
+                .TotalDischargePortion;
+            
+            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            Assert.That(pointVelocityDischarge.MaximumSegmentDischarge, Is.EqualTo(expectedMaximumSegmentDischarge));
         }
     }
 }
