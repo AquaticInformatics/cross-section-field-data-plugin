@@ -15,19 +15,6 @@
     <GAUGING_ID type="double">2</GAUGING_ID>
   </GF_PANELSItem>
   <GF_PANELSItem>
-    <PANEL_ID type="double">12</PANEL_ID>
-    <STAGE type="double">-999999999.999</STAGE>
-    <AREA type="double">1.25</AREA>
-    <MEAN_VELOCITY type="double">1</MEAN_VELOCITY>
-    <FLOW type="double">1.25</FLOW>
-    <VERTICAL_NUMBER type="integer">2</VERTICAL_NUMBER>
-    <DISTANCE type="double">2.5</DISTANCE>
-    <DEPTH type="double">1</DEPTH>
-    <SITE_ID type="text">DEMO4</SITE_ID>
-    <SAMPLE_DEPTH type="double">0.6</SAMPLE_DEPTH>
-    <GAUGING_ID type="double">2</GAUGING_ID>
-  </GF_PANELSItem>
-  <GF_PANELSItem>
     <PANEL_ID type="double">13</PANEL_ID>
     <STAGE type="double">-999999999.999</STAGE>
     <AREA type="double">3.75</AREA>
@@ -48,6 +35,19 @@
     <FLOW type="double">11.25</FLOW>
     <VERTICAL_NUMBER type="integer">4</VERTICAL_NUMBER>
     <DISTANCE type="double">7.5</DISTANCE>
+    <DEPTH type="double">1</DEPTH>
+    <SITE_ID type="text">DEMO4</SITE_ID>
+    <SAMPLE_DEPTH type="double">0.6</SAMPLE_DEPTH>
+    <GAUGING_ID type="double">2</GAUGING_ID>
+  </GF_PANELSItem>
+  <GF_PANELSItem>
+    <PANEL_ID type="double">12</PANEL_ID>
+    <STAGE type="double">-999999999.999</STAGE>
+    <AREA type="double">1.25</AREA>
+    <MEAN_VELOCITY type="double">1</MEAN_VELOCITY>
+    <FLOW type="double">1.25</FLOW>
+    <VERTICAL_NUMBER type="integer">2</VERTICAL_NUMBER>
+    <DISTANCE type="double">2.5</DISTANCE>
     <DEPTH type="double">1</DEPTH>
     <SITE_ID type="text">DEMO4</SITE_ID>
     <SAMPLE_DEPTH type="double">0.6</SAMPLE_DEPTH>
@@ -119,6 +119,19 @@
     <GAUGING_ID type="double">7</GAUGING_ID>
   </GF_PANELSItem>
   <GF_PANELSItem>
+    <PANEL_ID type="double">28</PANEL_ID>
+    <STAGE type="double">-999999999.999</STAGE>
+    <AREA type="double">3.75</AREA>
+    <MEAN_VELOCITY type="double">3</MEAN_VELOCITY>
+    <FLOW type="double">11.25</FLOW>
+    <VERTICAL_NUMBER type="integer">3</VERTICAL_NUMBER>
+    <DISTANCE type="double">5</DISTANCE>
+    <DEPTH type="double">2</DEPTH>
+    <SITE_ID type="text">DEMO3</SITE_ID>
+    <SAMPLE_DEPTH type="double">1.2</SAMPLE_DEPTH>
+    <GAUGING_ID type="double">1</GAUGING_ID>
+  </GF_PANELSItem>
+  <GF_PANELSItem>
     <PANEL_ID type="double">20</PANEL_ID>
     <STAGE type="double">-999999999.999</STAGE>
     <AREA type="double">0</AREA>
@@ -158,16 +171,16 @@
     <GAUGING_ID type="double">1</GAUGING_ID>
   </GF_PANELSItem>
   <GF_PANELSItem>
-    <PANEL_ID type="double">28</PANEL_ID>
+    <PANEL_ID type="double">30</PANEL_ID>
     <STAGE type="double">-999999999.999</STAGE>
-    <AREA type="double">3.75</AREA>
-    <MEAN_VELOCITY type="double">3</MEAN_VELOCITY>
-    <FLOW type="double">11.25</FLOW>
-    <VERTICAL_NUMBER type="integer">3</VERTICAL_NUMBER>
-    <DISTANCE type="double">5</DISTANCE>
-    <DEPTH type="double">2</DEPTH>
+    <AREA type="double">1.25</AREA>
+    <MEAN_VELOCITY type="double">1</MEAN_VELOCITY>
+    <FLOW type="double">1.25</FLOW>
+    <VERTICAL_NUMBER type="integer">5</VERTICAL_NUMBER>
+    <DISTANCE type="double">10</DISTANCE>
+    <DEPTH type="double">0</DEPTH>
     <SITE_ID type="text">DEMO3</SITE_ID>
-    <SAMPLE_DEPTH type="double">1.2</SAMPLE_DEPTH>
+    <SAMPLE_DEPTH type="double">0</SAMPLE_DEPTH>
     <GAUGING_ID type="double">1</GAUGING_ID>
   </GF_PANELSItem>
   <GF_PANELSItem>
@@ -181,19 +194,6 @@
     <DEPTH type="double">1</DEPTH>
     <SITE_ID type="text">DEMO3</SITE_ID>
     <SAMPLE_DEPTH type="double">0.6</SAMPLE_DEPTH>
-    <GAUGING_ID type="double">1</GAUGING_ID>
-  </GF_PANELSItem>
-  <GF_PANELSItem>
-    <PANEL_ID type="double">30</PANEL_ID>
-    <STAGE type="double">-999999999.999</STAGE>
-    <AREA type="double">1.25</AREA>
-    <MEAN_VELOCITY type="double">1</MEAN_VELOCITY>
-    <FLOW type="double">1.25</FLOW>
-    <VERTICAL_NUMBER type="integer">5</VERTICAL_NUMBER>
-    <DISTANCE type="double">10</DISTANCE>
-    <DEPTH type="double">0</DEPTH>
-    <SITE_ID type="text">DEMO3</SITE_ID>
-    <SAMPLE_DEPTH type="double">0</SAMPLE_DEPTH>
     <GAUGING_ID type="double">1</GAUGING_ID>
   </GF_PANELSItem>
 </GF_PANELS>

@@ -7,7 +7,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
     {
         public static IReadOnlyCollection<PanelItem> CreateExpectedPanels()
         {
-            return new List<PanelItem>()
+            return new List<PanelItem>
             {
                 CreateFirstPanel(),
                 CreateSecondPanel(),

@@ -12,6 +12,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Parsers
             var panels = pocketGaugerFiles.ParseType<Panels>();
             var verticals = pocketGaugerFiles.ParseType<Verticals>();
 
+            panels.PanelItems = panels.PanelItems.OrderBy(item => item.PanelId).ToList();
             AssignVerticals(panels, verticals);
 
             return panels.PanelItems;
@@ -21,8 +22,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Parsers
         {
             foreach (var panel in panels.PanelItems)
             {
-                panel.Verticals =
-                    verticals.VerticalItems.Where(vertical => vertical.PanelId == panel.PanelId).ToList();
+                panel.Verticals = verticals.VerticalItems
+                    .Where(vertical => vertical.PanelId == panel.PanelId)
+                    .OrderBy(item => item.VerticalNo)
+                    .ToList();
             }
         }
     }
