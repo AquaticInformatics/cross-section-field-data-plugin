@@ -165,7 +165,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 {
                     var resultObservation = result[i].VelocityObservation.Observations.ToList()[j];
 
-                    Assert.That(resultObservation.Depth, Is.EqualTo(verticalItems[j].Depth));
                     Assert.That(resultObservation.RevolutionCount, Is.EqualTo((int?)verticalItems[j].Revs));
                     Assert.That(resultObservation.ObservationInterval, Is.EqualTo(verticalItems[j].ExposureTime));
                     Assert.That(resultObservation.Velocity, Is.EqualTo(verticalItems[j].Velocity));
@@ -173,6 +172,27 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                     Assert.That(resultObservation.Weighting, Is.EqualTo(1));
                 }
             }
+        }
+
+        [Test]
+        public void Map_VelocityObservationDepth_IsCalculatedAsExpected()
+        {
+            const double sampleDepth = 0.6;
+            const double depthValue = 15;
+            const double expectedObservationDepth = 9;
+
+            var verticals = _fixture.Build<VerticalItem>()
+                .With(item => item.SamplePosition, sampleDepth)
+                .With(item => item.Depth, depthValue)
+                .CreateMany(1)
+                .ToList();
+
+            _gaugingSummaryItem.PanelItems.First().Verticals = verticals;
+
+            var result = _verticalMapper.Map(_gaugingSummaryItem, _channelMeasurement);
+
+            var velocityDepthObservation = result.First().VelocityObservation.Observations.First();
+            Assert.That(velocityDepthObservation.Depth, Is.EqualTo(expectedObservationDepth));
         }
 
         private static readonly List<Tuple<int, PointVelocityObservationType>> MultipleVelocityObservationTestCases =

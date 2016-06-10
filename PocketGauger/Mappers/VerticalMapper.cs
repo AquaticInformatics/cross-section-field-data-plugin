@@ -95,7 +95,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             return new VelocityDepthObservation
             {
-                Depth = verticalItem.Depth.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
+                Depth = verticalItem.Depth.GetValueOrDefault() * verticalItem.SamplePosition.GetValueOrDefault(), //TODO: AQ-19384 - Throw if Depth is null
                 RevolutionCount = (int?) verticalItem.Revs,
                 ObservationInterval = verticalItem.ExposureTime,
                 Velocity = verticalItem.Velocity.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
