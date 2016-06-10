@@ -65,8 +65,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         private IEnumerable<MeterCalibrationEquation> CreateCalibrationEquations(
             MeterDetailsItem meterDetailsItem)
         {
-            var orderedCalibrations = meterDetailsItem.Calibrations.OrderBy(c => c.MinRotationSpeed).ToList();
-            for (var i = 0; i < meterDetailsItem.Calibrations.Count; i++)
+            var orderedCalibrations = GetOrderedCalibrations(meterDetailsItem);
+            for (var i = 0; i < orderedCalibrations.Count; i++)
             {
                 var calibrationEquation = CreateCalibrationEquation(orderedCalibrations, i);
 
@@ -74,15 +74,25 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
         }
 
+        private static List<MeterCalibrationItem> GetOrderedCalibrations(MeterDetailsItem meterDetailsItem)
+        {
+            return meterDetailsItem.Calibrations
+                .Where(calibration => calibration.Constant.HasValue && calibration.Factor.HasValue)
+                .OrderBy(c => c.MinRotationSpeed)
+                .ToList();
+        }
+
         private MeterCalibrationEquation CreateCalibrationEquation(
             IReadOnlyList<MeterCalibrationItem> pocketGaugerCalibrations, int i)
         {
+            var calibration = pocketGaugerCalibrations[i];
+
             return new MeterCalibrationEquation
             {
-                RangeStart = pocketGaugerCalibrations[i].MinRotationSpeed,
+                RangeStart = calibration.MinRotationSpeed,
                 RangeEnd = GetRangeEnd(pocketGaugerCalibrations, i),
-                Slope = pocketGaugerCalibrations[i].Factor,
-                Intercept = pocketGaugerCalibrations[i].Constant,
+                Slope = calibration.Factor.GetValueOrDefault(),
+                Intercept = calibration.Constant.GetValueOrDefault(),
                 InterceptUnit = _parseContext.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId)
             };
         }

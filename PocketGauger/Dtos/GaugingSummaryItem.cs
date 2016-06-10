@@ -34,17 +34,45 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         [XmlElement("OBSERVERS_NAME")]
         public string ObserversName { get; set; }
 
+        [XmlIgnore]
+        public int? NumberOfPanels { get; set; }
+
         [XmlElement("NO_OF_PANELS")]
-        public int NumberOfPanels { get; set; }
+        public string NumberOfPanelsProxy
+        {
+            get { return IntHelper.Serialize(NumberOfPanels); }
+            set { NumberOfPanels = IntHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? StartStage { get; set; }
 
         [XmlElement("START_STAGE")]
-        public double StartStage { get; set; }
+        public string StartStageProxy
+        {
+            get { return DoubleHelper.Serialize(StartStage); }
+            set { StartStage = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? EndStage { get; set; }
 
         [XmlElement("END_STAGE")]
-        public double EndStage { get; set; }
+        public string EndStageProxy
+        {
+            get { return DoubleHelper.Serialize(EndStage); }
+            set { EndStage = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? MeanStage { get; set; }
 
         [XmlElement("MEAN_STAGE")]
-        public double MeanStage { get; set; }
+        public string MeanStageProxy
+        {
+            get { return DoubleHelper.Serialize(MeanStage); }
+            set { MeanStage = DoubleHelper.Parse(value); }
+        }
 
         [XmlIgnore]
         public RiverState? RiverState { get; set; }
@@ -56,14 +84,35 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
             set { RiverState = EnumHelper.Map<RiverState>(value); }
         }
 
+        [XmlIgnore]
+        public double? Area { get; set; }
+
         [XmlElement("AREA")]
-        public double Area { get; set; }
+        public string AreaProxy
+        {
+            get { return DoubleHelper.Serialize(Area); }
+            set { Area = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? MeanVelocity { get; set; }
 
         [XmlElement("MEAN_VELOCITY")]
-        public double MeanVelocity { get; set; }
+        public string MeanVelocityProxy
+        {
+            get { return DoubleHelper.Serialize(MeanVelocity); }
+            set { MeanVelocity = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? Flow { get; set; }
 
         [XmlElement("FLOW")]
-        public double Flow { get; set; }
+        public string FlowProxy
+        {
+            get { return DoubleHelper.Serialize(Flow); }
+            set { Flow = DoubleHelper.Parse(value); }
+        }
 
         [XmlIgnore]
         public GaugingMethod? GaugingMethod { get; set; }
@@ -134,8 +183,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         [XmlElement("RATING_ID")]
         public string RatingId { get; set; }
 
+        [XmlIgnore]
+        public int? MultipleMeterNo { get; set; }
+
         [XmlElement("MULTIPLE_METER_NO")]
-        public int MultipleMeterNo { get; set; }
+        public string MultipleMeterNoProxy
+        {
+            get { return IntHelper.Serialize(MultipleMeterNo); }
+            set { MultipleMeterNo = IntHelper.Parse(value); }
+        }
 
         [XmlIgnore]
         public bool SampleAtSurface { get; set; }
@@ -262,20 +318,48 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
         [XmlElement("COMMENTS")]
         public string Comments { get; set; }
 
+        [XmlIgnore]
+        public double? RatingFlow { get; set; }
+
         [XmlElement("RATING_FLOW")]
-        public double RatingFlow { get; set; }
+        public string RatingFlowProxy
+        {
+            get { return DoubleHelper.Serialize(RatingFlow); }
+            set { RatingFlow = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? RatingDeviation { get; set; }
 
         [XmlElement("RATING_DEVIATION")]
-        public double RatingDeviation { get; set; }
+        public string RatingDeviationProxy
+        {
+            get { return DoubleHelper.Serialize(RatingDeviation); }
+            set { RatingDeviation = DoubleHelper.Parse(value); }
+        }
 
         [XmlElement("GAUGING_ID")]
         public string GaugingId { get; set; }
 
+        [XmlIgnore]
+        public int? GStatus { get; set; }
+
         [XmlElement("GSTATUS")]
-        public int GStatus { get; set; }
+        public string GStatusProxy
+        {
+            get { return IntHelper.Serialize(GStatus); }
+            set { GStatus = IntHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public int? PrDepth { get; set; }
 
         [XmlElement("PRDEPTH")]
-        public int PrDepth { get; set; }
+        public string PrDepthProxy
+        {
+            get { return IntHelper.Serialize(PrDepth); }
+            set { PrDepth = IntHelper.Parse(value); }
+        }
 
         [XmlIgnore]
         public bool EndCorrect { get; set; }
@@ -287,14 +371,35 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
             set { EndCorrect = BooleanHelper.Parse(value); }
         }
 
+        [XmlIgnore]
+        public double? CFactor1 { get; set; }
+
         [XmlElement("CFACTOR1")]
-        public double CFactor1 { get; set; }
+        public string CFactor1Proxy
+        {
+            get { return DoubleHelper.Serialize(CFactor1); }
+            set { CFactor1 = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? CFactor2 { get; set; }
 
         [XmlElement("CFACTOR2")]
-        public double CFactor2 { get; set; }
+        public string CFactor2Proxy
+        {
+            get { return DoubleHelper.Serialize(CFactor2); }
+            set { CFactor2 = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? IndexVelocity { get; set; }
 
         [XmlElement("INDEX_VELOCITY")]
-        public double IndexVelocity { get; set; }
+        public string IndexVelocityProxy
+        {
+            get { return DoubleHelper.Serialize(IndexVelocity); }
+            set { IndexVelocity = DoubleHelper.Parse(value); }
+        }
 
         [XmlIgnore]
         public bool UseIndexVelocity { get; set; }

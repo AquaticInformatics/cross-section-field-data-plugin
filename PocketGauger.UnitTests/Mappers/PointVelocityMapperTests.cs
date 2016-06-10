@@ -259,7 +259,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             {
                 StartTime = _dischargeActivity.StartTime,
                 EndTime = _dischargeActivity.EndTime,
-                Discharge = _gaugingSummaryItem.Flow,
+                Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
                 Channel = _channelInfo,
                 Comments = _gaugingSummaryItem.Comments,
                 Party = _gaugingSummaryItem.ObserversName,

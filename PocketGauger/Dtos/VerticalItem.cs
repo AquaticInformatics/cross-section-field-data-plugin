@@ -6,51 +6,121 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Dtos
     [XmlType]
     public class VerticalItem
     {
+        [XmlIgnore]
+        public double? VerticalId { get; set; }
+
         [XmlElement("VERTICAL_ID")]
-        public double VerticalId { get; set; }
+        public string VerticalIdProxy
+        {
+            get { return DoubleHelper.Serialize(VerticalId); }
+            set { VerticalId = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? VerticalNo { get; set; }
 
         [XmlElement("VERTICAL_NO")]
-        public double VerticalNo { get; set; }
+        public string VerticalNoProxy
+        {
+            get { return DoubleHelper.Serialize(VerticalNo); }
+            set { VerticalNo = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public int? MeasurementNo { get; set; }
 
         [XmlElement("MEASUREMENT_NO")]
-        public int MeasurementNo { get; set; }
+        public string MeasurementNoProxy
+        {
+            get { return IntHelper.Serialize(MeasurementNo); }
+            set { MeasurementNo = IntHelper.Parse(value); }
+        }
 
         [XmlElement("PANEL_ID")]
         public string PanelId { get; set; }
 
+        [XmlIgnore]
+        public double? Distance { get; set; }
+
         [XmlElement("DISTANCE")]
-        public double Distance { get; set; }
-
-        [XmlElement("DEPTH")]
-        public double Depth { get; set; }
-
-        [XmlElement("SAMPLE_FROM_SURFACE")]
-        public string SampleFromSurfaceProxy { get; set; }
+        public string DistanceProxy
+        {
+            get { return DoubleHelper.Serialize(Distance); }
+            set { Distance = DoubleHelper.Parse(value); }
+        }
 
         [XmlIgnore]
-        public bool SampleFromSurface
+        public double? Depth { get; set; }
+
+        [XmlElement("DEPTH")]
+        public string DepthProxy
         {
-            get { return BooleanHelper.Parse(SampleFromSurfaceProxy); }
-            set { SampleFromSurfaceProxy = BooleanHelper.Serialize(value); }
+            get { return DoubleHelper.Serialize(Depth); }
+            set { Depth = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public bool SampleFromSurface { get; set; }
+
+        [XmlElement("SAMPLE_FROM_SURFACE")]
+        public string SampleFromSurfaceProxy
+        {
+            get { return BooleanHelper.Serialize(SampleFromSurface); }
+            set { SampleFromSurface = BooleanHelper.Parse(value); }
         }
 
         [XmlElement("METER_ID")]
         public string MeterId { get; set; }
 
+        [XmlIgnore]
+        public double? SamplePosition { get; set; }
+
         [XmlElement("SAMPLE_POSITION")]
-        public double SamplePosition { get; set; }
+        public string SamplePositionProxy
+        {
+            get { return DoubleHelper.Serialize(SamplePosition); }
+            set { SamplePosition = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? ExposureTime { get; set; }
 
         [XmlElement("EXPOSURE_TIME")]
-        public double ExposureTime { get; set; }
+        public string ExposureTimeProxy
+        {
+            get { return DoubleHelper.Serialize(ExposureTime); }
+            set { ExposureTime = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? Revs { get; set; }
 
         [XmlElement("REVS")]
-        public double Revs { get; set; }
+        public string RevsProxy
+        {
+            get { return DoubleHelper.Serialize(Revs); }
+            set { Revs = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? Velocity { get; set; }
 
         [XmlElement("VELOCITY")]
-        public double Velocity { get; set; }
+        public string VelocityProxy
+        {
+            get { return DoubleHelper.Serialize(Velocity); }
+            set { Velocity = DoubleHelper.Parse(value); }
+        }
+
+        [XmlIgnore]
+        public double? Stage { get; set; }
 
         [XmlElement("STAGE")]
-        public double Stage { get; set; }
+        public string StageProxy
+        {
+            get { return DoubleHelper.Serialize(Stage); }
+            set { Stage = DoubleHelper.Parse(value); }
+        }
 
         [XmlElement("SITE_ID")]
         public string SiteId { get; set; }

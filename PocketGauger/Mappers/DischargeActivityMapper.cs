@@ -56,7 +56,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 EndTime = endTime,
                 MeasurementTime = DateTimeHelper.GetMeanTime(startTime, endTime),
                 Party = gaugingSummary.ObserversName,
-                Discharge = gaugingSummary.Flow,
+                Discharge = gaugingSummary.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 DischargeUnit = _context.DischargeParameter.DefaultUnit,
                 DischargeMethod = GetDischargeMonitoringMethod(gaugingSummary.FlowCalculationMethod),
                 MeanGageHeight = gaugingSummary.MeanStage,

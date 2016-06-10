@@ -11,6 +11,7 @@ using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
+using DoubleHelper = Common.Utils.DoubleHelper;
 using FieldDataMeterType = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterType;
 using MeterType = Server.Plugins.FieldVisit.PocketGauger.Dtos.MeterType;
 
@@ -30,6 +31,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         public void SetUp()
         {
             _fixture = new Fixture();
+            _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
             CollectionRegistrar.Register(_fixture);
 
             _parseContext = Substitute.For<IParseContext>();
@@ -87,8 +89,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                     .ContainSingle(
                         e =>
                             e.RangeStart == calibration.MinRotationSpeed &&
-                            DoubleHelper.AreEqual(e.Slope, calibration.Factor) &&
-                            DoubleHelper.AreEqual(e.Intercept, calibration.Constant) && 
+                            DoubleHelper.AreEqual(e.Slope, calibration.Factor.GetValueOrDefault()) &&
+                            DoubleHelper.AreEqual(e.Intercept, calibration.Constant.GetValueOrDefault()) && 
                             e.InterceptUnit == _velocityDefaultUnit);
             }
         }

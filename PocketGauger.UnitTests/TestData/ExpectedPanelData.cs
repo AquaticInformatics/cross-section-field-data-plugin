@@ -32,7 +32,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "11",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 0,
                 MeanVelocity = 0,
                 Flow = 0,
@@ -64,7 +64,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 0,
                     Velocity = 0,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO4",
                     GaugingId = "2"
                 },
@@ -76,7 +76,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "12",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 1.25,
                 MeanVelocity = 1,
                 Flow = 1.25,
@@ -108,7 +108,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 100,
                     Velocity = 2,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO4",
                     GaugingId = "2"
                 }
@@ -120,7 +120,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "13",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 3.75,
                 MeanVelocity = 3,
                 Flow = 11.25,
@@ -152,7 +152,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 200,
                     Velocity = 4,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO4",
                     GaugingId = "2"
                 }
@@ -164,7 +164,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "14",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 3.75,
                 MeanVelocity = 3,
                 Flow = 11.25,
@@ -196,7 +196,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 100,
                     Velocity = 2,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO4",
                     GaugingId = "2"
                 }
@@ -208,7 +208,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "15",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 1.25,
                 MeanVelocity = 1,
                 Flow = 1.25,
@@ -240,7 +240,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 0,
                     Velocity = 0,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO4",
                     GaugingId = "2"
                 }
@@ -252,7 +252,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "16",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 0,
                 MeanVelocity = 0,
                 Flow = 0,
@@ -284,7 +284,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 0,
                     Velocity = 0,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO5",
                     GaugingId = "7"
                 }
@@ -296,7 +296,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "17",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 0.5,
                 MeanVelocity = 1,
                 Flow = 0.5,
@@ -328,7 +328,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 100,
                     Velocity = 2,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO5",
                     GaugingId = "7"
                 }
@@ -340,7 +340,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "18",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 1.5,
                 MeanVelocity = 3,
                 Flow = 4.5,
@@ -372,7 +372,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 200,
                     Velocity = 4,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO5",
                     GaugingId = "7"
                 }
@@ -384,7 +384,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "19",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 1,
                 MeanVelocity = 2,
                 Flow = 2,
@@ -416,7 +416,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 0,
                     Velocity = 0,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO5",
                     GaugingId = "7"
                 }
@@ -428,7 +428,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "20",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 0,
                 MeanVelocity = 0,
                 Flow = 0,
@@ -460,7 +460,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 0,
                     Velocity = 0,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO5",
                     GaugingId = "7"
                 }
@@ -472,7 +472,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "26",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 0,
                 MeanVelocity = 0,
                 Flow = 0,
@@ -504,7 +504,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 0,
                     Velocity = 0,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO3",
                     GaugingId = "1"
                 }
@@ -516,7 +516,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "27",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 1.25,
                 MeanVelocity = 1,
                 Flow = 1.25,
@@ -548,7 +548,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 100,
                     Velocity = 2,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO3",
                     GaugingId = "1"
                 }
@@ -560,7 +560,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "28",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 3.75,
                 MeanVelocity = 3,
                 Flow = 11.25,
@@ -592,7 +592,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 200,
                     Velocity = 4,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO3",
                     GaugingId = "1"
                 }
@@ -604,7 +604,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "29",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 3.75,
                 MeanVelocity = 3,
                 Flow = 11.25,
@@ -636,7 +636,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 100,
                     Velocity = 2,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO3",
                     GaugingId = "1"
                 }
@@ -648,7 +648,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             return new PanelItem
             {
                 PanelId = "30",
-                Stage = -999999999.999,
+                Stage = null,
                 Area = 1.25,
                 MeanVelocity = 1,
                 Flow = 1.25,
@@ -680,7 +680,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                     ExposureTime = 50,
                     Revs = 0,
                     Velocity = 0,
-                    Stage = -999999999.999,
+                    Stage = null,
                     SiteId = "DEMO3",
                     GaugingId = "1"
                 }

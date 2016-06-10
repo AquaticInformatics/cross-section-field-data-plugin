@@ -61,6 +61,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GaugingSummaryAssemblerTests.cs" />
+    <Compile Include="Helpers\IntHelperTests.cs" />
+    <Compile Include="Helpers\DoubleHelperTests.cs" />
     <Compile Include="IntegrationTests\IntegrationTestBase.cs" />
     <Compile Include="IntegrationTests\MeterDetailsParserTests.cs" />
     <Compile Include="IntegrationTests\GaugingSummaryParserTests.cs" />

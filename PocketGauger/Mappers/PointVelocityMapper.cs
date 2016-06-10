@@ -57,7 +57,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             {
                 StartTime = dischargeActivity.StartTime,
                 EndTime = dischargeActivity.EndTime,
-                Discharge = summaryItem.Flow,
+                Discharge = summaryItem.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 Channel = channelInfo,
                 Comments = summaryItem.Comments,
                 Party = summaryItem.ObserversName,

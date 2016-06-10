@@ -49,6 +49,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             if (valueType == typeof(bool))
                 return BooleanHelper.Serialize((bool)value);
 
+            if (valueType == typeof(double?))
+                return DoubleHelper.Serialize((double?)value);
+
+            if (valueType == typeof(int?))
+                return IntHelper.Serialize((int?)value);
+
             return value.ToString();
         }
     }

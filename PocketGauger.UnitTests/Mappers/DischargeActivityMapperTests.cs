@@ -166,7 +166,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             return new DischargeActivity
             {
                 Party = _gaugingSummaryItem.ObserversName,
-                Discharge = _gaugingSummaryItem.Flow,
+                Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
                 DischargeUnit = _context.DischargeParameter.DefaultUnit,
                 MeanGageHeight = _gaugingSummaryItem.MeanStage,
                 GageHeightUnit = _context.GageHeightParameter.DefaultUnit,

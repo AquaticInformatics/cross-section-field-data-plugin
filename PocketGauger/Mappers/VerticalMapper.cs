@@ -40,14 +40,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             return new Vertical
             {
-                SequenceNumber = panelItem.VerticalNumber,
+                SequenceNumber = panelItem.VerticalNumber.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 VerticalType = VerticalType.MidRiver,
                 MeasurementConditionData = new OpenWaterData(),
                 FlowDirection = FlowDirectionType.Normal,
-                TaglinePosition = panelItem.Distance,
-                SoundedDepth = panelItem.Depth,
+                TaglinePosition = panelItem.Distance.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
+                SoundedDepth = panelItem.Depth.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 IsSoundedDepthEstimated = false,
-                EffectiveDepth = panelItem.Depth
+                EffectiveDepth = panelItem.Depth.GetValueOrDefault() //TODO: AQ-19384 - Throw if this is null
             };
         }
 
@@ -56,19 +56,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return new Segment
             {
                 Width = CalculateSegmentWidth(panelItem),
-                Area = panelItem.Area,
-                Velocity = panelItem.MeanVelocity,
-                Discharge = panelItem.Flow,
+                Area = panelItem.Area.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
+                Velocity = panelItem.MeanVelocity.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
+                Discharge = panelItem.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 IsDischargeEstimated = false
             };
         }
 
         private static double CalculateSegmentWidth(PanelItem panelItem)
         {
-            if (IsEqual(panelItem.Depth, 0))
+            if (!panelItem.Depth.HasValue || IsEqual(panelItem.Depth.Value, 0))
                 return 0;
 
-            return Math.Abs(panelItem.Area/panelItem.Depth);
+            return Math.Abs(panelItem.Area.GetValueOrDefault()/panelItem.Depth.GetValueOrDefault());
         }
 
         private VelocityObservation CreateVelocityObservation(DischargeChannelMeasurement channelMeasurement,
@@ -81,7 +81,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 MeterCalibration = _meterCalibrationMapper.Map(meterDetails),
                 VelocityObservationMethod = DetermineVelocityObservationMethodFromVerticals(panelItem.Verticals),
                 DeploymentMethod = channelMeasurement.DeploymentMethod,
-                MeanVelocity = panelItem.MeanVelocity,
+                MeanVelocity = panelItem.MeanVelocity.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 Observations = observations
             };
         }
@@ -95,10 +95,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             return new VelocityDepthObservation
             {
-                Depth = verticalItem.Depth,
-                RevolutionCount = (int) verticalItem.Revs,
+                Depth = verticalItem.Depth.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
+                RevolutionCount = (int?) verticalItem.Revs,
                 ObservationInterval = verticalItem.ExposureTime,
-                Velocity = verticalItem.Velocity,
+                Velocity = verticalItem.Velocity.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 DepthMultiplier = 1,
                 Weighting = 1
             };
@@ -133,10 +133,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
             var depth = observation.SamplePosition;
 
-            if (IsEqual(depth, pointFiveDepth))
+            if (!depth.HasValue)
+                return PointVelocityObservationType.Surface;
+
+            if (IsEqual(depth.Value, pointFiveDepth))
                 return PointVelocityObservationType.OneAtPointFive;
 
-            if (IsEqual(depth, pointSixDepth))
+            if (IsEqual(depth.Value, pointSixDepth))
                 return PointVelocityObservationType.OneAtPointSix;
 
             return PointVelocityObservationType.Surface;
