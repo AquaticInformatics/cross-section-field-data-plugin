@@ -38,14 +38,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
         private ILocationInfo GetLocationInfoOrThrow(string locationIdentifier)
         {
-            var locationInfo = _context.FindLocationByIdentifier(locationIdentifier);
+            var trimmedLocationIdentifier = locationIdentifier.Trim();
+            var locationInfo = _context.FindLocationByIdentifier(trimmedLocationIdentifier);
 
             if (locationInfo == null)
             {
                 throw new ParsingFailedException(
-                    FormattableString.Invariant($"Location with identifier: {locationIdentifier} does not exist"))
+                    FormattableString.Invariant($"Location with identifier: {trimmedLocationIdentifier} does not exist"))
                 {
-                    UnknownLocation = locationIdentifier
+                    UnknownLocation = trimmedLocationIdentifier
                 };
             }
 

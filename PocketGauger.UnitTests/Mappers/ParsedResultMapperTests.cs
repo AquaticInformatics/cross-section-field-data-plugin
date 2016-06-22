@@ -112,5 +112,17 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             Assert.That(results, Has.All.TypeOf<NewFieldVisit>());
         }
+
+        [TestCase(" WhiteSpaceBefore", "WhiteSpaceBefore")]
+        [TestCase("WhiteSpaceAfter   ", "WhiteSpaceAfter")]
+        [TestCase("NoWhiteSpace", "NoWhiteSpace")]
+        public void CreateParsedResults_PassesTrimmedIdentifier_ToFindLocationByIdentifier(string identifier, string trimmed)
+        {
+            _gaugingSummary.GaugingSummaryItems.ForEach(g => g.SiteId = identifier);
+
+            _mapper.CreateParsedResults(_gaugingSummary);
+
+            _parseContext.Received().FindLocationByIdentifier(trimmed);
+        }
     }
 }
