@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
@@ -44,7 +43,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             if (locationInfo == null)
             {
                 throw new ParsingFailedException(
-                    FormattableString.Invariant($"Location with identifier: {trimmedLocationIdentifier} does not exist"))
+                    string.Format("Location with identifier: {0} does not exist", trimmedLocationIdentifier))
                 {
                     UnknownLocation = trimmedLocationIdentifier
                 };

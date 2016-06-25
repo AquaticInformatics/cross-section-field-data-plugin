@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
@@ -29,7 +28,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             var pocketGaugerFileType = typeof(TPocketGaugerDto);
 
             if (!FileNames.FileNameTypeMap.ContainsKey(pocketGaugerFileType))
-                throw new ArgumentException(Invariant($"Unknown type { pocketGaugerFileType.Name }"));
+                throw new ArgumentException(string.Format("Unknown type {0}", pocketGaugerFileType.Name));
 
             return DeserializeFile<TPocketGaugerDto>(FileNames.FileNameTypeMap[pocketGaugerFileType]);
         }
@@ -38,7 +37,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
         {
             if (!ContainsKey(fileName))
                 throw new ParsingFailedException(
-                    Invariant($"Zip file does not contain file {fileName}"));
+                    string.Format("Zip file does not contain file {0}", fileName));
 
             return XmlDeserializerHelper.Deserialize<TPocketGaugerDto>(this[fileName]);
         }

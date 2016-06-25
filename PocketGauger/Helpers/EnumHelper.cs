@@ -1,5 +1,4 @@
 ﻿using System;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
@@ -9,7 +8,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
         {
             if (!typeof (TEnum).IsEnum)
             {
-                throw new ArgumentException(Invariant($"{typeof (TEnum).Name} is not an enum"));
+                throw new ArgumentException(string.Format("{0} is not an enum", typeof(TEnum).Name));
             }
             if (value == null) return null;
 

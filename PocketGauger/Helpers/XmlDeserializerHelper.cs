@@ -2,7 +2,6 @@
 using System.IO;
 using System.Xml.Serialization;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
@@ -19,7 +18,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
             }
             catch (InvalidOperationException ex)
             {
-                throw new ParsingFailedException(Invariant($"Parsing {FileNames.FileNameTypeMap[pocketGaugerType]} failed"), ex);
+                throw new ParsingFailedException(string.Format("Parsing {0} failed", FileNames.FileNameTypeMap[pocketGaugerType]), ex);
             }
         }
     }

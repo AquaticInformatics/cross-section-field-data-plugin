@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
@@ -17,7 +16,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
             }
             catch (FormatException)
             {
-                throw new ParsingFailedException(Invariant($"{value} is not a valid DateTime value"));
+                throw new ParsingFailedException(string.Format("{0} is not a valid DateTime value", value));
             }
         }
 

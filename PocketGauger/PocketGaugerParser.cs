@@ -23,7 +23,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 if (!zipContents.ContainsKey(FileNames.GaugingSummary))
                 {
                     throw new FormatNotSupportedException(
-                        FormattableString.Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
+                        string.Format("Zip file does not contain file {0}", FileNames.GaugingSummary));
                 }
 
                 var gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
