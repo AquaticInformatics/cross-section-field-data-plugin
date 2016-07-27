@@ -1,11 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NSubstitute;
+using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData
 {
     public class TestHelpers
     {
+        public static void RegisterMockTypes(IFixture fixture)
+        {
+            fixture.Register(() => SetupMockUnit(fixture.Create<string>()));
+            fixture.Register(() => SetupMockChannel(fixture.Create<string>()));
+            fixture.Register(() => SetupMockRelativeLocation(fixture.Create<string>()));
+        }
+
         public static IDictionary<string, string> CreateExpectedMetadata()
         {
             return new Dictionary<string, string>
@@ -21,6 +30,14 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData
                 { "StartBank", "Left bank" },
                 { "Comment", "Cross-section survey comments" }
             };
+        }
+
+        public static ILocationInfo SetupMockLocationInfo(string locationIdentifier)
+        {
+            var relativeLocation = Substitute.For<ILocationInfo>();
+            relativeLocation.LocationIdentifier.Returns(locationIdentifier);
+
+            return relativeLocation;
         }
 
         public static IChannelInfo SetupMockChannel(string channelName)

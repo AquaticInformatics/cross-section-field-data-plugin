@@ -55,6 +55,7 @@
     <Compile Include="Helpers\StartPointTypeHelperTests.cs" />
     <Compile Include="Mappers\CrossSectionMapperTests.cs" />
     <Compile Include="Mappers\CrossSectionPointMapperTests.cs" />
+    <Compile Include="Mappers\ParsedResultMapperTests.cs" />
     <Compile Include="Model\CrossSectionSurveyTests.cs" />
     <Compile Include="Parsers\CrossSectionSurveyParserTests.cs" />
     <Compile Include="TestData\TestHelpers.cs" />
