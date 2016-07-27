@@ -34,10 +34,30 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FileHelpers">
+      <HintPath>$(SolutionDir)NuGetPackages\FileHelpers-Stable.2.9.9\lib\4.0\FileHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>$(SolutionDir)NuGetPackages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helpers\CrossSectionParserConstants.cs" />
+    <Compile Include="Interfaces\ICrossSectionParser.cs" />
+    <Compile Include="Parsers\CrossSectionSurveyParser.cs" />
+    <Compile Include="Model\CrossSectionSurvey.cs" />
+    <Compile Include="Model\CrossSectionPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPlugInCore.csproj">
+      <Project>{A37B4978-D615-4092-BEC8-27AABFD2681E}</Project>
+      <Name>Server.BusinessInterfaces.FieldDataPlugInCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
