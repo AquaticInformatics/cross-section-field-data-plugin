@@ -15,5 +15,15 @@ namespace Server.Plugins.FieldVisit.CrossSection.Model
 
         [FieldOrder(3), FieldTrim(TrimMode.Both), FieldQuoted, FieldOptional]
         public string Comment;
+
+        public bool IsEmptyPoint()
+        {
+            return !Distance.HasValue && !Elevation.HasValue && string.IsNullOrWhiteSpace(Comment);
+        }
+
+        public override string ToString()
+        {
+            return FormattableString.Invariant($"Distance='{Distance}' Elevation='{Elevation}' Comment='{Comment}'");
+        }
     }
 }
