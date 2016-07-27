@@ -13,6 +13,7 @@ using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using Server.Plugins.FieldVisit.CrossSection.Parsers;
+using Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
 {
@@ -138,30 +139,13 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
         [Test]
         public void ParseFile_FileStreamIsAValidCrossSectionFile_CreatesExpectedMetadata()
         {
-            var expectedMetadata = CreateExpectedMetadata();
+            var expectedMetadata = TestHelpers.CreateExpectedMetadata();
 
             _stream = GetTestFile(ValidCrossSectionFilePath);
 
             var result = _crossSectionParser.ParseFile(_stream);
 
             result.Metadata.ShouldBeEquivalentTo(expectedMetadata);
-        }
-
-        private static IDictionary<string, string> CreateExpectedMetadata()
-        {
-            return new Dictionary<string, string>
-            {
-                { "Location", "Server.Plugins.FieldVisit.CrossSection.Tests.CompleteCrossSection" },
-                { "StartDate", "2001-05-08T14:32:15+07:00" },
-                { "EndDate", "2001-05-08T17:12:45+07:00" },
-                { "Party", "Cross-Section Party" },
-                { "Channel", "Right overflow" },
-                { "RelativeLocation", "At the Gage" },
-                { "Stage", "12.2" },
-                { "Unit", "ft" },
-                { "StartBank", "Left bank" },
-                { "Comment", "Cross-section survey comments" }
-            };
         }
 
         [Test]

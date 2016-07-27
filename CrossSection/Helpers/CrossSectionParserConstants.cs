@@ -9,5 +9,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 
         public const string MetadataSeparator = ":";
         public const string DataRecordSeparator = ",";
+
+        public const string DefaultChannelName = "Main";
+        public const string DefaultRelativeLocationName = "At the control";
+        public const StartPointType DefaultStartPointType = StartPointType.Unspecified;
     }
 }

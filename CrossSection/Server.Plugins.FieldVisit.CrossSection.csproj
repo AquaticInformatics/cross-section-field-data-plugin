@@ -46,11 +46,16 @@
     <Compile Include="Helpers\CrossSectionParserConstants.cs" />
     <Compile Include="Helpers\DateTimeOffsetHelper.cs" />
     <Compile Include="Helpers\DoubleHelper.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\StartPointTypeHelper.cs" />
     <Compile Include="Interfaces\ICrossSectionParser.cs" />
+    <Compile Include="Interfaces\ICrossSectionMapper.cs" />
+    <Compile Include="Interfaces\ICrossSectionPointMapper.cs" />
+    <Compile Include="Mappers\CrossSectionMapper.cs" />
     <Compile Include="Parsers\CrossSectionSurveyParser.cs" />
     <Compile Include="Model\CrossSectionSurvey.cs" />
     <Compile Include="Model\CrossSectionPoint.cs" />
+    <Compile Include="Helpers\MetaDataHeaders.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
