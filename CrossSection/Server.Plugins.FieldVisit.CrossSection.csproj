@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\CrossSectionParserConstants.cs" />
+    <Compile Include="Helpers\DateTimeOffsetHelper.cs" />
+    <Compile Include="Helpers\DoubleHelper.cs" />
+    <Compile Include="Helpers\StartPointTypeHelper.cs" />
     <Compile Include="Interfaces\ICrossSectionParser.cs" />
     <Compile Include="Parsers\CrossSectionSurveyParser.cs" />
     <Compile Include="Model\CrossSectionSurvey.cs" />
