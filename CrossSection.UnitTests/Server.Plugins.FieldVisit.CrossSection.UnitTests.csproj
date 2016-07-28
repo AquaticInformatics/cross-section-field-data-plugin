@@ -81,6 +81,7 @@
   <ItemGroup>
     <EmbeddedResource Include="TestData\CrossSectionWithDuplicateLocationMetadata.csv" />
     <EmbeddedResource Include="TestData\CrossSection.csv" />
+    <EmbeddedResource Include="TestData\CrossSectionWithNegativeValues.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

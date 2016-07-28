@@ -75,6 +75,14 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         }
 
         [Test]
+        public void MapPoints_NullPointsCollection_Throws()
+        {
+            TestDelegate testDelegate = () => _crossSectionPointMapper.MapPoints(null);
+
+            Assert.That(testDelegate, Throws.Exception.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
         public void MapPoints_InvalidPoint_Throws()
         {
             var points = new List<CrossSectionPoint> { CreateInvalidPoint() };

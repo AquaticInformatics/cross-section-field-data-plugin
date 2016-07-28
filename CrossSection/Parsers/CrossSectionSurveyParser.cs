@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using FileHelpers;
 using FileHelpers.Events;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using static Server.Plugins.FieldVisit.CrossSection.Helpers.CrossSectionParserConstants;
@@ -35,7 +37,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
         {
             using (var reader = CreateStreamReader(fileStream))
             {
-                VerifyIsCrossSectionCsvFile(reader);
+                ParseVersionFromHeader(reader);
 
                 return ParsePoints(reader);
             }
@@ -49,14 +51,19 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
                 bufferSize: defaultByteBufferSize, leaveOpen: true);
         }
 
-        private void VerifyIsCrossSectionCsvFile(TextReader reader)
+        private void ParseVersionFromHeader(TextReader reader)
         {
             var firstLine = reader.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(firstLine) || !IsHeaderRecord(firstLine))
-                throw new FormatNotSupportedException("Uploaded file is not an AQUARIUS Cross-Section");
+            VerifyIsCrossSectionCsvFile(firstLine);
 
             ParseFileVersion(firstLine);
+        }
+
+        private static void VerifyIsCrossSectionCsvFile(string firstLine)
+        {
+            if (string.IsNullOrWhiteSpace(firstLine) || !IsHeaderRecord(firstLine))
+                throw new FormatNotSupportedException("Uploaded file is not an AQUARIUS Cross-Section");
         }
 
         private static bool IsHeaderRecord(string header)
@@ -67,9 +74,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
         private void ParseFileVersion(string headerLine)
         {
             const string anyDigitFollowedByPeriodAndDigits = @"\d+(\.\d+)+";
-            var versionNumeberRegex = new Regex(anyDigitFollowedByPeriodAndDigits, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+            var versionNumberRegex = new Regex(anyDigitFollowedByPeriodAndDigits, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-            var versionNumber = versionNumeberRegex.Match(headerLine);
+            var versionNumber = versionNumberRegex.Match(headerLine);
 
             if (!versionNumber.Success)
                 return;
@@ -146,7 +153,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
 
         private static bool IsDataRecord(string line)
         {
-            return char.IsNumber(line, 0) && line.Contains(DataRecordSeparator);
+            var lineTokens = line.Split(DataRecordSeparator.ToCharArray());
+
+            return DoubleHelper.Parse(lineTokens.FirstOrDefault()).HasValue;
         }
     }
 }

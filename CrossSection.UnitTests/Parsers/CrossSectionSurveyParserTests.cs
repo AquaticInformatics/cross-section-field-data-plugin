@@ -24,6 +24,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
 
         private const string ValidCrossSectionFilePath = NamespacePrefix + "CrossSection.csv";
         private const string DuplicateMetadataCrossSectionFilePath = NamespacePrefix + "CrossSectionWithDuplicateLocationMetadata.csv";
+        private const string NegativeValuesFilePath = NamespacePrefix + "CrossSectionWithNegativeValues.csv";
 
         private Stream _stream;
 
@@ -164,11 +165,26 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
         {
             return new List<CrossSectionPoint>
             {
-                new CrossSectionPoint { Distance = 0, Elevation = 7.467, Comment = string.Empty },
-                new CrossSectionPoint { Distance = 19.1, Elevation = 6.909, Comment = "some comment" },
-                new CrossSectionPoint { Distance = 44.8, Elevation = 6.3, Comment = "yet, another, comment" },
-                new CrossSectionPoint { Distance = 70.1, Elevation = 5.356, Comment = "another comment" },
-                new CrossSectionPoint { Distance = 82.4, Elevation = 5.287, Comment = string.Empty }
+                CreatePoint(0, 7.467),
+                CreatePoint(19.1, 6.909, "some comment"),
+                CreatePoint(44.8, 6.3, "yet, another, comment"),
+                CreatePoint(70.1, 5.356, "another comment"),
+                CreatePoint(82.4, 5.287)
+            };
+        }
+
+        private static CrossSectionPoint CreatePoint(double distance, double elevation)
+        {
+            return CreatePoint(distance, elevation, string.Empty);
+        }
+
+        private static CrossSectionPoint CreatePoint(double distance, double elevation, string comment)
+        {
+            return new CrossSectionPoint
+            {
+                Distance = distance,
+                Elevation = elevation,
+                Comment = comment
             };
         }
 
@@ -188,6 +204,30 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
             Assert.That(actual.Distance, Is.EqualTo(expectation.Distance));
             Assert.That(actual.Elevation, Is.EqualTo(expectation.Elevation));
             Assert.That(actual.Comment, Is.EqualTo(expectation.Comment));
+        }
+
+        [Test]
+        public void ParseFile_CrossSectionFileWithNegativeValues_CreatesExpectedPointsCollection()
+        {
+            var expectedPoints = CreateExpectedNegativeCrossSectionPoints();
+
+            _stream = GetTestFile(NegativeValuesFilePath);
+
+            var result = _crossSectionParser.ParseFile(_stream);
+
+            AssertPointsMatchesExpected(result.Points, expectedPoints);
+        }
+
+        private static List<CrossSectionPoint> CreateExpectedNegativeCrossSectionPoints()
+        {
+            return new List<CrossSectionPoint>
+            {
+                CreatePoint(-1.5, -6),
+                CreatePoint(-1.2, -6.905),
+                CreatePoint(0, -2.1),
+                CreatePoint(1, -1.4),
+                CreatePoint(2.2, 2)
+            };
         }
     }
 }

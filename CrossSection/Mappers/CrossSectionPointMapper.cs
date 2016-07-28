@@ -12,6 +12,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
     {
         public ICollection<CrossSectionPoint> MapPoints(List<Model.CrossSectionPoint> points)
         {
+            if (points == null)
+                throw new ArgumentNullException(nameof(points));
+
             return points.Where(point => point != null && !point.IsEmptyPoint()).Select(ToPoint).ToList();
         }
 

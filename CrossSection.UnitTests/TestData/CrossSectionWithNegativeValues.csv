@@ -1,0 +1,19 @@
+﻿AQUARIUS Cross-Section CSV v1.0
+ 
+Location: Server.Plugins.FieldVisit.CrossSection.Tests.CompleteCrossSection
+StartDate: 2001-05-08T14:32:15+07:00
+EndDate: 2001-05-08T17:12:45+07:00
+Party: Cross-Section Party
+Channel: Right overflow
+RelativeLocation: At the Gage
+Stage: 12.2
+Unit: ft
+StartBank: Left bank
+Comment: Cross-section survey comments
+ 
+Distance, Elevation, Comment
+-1.5, -6.,
+-1.2, -6.905,
+-0, -2.1,
+1, -1.4
+2.2, 2
