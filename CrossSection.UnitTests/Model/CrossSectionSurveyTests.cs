@@ -9,39 +9,39 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Model
     public class CrossSectionSurveyTests
     {
         [Test]
-        public void GetMetadataValue_NullMetadataKey_Throws()
+        public void GetFieldValue_NullField_Throws()
         {
             var crossSection = new CrossSectionSurvey();
 
-            TestDelegate testDelegate = () => crossSection.GetMetadataValue(null);
+            TestDelegate testDelegate = () => crossSection.GetFieldValue(null);
 
             Assert.That(testDelegate, Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void GetMetadataValue_MetadataKeyDoesNotExist_Throws()
+        public void GetFieldValue_FieldDoesNotExist_Throws()
         {
             var crossSection = new CrossSectionSurvey();
 
-            const string metadataKey = "SomeKey";
+            const string field = "SomeKey";
 
-            TestDelegate testDelegate = () => crossSection.GetMetadataValue(metadataKey);
+            TestDelegate testDelegate = () => crossSection.GetFieldValue(field);
 
-            Assert.That(testDelegate, Throws.Exception.TypeOf<ParsingFailedException>().With.Message.Contains(metadataKey));
+            Assert.That(testDelegate, Throws.Exception.TypeOf<ParsingFailedException>().With.Message.Contains(field));
         }
 
         [Test]
-        public void GetMetadataValue_MetadataKeyExists_ReturnsExpectedValue()
+        public void GetFieldValue_FieldExists_ReturnsExpectedValue()
         {
             var crossSection = new CrossSectionSurvey();
 
-            const string metadataKey = "SomeKey";
-            const string metadataValue = "value";
-            crossSection.Metadata.Add(metadataKey, metadataValue);
+            const string field = "SomeKey";
+            const string data = "value";
+            crossSection.Fields.Add(field, data);
 
-            var result = crossSection.GetMetadataValue(metadataKey);
+            var result = crossSection.GetFieldValue(field);
 
-            Assert.That(result, Is.EqualTo(metadataValue));
+            Assert.That(result, Is.EqualTo(data));
         }
     }
 }

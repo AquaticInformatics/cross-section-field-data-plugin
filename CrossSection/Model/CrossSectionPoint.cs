@@ -4,7 +4,7 @@ using Server.Plugins.FieldVisit.CrossSection.Helpers;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Model
 {
-    [DelimitedRecord(CrossSectionParserConstants.DataRecordSeparator), IgnoreFirst(1)]
+    [DelimitedRecord(CrossSectionParserConstants.CrossSectionPointDataSeparator), IgnoreFirst(1)]
     public class CrossSectionPoint
     {
         [FieldOrder(1), FieldTrim(TrimMode.Both), FieldOptional]

@@ -1,6 +1,6 @@
 ﻿namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 {
-    public static class MetadataHeaders
+    public static class CrossSectionDataFields
     {
         public static readonly string Location = "Location";
         public static readonly string StartDate = "StartDate";

@@ -39,7 +39,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
             {
                 ParseVersionFromHeader(reader);
 
-                return ParsePoints(reader);
+                return ParsePointData(reader);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
                 CrossSectionSurvey.CsvFileVersion = version;
         }
 
-        private List<CrossSectionPoint> ParsePoints(StreamReader reader)
+        private List<CrossSectionPoint> ParsePointData(StreamReader reader)
         {
             var engine = CreateCsvParser(reader);
 
@@ -114,46 +114,46 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
                 return;
             }
 
-            if (IsMetadataRecord(line))
+            if (IsCrossSectionSurveyData(line))
             {
-                ParseMetadata(line);
+                ParseCrossSectionSurveyData(line);
                 return;
             }
 
-            if (IsDataRecord(line))
+            if (IsCrossSectionPointData(line))
             {
                 eventArgs.SkipThisRecord = false;
             }
         }
 
-        private static bool IsMetadataRecord(string line)
+        private static bool IsCrossSectionSurveyData(string line)
         {
-            return line.Contains(MetadataSeparator);
+            return line.Contains(CrossSectionDataSeparator);
         }
 
-        private void ParseMetadata(string line)
+        private void ParseCrossSectionSurveyData(string line)
         {
-            var metadata = ParseMetadataRecord(line);
+            var data = ParseCrossSectionData(line);
 
-            if (CrossSectionSurvey.Metadata.ContainsKey(metadata.Key))
-                throw new ParsingFailedException(FormattableString.Invariant($"File has duplicate {metadata.Key} records"));
+            if (CrossSectionSurvey.Fields.ContainsKey(data.Key))
+                throw new ParsingFailedException(FormattableString.Invariant($"File has duplicate {data.Key} records"));
 
-            CrossSectionSurvey.Metadata.Add(metadata.Key, metadata.Value);
+            CrossSectionSurvey.Fields.Add(data.Key, data.Value);
         }
 
-        public KeyValuePair<string, string> ParseMetadataRecord(string line)
+        public KeyValuePair<string, string> ParseCrossSectionData(string line)
         {
-            var metaDataSeparatorIndex = line.IndexOf(MetadataSeparator, StringComparison.Ordinal);
+            var separatorIndex = line.IndexOf(CrossSectionDataSeparator, StringComparison.Ordinal);
 
-            var header = line.Substring(0, metaDataSeparatorIndex).Trim();
-            var data = line.Substring(metaDataSeparatorIndex + 1).Trim();
+            var field = line.Substring(0, separatorIndex).Trim();
+            var data = line.Substring(separatorIndex + 1).Trim();
 
-            return new KeyValuePair<string, string>(header, data);
+            return new KeyValuePair<string, string>(field, data);
         }
 
-        private static bool IsDataRecord(string line)
+        private static bool IsCrossSectionPointData(string line)
         {
-            var lineTokens = line.Split(DataRecordSeparator.ToCharArray());
+            var lineTokens = line.Split(CrossSectionPointDataSeparator.ToCharArray());
 
             return DoubleHelper.Parse(lineTokens.FirstOrDefault()).HasValue;
         }

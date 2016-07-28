@@ -52,7 +52,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
             _crossSectionSurvey = new CrossSectionSurvey
             {
-                Metadata = TestHelpers.CreateExpectedMetadata()
+                Fields = TestHelpers.CreateExpectedCrossSectionFields()
             };
         }
 
@@ -90,7 +90,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         {
             var mockGageHeightUnit = SetupGageHeightParameterWithDefaultUnit();
 
-            _crossSectionSurvey.Metadata[MetadataHeaders.Unit] = "SomeUnit";
+            _crossSectionSurvey.Fields[CrossSectionDataFields.Unit] = "SomeUnit";
 
             var actual = _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
 
@@ -129,7 +129,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         public void MapCrossSection_RelativeLocationDoesNotExistInLocation_CallsCreateNewRelativeLocation()
         {
             const string newRelativeLocation = "new relative location";
-            _crossSectionSurvey.Metadata[MetadataHeaders.RelativeLocation] = newRelativeLocation;
+            _crossSectionSurvey.Fields[CrossSectionDataFields.RelativeLocation] = newRelativeLocation;
 
             _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
 
@@ -142,7 +142,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             var defaultRelativeLocation =
                 TestHelpers.SetupMockRelativeLocation(CrossSectionParserConstants.DefaultRelativeLocationName);
             _mockLocationInfo.RelativeLocations.Returns(new List<IRelativeLocationInfo> { defaultRelativeLocation });
-            _crossSectionSurvey.Metadata[MetadataHeaders.RelativeLocation] = string.Empty;
+            _crossSectionSurvey.Fields[CrossSectionDataFields.RelativeLocation] = string.Empty;
 
             var actual = _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
 
@@ -153,7 +153,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         [Test]
         public void MapCrossSection_EmptyRelativeLocationNameAndDefaultRelativeLocationDoesNotExistInLocation_CallsCreateNewRelativeLocation()
         {
-            _crossSectionSurvey.Metadata[MetadataHeaders.RelativeLocation] = string.Empty;
+            _crossSectionSurvey.Fields[CrossSectionDataFields.RelativeLocation] = string.Empty;
 
             _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
 
@@ -172,7 +172,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         public void MapCrossSection_ChannelDoesNotExistInLocation_CallsCreateNewChannel()
         {
             const string newChannel = "new channel";
-            _crossSectionSurvey.Metadata[MetadataHeaders.Channel] = newChannel;
+            _crossSectionSurvey.Fields[CrossSectionDataFields.Channel] = newChannel;
 
             _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
 
@@ -185,7 +185,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             var defaultChannel =
                 TestHelpers.SetupMockChannel(CrossSectionParserConstants.DefaultChannelName);
             _mockLocationInfo.Channels.Returns(new List<IChannelInfo> { defaultChannel });
-            _crossSectionSurvey.Metadata[MetadataHeaders.Channel] = string.Empty;
+            _crossSectionSurvey.Fields[CrossSectionDataFields.Channel] = string.Empty;
 
             var actual = _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
 
@@ -196,7 +196,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         [Test]
         public void MapCrossSection_EmptyChannelNameAndDefaultChannelDoesNotExistInLocation_CallsCreateNewChannel()
         {
-            _crossSectionSurvey.Metadata[MetadataHeaders.Channel] = string.Empty;
+            _crossSectionSurvey.Fields[CrossSectionDataFields.Channel] = string.Empty;
 
             _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
 

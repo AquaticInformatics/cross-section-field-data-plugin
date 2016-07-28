@@ -15,7 +15,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData
             fixture.Register(() => SetupMockRelativeLocation(fixture.Create<string>()));
         }
 
-        public static IDictionary<string, string> CreateExpectedMetadata()
+        public static IDictionary<string, string> CreateExpectedCrossSectionFields()
         {
             return new Dictionary<string, string>
             {

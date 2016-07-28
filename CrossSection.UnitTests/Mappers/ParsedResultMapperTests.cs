@@ -35,9 +35,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         {
             _fixture = new Fixture();
             TestHelpers.RegisterMockTypes(_fixture);
-            _crossSectionSurvey = new CrossSectionSurvey { Metadata = TestHelpers.CreateExpectedMetadata() };
+            _crossSectionSurvey = new CrossSectionSurvey { Fields = TestHelpers.CreateExpectedCrossSectionFields() };
 
-            _mockLocationInfo = TestHelpers.SetupMockLocationInfo(_crossSectionSurvey.GetMetadataValue(MetadataHeaders.Location));
+            _mockLocationInfo = TestHelpers.SetupMockLocationInfo(_crossSectionSurvey.GetFieldValue(CrossSectionDataFields.Location));
             _mockFieldVisitInfo = Substitute.For<IFieldVisitInfo>();
 
             _mockParseContext = Substitute.For<IParseContext>();

@@ -11,27 +11,27 @@ namespace Server.Plugins.FieldVisit.CrossSection.Model
         public CrossSectionSurvey()
         {
             CsvFileVersion = new Version(CrossSectionParserConstants.DefaultVersion);
-            Metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            Fields = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             Points = new List<CrossSectionPoint>();
         }
 
         public Version CsvFileVersion { get; set; }
 
-        public IDictionary<string, string> Metadata { get; set; }
+        public IDictionary<string, string> Fields { get; set; }
 
         public List<CrossSectionPoint> Points { get; set; }
 
-        public string GetMetadataValue(string metadata)
+        public string GetFieldValue(string field)
         {
-            if (string.IsNullOrWhiteSpace(metadata))
-                throw new ArgumentNullException(nameof(metadata));
+            if (string.IsNullOrWhiteSpace(field))
+                throw new ArgumentNullException(nameof(field));
 
-            if (Metadata.ContainsKey(metadata))
+            if (Fields.ContainsKey(field))
             {
-                return Metadata[metadata];
+                return Fields[field];
             }
 
-            throw new ParsingFailedException(Invariant($"Metadata record '{metadata}' was not found."));
+            throw new ParsingFailedException(Invariant($"Field '{field}' was not found in the file."));
         }
     }
 }

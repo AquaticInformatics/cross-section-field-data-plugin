@@ -23,7 +23,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
         private const string NamespacePrefix = "Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData.";
 
         private const string ValidCrossSectionFilePath = NamespacePrefix + "CrossSection.csv";
-        private const string DuplicateMetadataCrossSectionFilePath = NamespacePrefix + "CrossSectionWithDuplicateLocationMetadata.csv";
+        private const string DuplicateMetadataCrossSectionFilePath = NamespacePrefix + "CrossSectionWithDuplicateLocationFields.csv";
         private const string NegativeValuesFilePath = NamespacePrefix + "CrossSectionWithNegativeValues.csv";
 
         private Stream _stream;
@@ -140,13 +140,13 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
         [Test]
         public void ParseFile_FileStreamIsAValidCrossSectionFile_CreatesExpectedMetadata()
         {
-            var expectedMetadata = TestHelpers.CreateExpectedMetadata();
+            var expectedMetadata = TestHelpers.CreateExpectedCrossSectionFields();
 
             _stream = GetTestFile(ValidCrossSectionFilePath);
 
             var result = _crossSectionParser.ParseFile(_stream);
 
-            result.Metadata.ShouldBeEquivalentTo(expectedMetadata);
+            result.Fields.ShouldBeEquivalentTo(expectedMetadata);
         }
 
         [Test]

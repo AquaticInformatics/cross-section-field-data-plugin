@@ -41,7 +41,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 
         private ILocationInfo GetLocationFromCrossSection(Model.CrossSectionSurvey crossSectionSurvey)
         {
-            var crossSectionLocationIdentifier = crossSectionSurvey.GetMetadataValue(MetadataHeaders.Location);
+            var crossSectionLocationIdentifier = crossSectionSurvey.GetFieldValue(CrossSectionDataFields.Location);
             var location = FindLocationByIdentifier(crossSectionLocationIdentifier);
 
             if (location != null)

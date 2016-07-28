@@ -58,7 +58,7 @@
     <Compile Include="Interfaces\IParsedResultMapper.cs" />
     <Compile Include="Model\CrossSectionSurvey.cs" />
     <Compile Include="Model\CrossSectionPoint.cs" />
-    <Compile Include="Helpers\MetaDataHeaders.cs" />
+    <Compile Include="Helpers\CrossSectionDataFields.cs" />
     <Compile Include="Mappers\ParsedResultMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">

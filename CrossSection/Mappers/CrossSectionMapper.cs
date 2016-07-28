@@ -3,7 +3,7 @@ using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using CrossSectionSurvey = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection.CrossSectionSurvey;
-using static Server.Plugins.FieldVisit.CrossSection.Helpers.MetadataHeaders;
+using static Server.Plugins.FieldVisit.CrossSection.Helpers.CrossSectionDataFields;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 {
@@ -20,18 +20,18 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 
         public CrossSectionSurvey MapCrossSection(ILocationInfo location, Model.CrossSectionSurvey crossSectionSurvey)
         {
-            var commonStageUnit = FindUnit(crossSectionSurvey.GetMetadataValue(Unit));
+            var commonStageUnit = FindUnit(crossSectionSurvey.GetFieldValue(Unit));
 
             return new CrossSectionSurvey
             {
-                Party = crossSectionSurvey.GetMetadataValue(Party),
-                Comments = crossSectionSurvey.GetMetadataValue(Comment),
-                StartTime = crossSectionSurvey.GetMetadataValue(StartDate).ToDateTimeOffset(),
-                EndTime = crossSectionSurvey.GetMetadataValue(EndDate).ToDateTimeOffset(),
-                Stage = crossSectionSurvey.GetMetadataValue(Stage).ToDouble(),
-                StartPoint = crossSectionSurvey.GetMetadataValue(StartBank).ToStartPointType(),
-                RelativeLocation = FindRelativeLocation(location, crossSectionSurvey.GetMetadataValue(RelativeLocation)),
-                Channel = FindChannelInfo(location, crossSectionSurvey.GetMetadataValue(Channel)),
+                Party = crossSectionSurvey.GetFieldValue(Party),
+                Comments = crossSectionSurvey.GetFieldValue(Comment),
+                StartTime = crossSectionSurvey.GetFieldValue(StartDate).ToDateTimeOffset(),
+                EndTime = crossSectionSurvey.GetFieldValue(EndDate).ToDateTimeOffset(),
+                Stage = crossSectionSurvey.GetFieldValue(Stage).ToDouble(),
+                StartPoint = crossSectionSurvey.GetFieldValue(StartBank).ToStartPointType(),
+                RelativeLocation = FindRelativeLocation(location, crossSectionSurvey.GetFieldValue(RelativeLocation)),
+                Channel = FindChannelInfo(location, crossSectionSurvey.GetFieldValue(Channel)),
                 DepthUnit = commonStageUnit,
                 DistanceUnit = commonStageUnit,
                 StageUnit = commonStageUnit,
