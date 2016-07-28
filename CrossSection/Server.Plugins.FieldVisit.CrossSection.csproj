@@ -52,6 +52,7 @@
     <Compile Include="Interfaces\ICrossSectionMapper.cs" />
     <Compile Include="Interfaces\ICrossSectionPointMapper.cs" />
     <Compile Include="Mappers\CrossSectionMapper.cs" />
+    <Compile Include="CrossSectionPlugin.cs" />
     <Compile Include="Mappers\CrossSectionPointMapper.cs" />
     <Compile Include="Parsers\CrossSectionSurveyParser.cs" />
     <Compile Include="Interfaces\IParsedResultMapper.cs" />
