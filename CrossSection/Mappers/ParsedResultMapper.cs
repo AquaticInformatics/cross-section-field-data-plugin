@@ -75,6 +75,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
                 Invariant(
                     $"Visit's location identifier '{targetIdentifier}' does not match the identifier in the file: '{fileLocation.LocationIdentifier}'"))
             {
+                TargetLocation = _parseContext.TargetLocation,
                 AmbiguousLocations = new[] { fileLocation }
             };
         }
@@ -109,6 +110,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             
             throw new ParsingFailedException("A Visit within the time range of the Cross-Section already exists.")
             {
+                TargetLocation = locationInfo,
                 ConflictingVisits = existingLocationVisits.ToList()
             };
         }
