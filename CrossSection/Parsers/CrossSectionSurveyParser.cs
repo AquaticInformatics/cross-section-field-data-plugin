@@ -141,7 +141,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
             CrossSectionSurvey.Fields.Add(data.Key, data.Value);
         }
 
-        public KeyValuePair<string, string> ParseCrossSectionData(string line)
+        private static KeyValuePair<string, string> ParseCrossSectionData(string line)
         {
             var separatorIndex = line.IndexOf(CrossSectionDataSeparator, StringComparison.Ordinal);
 
