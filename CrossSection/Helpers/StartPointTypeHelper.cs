@@ -2,7 +2,6 @@
 using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 {
@@ -35,12 +34,12 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
             if(StartsWithAnyPrefix(startPoint, ValidRightPrefixes))
                 return StartPointType.RightEdgeOfWater;
 
-            throw new ParsingFailedException(Invariant($"Start point is not valid: {startPoint}"));
+            throw new ParsingFailedException("StartBank must be set to 'LeftEdgeOfWater' or 'RightEdgeOfWater'");
         }
 
         private static bool StartsWithAnyPrefix(string startPoint, string[] validPrefixes)
         {
-            return validPrefixes.Any(leftPrefix => startPoint.StartsWith(leftPrefix, StringComparison.OrdinalIgnoreCase));
+            return validPrefixes.Any(prefix => startPoint.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
         }
     }
 }
