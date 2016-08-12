@@ -1,18 +1,20 @@
 ﻿using System;
+using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 {
     public class StartPointTypeHelper
     {
-        private const StartPointType DefaultStartPointType = CrossSectionParserConstants.DefaultStartPointType;
-        private const string LeftPrefix = "Left";
-        private const string RightPrefix = "Right";
+        private static readonly string[] ValidLeftPrefixes = {"Left", "LEW"};
+        private static readonly string[] ValidRightPrefixes = {"Right", "REW"};
 
         public static StartPointType Parse(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                return DefaultStartPointType;
+                throw new ParsingFailedException("StartPoint must be specified");
 
             var startPoint = value.Replace(" ", string.Empty);
 
@@ -24,15 +26,21 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
             return AttemptToInferStartPoint(startPoint);
         }
 
+
         private static StartPointType AttemptToInferStartPoint(string startPoint)
         {
-            if (startPoint.StartsWith(LeftPrefix, StringComparison.OrdinalIgnoreCase))
+            if (StartsWithAnyPrefix(startPoint, ValidLeftPrefixes))
                 return StartPointType.LeftEdgeOfWater;
 
-            if (startPoint.StartsWith(RightPrefix, StringComparison.OrdinalIgnoreCase))
+            if(StartsWithAnyPrefix(startPoint, ValidRightPrefixes))
                 return StartPointType.RightEdgeOfWater;
 
-            return DefaultStartPointType;
+            throw new ParsingFailedException(Invariant($"Start point is not valid: {startPoint}"));
+        }
+
+        private static bool StartsWithAnyPrefix(string startPoint, string[] validPrefixes)
+        {
+            return validPrefixes.Any(leftPrefix => startPoint.StartsWith(leftPrefix, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

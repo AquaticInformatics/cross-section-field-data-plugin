@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
@@ -10,11 +11,11 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
     public class StartPointTypeHelperTests
     {
         [TestCaseSource(nameof(InvalidStartPointTypeStrings))]
-        public void Parse_ValueIsNotValid_ReturnsDefaultStartPointType(string invalidOrUnknownStartPointTypeStrings)
+        public void Parse_ValueIsNotValid_Throws(string invalidOrUnknownStartPointTypeStrings)
         {
-            var startPoint = StartPointTypeHelper.Parse(invalidOrUnknownStartPointTypeStrings);
+            TestDelegate testDelegate = () => StartPointTypeHelper.Parse(invalidOrUnknownStartPointTypeStrings);
 
-            Assert.That(startPoint, Is.EqualTo(CrossSectionParserConstants.DefaultStartPointType));
+            Assert.That(testDelegate, Throws.TypeOf<ParsingFailedException>());
         }
 
         private static readonly List<string> InvalidStartPointTypeStrings = new List<string>
@@ -42,7 +43,8 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
             "Left edge OF WATER",
             "LEfTEdGEOFWaTER",
             "Left",
-            "LeftBank"
+            "LeftBank",
+            "LEW"
         };
 
         [TestCaseSource(nameof(RightEdgeOfWaterTestCases))]
@@ -60,7 +62,8 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
             "RIGHT edge OF WATER",
             "RightEdGEOFWaTER",
             "Right",
-            "RightBank"
+            "RightBank",
+            "REW"
         };
     }
 }
