@@ -25,7 +25,8 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
             Guid.NewGuid().ToString(),
             "",
             null,
-            "About the LeftBank"
+            "About the LeftBank",
+            "Unspecified"
         };
 
         [TestCaseSource(nameof(LeftEdgeOfWaterTestCases))]

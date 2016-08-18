@@ -20,11 +20,19 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
             StartPointType startPointEnum;
 
             if (Enum.TryParse(startPoint, true, out startPointEnum))
+            {
+                if (startPointEnum == StartPointType.Unspecified) throw CreateInvalidStartBankException();
+
                 return startPointEnum;
+            }
 
             return AttemptToInferStartPoint(startPoint);
         }
 
+        private static ParsingFailedException CreateInvalidStartBankException()
+        {
+            return new ParsingFailedException("StartBank must be set to 'LeftEdgeOfWater' or 'RightEdgeOfWater'");
+        }
 
         private static StartPointType AttemptToInferStartPoint(string startPoint)
         {
@@ -34,7 +42,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
             if(StartsWithAnyPrefix(startPoint, ValidRightPrefixes))
                 return StartPointType.RightEdgeOfWater;
 
-            throw new ParsingFailedException("StartBank must be set to 'LeftEdgeOfWater' or 'RightEdgeOfWater'");
+            throw CreateInvalidStartBankException();
         }
 
         private static bool StartsWithAnyPrefix(string startPoint, string[] validPrefixes)
