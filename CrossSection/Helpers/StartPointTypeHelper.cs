@@ -12,8 +12,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 
         public static StartPointType Parse(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-                throw new ParsingFailedException("StartPoint must be specified");
+            if (string.IsNullOrWhiteSpace(value)) throw CreateInvalidStartBankException();
 
             var startPoint = value.Replace(" ", string.Empty);
 
