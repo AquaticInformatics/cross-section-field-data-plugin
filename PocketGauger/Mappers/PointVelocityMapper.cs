@@ -15,6 +15,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         private readonly IParseContext _context;
         private readonly IVerticalMapper _verticalMapper;
 
+        public PointVelocityMapper(IVerticalMapper verticalMapper)
+        {
+            _verticalMapper = verticalMapper;
+        }
+
         public PointVelocityMapper(IParseContext context, IVerticalMapper verticalMapper)
         {
             _context = context;
@@ -48,7 +53,34 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        private DischargeChannelMeasurement CreateChannelMeasurement(IChannelInfo channelInfo, GaugingSummaryItem summaryItem, 
+        public PointVelocityDischarge Map(GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
+        {
+            var channelMeasurement = CreateChannelMeasurement(summaryItem, dischargeActivity);
+            var verticals = _verticalMapper.Map(summaryItem, channelMeasurement);
+
+            return new PointVelocityDischarge
+            {
+                Area = summaryItem.Area,
+                AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
+                ChannelMeasurement = channelMeasurement,
+                DischargeMethod = MapPointVelocityMethod(dischargeActivity.DischargeMethod),
+                MeasurementConditions = MeasurementCondition.OpenWater,
+                StartPoint = MapStartPoint(summaryItem.StartBank),
+                TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
+                DistanceToMeterUnitId = ParametersAndMethodsConstants.DistanceUnitId,
+                VelocityAverage = summaryItem.MeanVelocity,
+                VelocityAverageUnitId = ParametersAndMethodsConstants.VelocityUnitId,
+                VelocityObservationMethod = CalculateVelocityObservationMethod(summaryItem),
+                MeanObservationDuration = CalculateMeanObservationDuration(verticals),
+                Width = CalculateTotalWidth(verticals),
+                WidthUnitId = ParametersAndMethodsConstants.DistanceUnitId,
+                AscendingSegmentDisplayOrder = IsAscendingDisplayOrder(verticals),
+                MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals),
+                Verticals = verticals
+            };
+        }
+
+        private DischargeChannelMeasurement CreateChannelMeasurement(IChannelInfo channelInfo, GaugingSummaryItem summaryItem,
             DischargeActivity dischargeActivity)
         {
             var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod(summaryItem);
@@ -65,7 +97,28 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 MonitoringMethod = dischargeActivity.DischargeMethod,
                 MeterSuspension = meterSuspensionAndDeploymentMethod.Key,
                 DeploymentMethod = meterSuspensionAndDeploymentMethod.Value,
-                DistanceToGageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId)
+                DistanceToGageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId),
+            };
+        }
+
+        private DischargeChannelMeasurement CreateChannelMeasurement(GaugingSummaryItem summaryItem,
+            DischargeActivity dischargeActivity)
+        {
+            var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod(summaryItem);
+
+            return new DischargeChannelMeasurement
+            {
+                StartTime = dischargeActivity.StartTime,
+                EndTime = dischargeActivity.EndTime,
+                Discharge = summaryItem.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
+                ChannelName = ParametersAndMethodsConstants.DefaultChannelName,
+                Comments = summaryItem.Comments,
+                Party = summaryItem.ObserversName,
+                DischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId,
+                MonitoringMethodCode = dischargeActivity.DischargeMethodCode,
+                MeterSuspension = meterSuspensionAndDeploymentMethod.Key,
+                DeploymentMethod = meterSuspensionAndDeploymentMethod.Value,
+                DistanceToGageUnitId = ParametersAndMethodsConstants.DistanceUnitId
             };
         }
 

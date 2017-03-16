@@ -6,5 +6,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.Interfaces
     public interface ICrossSectionMapper
     {
         CrossSectionSurvey MapCrossSection(ILocationInfo location, Model.CrossSectionSurvey crossSectionSurvey);
+        CrossSectionSurvey MapCrossSection(Model.CrossSectionSurvey crossSectionSurvey);
     }
 }

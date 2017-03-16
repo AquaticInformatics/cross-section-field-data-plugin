@@ -33,5 +33,12 @@ namespace Server.Plugins.FieldVisit.CrossSection.Model
 
             throw new ParsingFailedException(Invariant($"Field '{field}' was not found in the file."));
         }
+
+        public string GetFieldValueWithDefault(string field, string defaultValue)
+        {
+            var fieldValue = GetFieldValue(field);
+
+            return string.IsNullOrWhiteSpace(fieldValue) ? defaultValue : fieldValue;
+        }
     }
 }

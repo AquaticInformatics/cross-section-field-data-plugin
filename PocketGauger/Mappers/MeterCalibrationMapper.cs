@@ -15,6 +15,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         public static string NonApplicable = "N/A";
         private readonly IParseContext _parseContext;
 
+        public MeterCalibrationMapper()
+        {
+        }
+
         public MeterCalibrationMapper(IParseContext parseContext)
         {
             _parseContext = parseContext;
@@ -93,7 +97,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 RangeEnd = GetRangeEnd(pocketGaugerCalibrations, i),
                 Slope = calibration.Factor.GetValueOrDefault(),
                 Intercept = calibration.Constant.GetValueOrDefault(),
-                InterceptUnit = _parseContext.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId)
+                InterceptUnit = _parseContext?.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId),
+                InterceptUnitId = ParametersAndMethodsConstants.VelocityUnitId
             };
         }
 

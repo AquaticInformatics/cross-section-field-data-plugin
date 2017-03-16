@@ -107,7 +107,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 
             if (!existingLocationVisits.Any())
                 return;
-            
+
             throw new ParsingFailedException("A Visit within the time range of the Cross-Section already exists.")
             {
                 TargetLocation = locationInfo,

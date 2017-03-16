@@ -8,5 +8,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Interfaces
     public interface IPointVelocityMapper
     {
         PointVelocityDischarge Map(IChannelInfo channelInfo, GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity);
+        PointVelocityDischarge Map(GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity);
     }
 }
