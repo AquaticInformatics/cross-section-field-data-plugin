@@ -37,7 +37,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _parseContext = _parseContextTestHelper.CreateMockParseContext();
 
             _dischargeActivityMapper = Substitute.For<IDischargeActivityMapper>();
-            _dischargeActivityMapper.Map(null, null).ReturnsForAnyArgs(new DischargeActivity());
+            _dischargeActivityMapper.Map(Arg.Any<GaugingSummaryItem>(), Arg.Any<TimeSpan>()).ReturnsForAnyArgs(new DischargeActivity());
 
             _mapper = new ParsedResultMapper(_parseContext, _dischargeActivityMapper);
 

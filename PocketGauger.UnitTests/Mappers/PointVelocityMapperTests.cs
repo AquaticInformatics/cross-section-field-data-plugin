@@ -67,7 +67,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _locationInfo = Substitute.For<ILocationInfo>();
 
-            _locationInfo.Channels.ReturnsForAnyArgs(new List<IChannelInfo> { _channelInfo });
             _locationInfo.UtcOffsetHours.ReturnsForAnyArgs(LocationUtcOffset);
         }
 
@@ -93,7 +92,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private PointVelocityDischarge MapPointVelocityActivity()
         {
-            return _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            return _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
         }
 
         [TestCase(ParametersAndMethodsConstants.MeanSectionMonitoringMethod, PointVelocityMethodType.MeanSection)]
@@ -164,18 +163,18 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         };
 
         [TestCaseSource(nameof(_nonBridgeGaugingMethodToMeterSuspensionAndExpectedDeploymentTypeTestCases))]
-        public void Map_NonBridgeGaugingMethod_IsMappedToExpectedMeterSuspensionAndDeploymentType(GaugingMethod? gaugingMethod, 
+        public void Map_NonBridgeGaugingMethod_IsMappedToExpectedMeterSuspensionAndDeploymentType(GaugingMethod? gaugingMethod,
             Tuple<MeterSuspensionType, DeploymentMethodType> expectedMeterAndDeploymentType)
         {
             _gaugingSummaryItem.GaugingMethodProxy = gaugingMethod.ToString();
 
             var pointVelocityDischarge = MapPointVelocityActivity();
 
-            AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.ChannelMeasurement, 
+            AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.ChannelMeasurement,
                 expectedMeterAndDeploymentType.Item1, expectedMeterAndDeploymentType.Item2);
         }
 
-        private static void AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(DischargeChannelMeasurement channelMeasurement, 
+        private static void AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(DischargeChannelMeasurement channelMeasurement,
             MeterSuspensionType meterSuspensionType, DeploymentMethodType expectedMeterAndDeploymentType)
         {
             Assert.That(channelMeasurement.MeterSuspension, Is.EqualTo(meterSuspensionType));
@@ -260,7 +259,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 StartTime = _dischargeActivity.StartTime,
                 EndTime = _dischargeActivity.EndTime,
                 Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
-                Channel = _channelInfo,
+                ChannelName = _channelInfo.ChannelName,
                 Comments = _gaugingSummaryItem.Comments,
                 Party = _gaugingSummaryItem.ObserversName,
                 DischargeUnit = _context.DischargeParameter.DefaultUnit,
@@ -272,7 +271,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_RetrievesVerticalsFromVerticalMapper()
         {
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             _mockVerticalMapper.Received().Map(_gaugingSummaryItem, pointVelocityDischarge.ChannelMeasurement);
         }
@@ -280,8 +279,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_EmptyVerticalsList_SetsMeanObservationDurationAsNull()
         {
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
-            
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
+
             Assert.That(pointVelocityDischarge.MeanObservationDuration, Is.Null);
         }
 
@@ -303,7 +302,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             SetupVerticalMapperToReturn(verticals);
 
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.MeanObservationDuration, Is.EqualTo(expectedMeanDuration));
         }
@@ -348,7 +347,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             SetupVerticalMapperToReturn(verticals);
 
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.MeanObservationDuration, Is.EqualTo(null));
         }
@@ -356,7 +355,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_EmptyVerticalsList_SetsWidthToNull()
         {
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.Width, Is.Null);
         }
@@ -377,7 +376,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             SetupVerticalMapperToReturn(verticals);
 
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.Width, Is.EqualTo(expectedTotalWidth));
         }
@@ -385,7 +384,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_EmptyVerticalsList_SetsAscendingDisplayOrderToTrue()
         {
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.True);
         }
@@ -399,7 +398,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             SetupVerticalMapperToReturn(verticals);
 
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.True);
         }
@@ -413,7 +412,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             SetupVerticalMapperToReturn(verticals);
 
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.False);
         }
@@ -421,7 +420,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_EmptyVerticalsList_SetsMaximumSegmentDischargeToNull()
         {
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.MaximumSegmentDischarge, Is.Null);
         }
@@ -430,7 +429,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         public void Map_PointVelocityWithVerticals_SetsMaximumSegmentDischargeToVerticalWithLargestTotalDischargePortion()
         {
             var verticals = _fixture.CreateMany<Vertical>().ToList();
-            
+
             SetupVerticalMapperToReturn(verticals);
 
             var expectedMaximumSegmentDischarge = verticals
@@ -438,8 +437,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 .Last()
                 .Segment
                 .TotalDischargePortion;
-            
-            var pointVelocityDischarge = _mapper.Map(_channelInfo, _gaugingSummaryItem, _dischargeActivity);
+
+            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.MaximumSegmentDischarge, Is.EqualTo(expectedMaximumSegmentDischarge));
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
@@ -26,8 +27,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             foreach (var gaugingSummaryItem in gaugingSummary.GaugingSummaryItems)
             {
                 var locationInfo = GetLocationInfoOrThrow(gaugingSummaryItem.SiteId);
+                var locationUtcOffset = TimeSpan.FromHours(locationInfo.UtcOffsetHours);
 
-                var dischargeActivity = _dischargeActivityMapper.Map(locationInfo, gaugingSummaryItem);
+                var dischargeActivity = _dischargeActivityMapper.Map(gaugingSummaryItem, locationUtcOffset);
 
                 parsedResults.Add(CreateParsedResult(locationInfo, dischargeActivity));
             }

@@ -45,7 +45,6 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GaugingSummaryAssembler.cs" />
-    <Compile Include="Helpers\ChannelHelper.cs" />
     <Compile Include="Helpers\DoubleHelper.cs" />
     <Compile Include="Helpers\IntHelper.cs" />
     <Compile Include="Interfaces\IDischargeActivityMapper.cs" />

@@ -41,7 +41,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
                 .Returns(fieldVisitsToReturn);
 
             var channel = Substitute.For<IChannelInfo>();
-            LocationInfo.Channels.ReturnsForAnyArgs(new List<IChannelInfo> { channel });
             _parseContext.FindLocationByIdentifier(Arg.Any<string>()).Returns(LocationInfo);
         }
 

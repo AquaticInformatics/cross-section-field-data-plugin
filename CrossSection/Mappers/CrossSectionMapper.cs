@@ -36,9 +36,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
                 EndTime = crossSectionSurvey.GetFieldValue(EndDate).ToDateTimeOffset(),
                 Stage = crossSectionSurvey.GetFieldValue(Stage).ToDouble(),
                 StartPoint = crossSectionSurvey.GetFieldValue(StartBank).ToStartPointType(),
-                RelativeLocation = FindRelativeLocation(location, crossSectionSurvey.GetFieldValue(RelativeLocation)),
                 RelativeLocationName = crossSectionSurvey.GetFieldValueWithDefault(RelativeLocation, CrossSectionParserConstants.DefaultRelativeLocationName),
-                Channel = FindChannelInfo(location, crossSectionSurvey.GetFieldValue(Channel)),
                 ChannelName = crossSectionSurvey.GetFieldValueWithDefault(Channel, CrossSectionParserConstants.DefaultChannelName),
                 DepthUnit = commonStageUnit,
                 DepthUnitId = commonStageUnit.UnitId,
@@ -75,34 +73,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         {
             return _parseContext.LengthUnits.FirstOrDefault(u => u.Name.EqualsOrdinalIgnoreCase(unit)) ??
                 _parseContext.GageHeightParameter.DefaultUnit;
-        }
-
-        private static IRelativeLocationInfo FindRelativeLocation(ILocationInfo location, string relativeLocationName)
-        {
-            if (string.IsNullOrWhiteSpace(relativeLocationName))
-                return GetOrCreateRelativeLocation(location, CrossSectionParserConstants.DefaultRelativeLocationName);
-
-            return GetOrCreateRelativeLocation(location, relativeLocationName);
-        }
-
-        private static IRelativeLocationInfo GetOrCreateRelativeLocation(ILocationInfo location, string relativeLocationName)
-        {
-            return location.RelativeLocations.FirstOrDefault(l => l.RelativeLocationName.EqualsOrdinalIgnoreCase(relativeLocationName)) ??
-                   location.CreateNewRelativeLocation(relativeLocationName);
-        }
-
-        private static IChannelInfo FindChannelInfo(ILocationInfo location, string channelName)
-        {
-            if (string.IsNullOrWhiteSpace(channelName))
-                return GetOrCreateChannel(location, CrossSectionParserConstants.DefaultChannelName);
-
-            return GetOrCreateChannel(location, channelName);
-        }
-
-        private static IChannelInfo GetOrCreateChannel(ILocationInfo location, string channelName)
-        {
-            return location.Channels.FirstOrDefault(c => c.ChannelName.EqualsOrdinalIgnoreCase(channelName)) ??
-                   location.CreateNewChannel(channelName);
         }
     }
 }

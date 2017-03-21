@@ -39,14 +39,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
                 .Returns(new List<PluginFramework.CrossSectionPoint>());
 
             _mockLocationInfo = Substitute.For<ILocationInfo>();
-            _mockLocationInfo.RelativeLocations.Returns(new List<IRelativeLocationInfo>
-            {
-                _mockRelativeLocation
-            });
-            _mockLocationInfo.Channels.Returns(new List<IChannelInfo>
-            {
-                _mockChannel
-            });
 
             _crossSectionMapper = new CrossSectionMapper(_mockParseContext, _mockCrossSectionPointMapper);
 
@@ -73,7 +65,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
                 StartTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7)),
                 EndTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7)),
                 Party = "Cross-Section Party",
-                Channel = _mockChannel,
                 ChannelName = _mockChannel.ChannelName,
                 RelativeLocation = _mockRelativeLocation,
                 RelativeLocationName = _mockRelativeLocation.RelativeLocationName,
@@ -120,92 +111,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
 
             _mockCrossSectionPointMapper.Received(1).MapPoints(Arg.Any<List<CrossSectionPoint>>());
-        }
-
-        [Test]
-        public void MapCrossSection_RelativeLocationExistsInLocation_DoesNotCallCreateNewRelativeLocation()
-        {
-            _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
-
-            _mockLocationInfo.DidNotReceive().CreateNewRelativeLocation(Arg.Any<string>());
-        }
-
-        [Test]
-        public void MapCrossSection_RelativeLocationDoesNotExistInLocation_CallsCreateNewRelativeLocation()
-        {
-            const string newRelativeLocation = "new relative location";
-            _crossSectionSurvey.Fields[CrossSectionDataFields.RelativeLocation] = newRelativeLocation;
-
-            _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
-
-            _mockLocationInfo.Received(1).CreateNewRelativeLocation(newRelativeLocation);
-        }
-
-        [Test]
-        public void MapCrossSection_EmptyRelativeLocationNameAndDefaultRelativeLocationExistsInLocation_ReturnsDefaultRelativeLocation()
-        {
-            var defaultRelativeLocation =
-                TestHelpers.SetupMockRelativeLocation(CrossSectionParserConstants.DefaultRelativeLocationName);
-            _mockLocationInfo.RelativeLocations.Returns(new List<IRelativeLocationInfo> { defaultRelativeLocation });
-            _crossSectionSurvey.Fields[CrossSectionDataFields.RelativeLocation] = string.Empty;
-
-            var actual = _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
-
-            _mockLocationInfo.DidNotReceive().CreateNewRelativeLocation(Arg.Any<string>());
-            Assert.That(actual.RelativeLocation, Is.EqualTo(defaultRelativeLocation));
-        }
-
-        [Test]
-        public void MapCrossSection_EmptyRelativeLocationNameAndDefaultRelativeLocationDoesNotExistInLocation_CallsCreateNewRelativeLocation()
-        {
-            _crossSectionSurvey.Fields[CrossSectionDataFields.RelativeLocation] = string.Empty;
-
-            _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
-
-            _mockLocationInfo.Received(1).CreateNewRelativeLocation(CrossSectionParserConstants.DefaultRelativeLocationName);
-        }
-
-        [Test]
-        public void MapCrossSection_ChannelExistsInLocation_DoesNotCallCreateNewChannel()
-        {
-            _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
-
-            _mockLocationInfo.DidNotReceive().CreateNewChannel(Arg.Any<string>());
-        }
-
-        [Test]
-        public void MapCrossSection_ChannelDoesNotExistInLocation_CallsCreateNewChannel()
-        {
-            const string newChannel = "new channel";
-            _crossSectionSurvey.Fields[CrossSectionDataFields.Channel] = newChannel;
-
-            _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
-
-            _mockLocationInfo.Received(1).CreateNewChannel(newChannel);
-        }
-
-        [Test]
-        public void MapCrossSection_EmptyChannelNameAndDefaultChannelExistsInLocation_ReturnsDefaultChannel()
-        {
-            var defaultChannel =
-                TestHelpers.SetupMockChannel(CrossSectionParserConstants.DefaultChannelName);
-            _mockLocationInfo.Channels.Returns(new List<IChannelInfo> { defaultChannel });
-            _crossSectionSurvey.Fields[CrossSectionDataFields.Channel] = string.Empty;
-
-            var actual = _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
-
-            _mockLocationInfo.DidNotReceive().CreateNewChannel(Arg.Any<string>());
-            Assert.That(actual.Channel, Is.EqualTo(defaultChannel));
-        }
-
-        [Test]
-        public void MapCrossSection_EmptyChannelNameAndDefaultChannelDoesNotExistInLocation_CallsCreateNewChannel()
-        {
-            _crossSectionSurvey.Fields[CrossSectionDataFields.Channel] = string.Empty;
-
-            _crossSectionMapper.MapCrossSection(_mockLocationInfo, _crossSectionSurvey);
-
-            _mockLocationInfo.Received(1).CreateNewChannel(CrossSectionParserConstants.DefaultChannelName);
         }
     }
 }
