@@ -10,8 +10,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData
         public static void RegisterMockTypes(IFixture fixture)
         {
             fixture.Register(() => SetupMockUnit(fixture.Create<string>()));
-            fixture.Register(() => SetupMockChannel(fixture.Create<string>()));
-            fixture.Register(() => SetupMockRelativeLocation(fixture.Create<string>()));
         }
 
         public static IDictionary<string, string> CreateExpectedCrossSectionFields()
@@ -35,22 +33,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData
         {
             var relativeLocation = Substitute.For<ILocationInfo>();
             relativeLocation.LocationIdentifier.Returns(locationIdentifier);
-
-            return relativeLocation;
-        }
-
-        public static IChannelInfo SetupMockChannel(string channelName)
-        {
-            var channel = Substitute.For<IChannelInfo>();
-            channel.ChannelName.Returns(channelName);
-
-            return channel;
-        }
-
-        public static IRelativeLocationInfo SetupMockRelativeLocation(string relativeLocationName)
-        {
-            var relativeLocation = Substitute.For<IRelativeLocationInfo>();
-            relativeLocation.RelativeLocationName.Returns(relativeLocationName);
 
             return relativeLocation;
         }

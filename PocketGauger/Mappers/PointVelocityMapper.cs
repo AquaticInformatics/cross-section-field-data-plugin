@@ -12,45 +12,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 {
     public class PointVelocityMapper : IPointVelocityMapper
     {
-        private readonly IParseContext _context;
         private readonly IVerticalMapper _verticalMapper;
 
         public PointVelocityMapper(IVerticalMapper verticalMapper)
         {
             _verticalMapper = verticalMapper;
-        }
-
-        public PointVelocityMapper(IParseContext context, IVerticalMapper verticalMapper)
-        {
-            _context = context;
-            _verticalMapper = verticalMapper;
-        }
-
-        public PointVelocityDischarge Map(IChannelInfo channelInfo, GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
-        {
-            var channelMeasurement = CreateChannelMeasurement(channelInfo, summaryItem, dischargeActivity);
-            var verticals = _verticalMapper.Map(summaryItem, channelMeasurement);
-
-            return new PointVelocityDischarge
-            {
-                Area = summaryItem.Area,
-                AreaUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.AreaParameterId),
-                ChannelMeasurement = channelMeasurement,
-                DischargeMethod = MapPointVelocityMethod(dischargeActivity.DischargeMethod),
-                MeasurementConditions = MeasurementCondition.OpenWater,
-                StartPoint = MapStartPoint(summaryItem.StartBank),
-                TaglinePointUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId),
-                DistanceToMeterUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId),
-                VelocityAverage = summaryItem.MeanVelocity,
-                VelocityAverageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId),
-                VelocityObservationMethod = CalculateVelocityObservationMethod(summaryItem),
-                MeanObservationDuration = CalculateMeanObservationDuration(verticals),
-                Width = CalculateTotalWidth(verticals),
-                WidthUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.WidthParameterId),
-                AscendingSegmentDisplayOrder = IsAscendingDisplayOrder(verticals),
-                MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals),
-                Verticals = verticals
-            };
         }
 
         public PointVelocityDischarge Map(GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
@@ -77,26 +43,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 AscendingSegmentDisplayOrder = IsAscendingDisplayOrder(verticals),
                 MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals),
                 Verticals = verticals
-            };
-        }
-
-        private DischargeChannelMeasurement CreateChannelMeasurement(IChannelInfo channelInfo, GaugingSummaryItem summaryItem,
-            DischargeActivity dischargeActivity)
-        {
-            var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod(summaryItem);
-
-            return new DischargeChannelMeasurement
-            {
-                StartTime = dischargeActivity.StartTime,
-                EndTime = dischargeActivity.EndTime,
-                Discharge = summaryItem.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
-                Comments = summaryItem.Comments,
-                Party = summaryItem.ObserversName,
-                DischargeUnit = _context.DischargeParameter.DefaultUnit,
-                MonitoringMethod = dischargeActivity.DischargeMethod,
-                MeterSuspension = meterSuspensionAndDeploymentMethod.Key,
-                DeploymentMethod = meterSuspensionAndDeploymentMethod.Value,
-                DistanceToGageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId),
             };
         }
 

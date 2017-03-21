@@ -40,7 +40,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData
             LocationInfo.FindLocationFieldVisitsInTimeRange(Arg.Any<DateTimeOffset>(), Arg.Any<DateTimeOffset>())
                 .Returns(fieldVisitsToReturn);
 
-            var channel = Substitute.For<IChannelInfo>();
             _parseContext.FindLocationByIdentifier(Arg.Any<string>()).Returns(LocationInfo);
         }
 

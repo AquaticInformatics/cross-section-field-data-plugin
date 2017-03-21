@@ -25,8 +25,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         private CrossSectionSurvey _crossSectionSurvey;
 
         private readonly IUnit _mockUnit = TestHelpers.SetupMockUnit("ft");
-        private readonly IRelativeLocationInfo _mockRelativeLocation = TestHelpers.SetupMockRelativeLocation("At the Gage");
-        private readonly IChannelInfo _mockChannel = TestHelpers.SetupMockChannel("Right overflow");
 
         [SetUp]
         public void TestSetup()
@@ -65,9 +63,8 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
                 StartTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7)),
                 EndTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7)),
                 Party = "Cross-Section Party",
-                ChannelName = _mockChannel.ChannelName,
-                RelativeLocation = _mockRelativeLocation,
-                RelativeLocationName = _mockRelativeLocation.RelativeLocationName,
+                ChannelName = "Right overflow",
+                RelativeLocationName = "At the Gage",
                 StartPoint = StartPointType.LeftEdgeOfWater,
                 Comments = "Cross-section survey comments",
                 Stage = 12.2,

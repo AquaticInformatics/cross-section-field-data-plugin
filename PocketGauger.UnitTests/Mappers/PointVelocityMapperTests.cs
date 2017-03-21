@@ -22,7 +22,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private IFixture _fixture;
         private IParseContext _context;
         private ILocationInfo _locationInfo;
-        private IChannelInfo _channelInfo;
+        private string _channelName;
 
         private IVerticalMapper _mockVerticalMapper;
         private IPointVelocityMapper _mapper;
@@ -41,11 +41,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             SetupMockLocationInfo();
             SetupMockVerticalMapper();
 
-            _channelInfo = Substitute.For<IChannelInfo>();
+            _channelName = _fixture.Create<string>();
 
             _gaugingSummaryItem = _fixture.Create<GaugingSummaryItem>();
 
-            _mapper = new PointVelocityMapper(_context, _mockVerticalMapper);
+            _mapper = new PointVelocityMapper(_mockVerticalMapper);
         }
 
         private void SetupMockVerticalMapper()
@@ -259,7 +259,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 StartTime = _dischargeActivity.StartTime,
                 EndTime = _dischargeActivity.EndTime,
                 Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
-                ChannelName = _channelInfo.ChannelName,
+                ChannelName = _channelName,
                 Comments = _gaugingSummaryItem.Comments,
                 Party = _gaugingSummaryItem.ObserversName,
                 DischargeUnit = _context.DischargeParameter.DefaultUnit,
