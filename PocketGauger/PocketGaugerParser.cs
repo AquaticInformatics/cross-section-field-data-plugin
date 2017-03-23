@@ -36,7 +36,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
         public void ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
         {
-            //throw new NotImplementedException();
             using (var zipArchive = GetZipArchive(fileStream))
             using (var zipContents = GetZipContents(zipArchive))
             {

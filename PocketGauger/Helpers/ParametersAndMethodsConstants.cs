@@ -18,7 +18,7 @@
         public const string VelocityUnitId = "m/s";
         public const string DischargeUnitId = "m^3/s";
 
-        public const string GageHeightMethodCode = "ATP_DEC_2";
+        public const string GageHeightMethodCode = "HGFLOAT";
         public const string GageHeightUnitId = DistanceUnitId;
 
         public const string DefaultChannelName = "Main";

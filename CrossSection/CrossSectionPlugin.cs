@@ -89,11 +89,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
                 return;
 
             throw new ParsingFailedException(
-                Invariant($"Location identifier '{locationIdentifier}' does not match the identifier in the file: '{locationIdentifierFromFile}'"))
-            {
-//                TargetLocation = _parseContext.TargetLocation,
-//                AmbiguousLocations = new[] { fileLocation }
-            };
+                Invariant($"Location identifier '{locationIdentifier}' does not match the identifier in the file: '{locationIdentifierFromFile}'"));
         }
 
         private static string GetLocationIdentifier(CrossSectionSurvey crossSectionSurvey)

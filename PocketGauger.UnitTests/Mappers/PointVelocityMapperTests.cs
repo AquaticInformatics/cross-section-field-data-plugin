@@ -20,9 +20,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
     public class PointVelocityMapperTests
     {
         private IFixture _fixture;
-        private IParseContext _context;
         private ILocationInfo _locationInfo;
-        private string _channelName;
 
         private IVerticalMapper _mockVerticalMapper;
         private IPointVelocityMapper _mapper;
@@ -36,12 +34,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             SetupAutoFixture();
 
-            _context = new ParseContextTestHelper().CreateMockParseContext();
-
             SetupMockLocationInfo();
             SetupMockVerticalMapper();
-
-            _channelName = _fixture.Create<string>();
 
             _gaugingSummaryItem = _fixture.Create<GaugingSummaryItem>();
 
@@ -100,7 +94,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [TestCase(null, PointVelocityMethodType.Unknown)]
         public void Map_DischargeMethod_IsMappedToExpectedStartPointType(string monitoringMethodCode, PointVelocityMethodType expectedPointVelocityMethod)
         {
-            _dischargeActivity.DischargeMethod.MethodCode.ReturnsForAnyArgs(monitoringMethodCode);
+            _dischargeActivity.DischargeMethodCode = monitoringMethodCode;
 
             var pointVelocityActivity = MapPointVelocityActivity();
 
@@ -229,13 +223,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             return new PointVelocityDischarge
             {
                 Area = _gaugingSummaryItem.Area,
-                AreaUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.AreaParameterId),
+                AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
                 MeasurementConditions = MeasurementCondition.OpenWater,
-                TaglinePointUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId),
-                DistanceToMeterUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId),
+                TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
+                DistanceToMeterUnitId = ParametersAndMethodsConstants.DistanceUnitId,
                 VelocityAverage = _gaugingSummaryItem.MeanVelocity,
-                VelocityAverageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId),
-                WidthUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.WidthParameterId),
+                VelocityAverageUnitId = ParametersAndMethodsConstants.VelocityUnitId,
+                WidthUnitId = ParametersAndMethodsConstants.DistanceUnitId,
                 AscendingSegmentDisplayOrder = true
             };
         }
@@ -259,12 +253,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 StartTime = _dischargeActivity.StartTime,
                 EndTime = _dischargeActivity.EndTime,
                 Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
-                ChannelName = _channelName,
+                ChannelName = ParametersAndMethodsConstants.DefaultChannelName,
                 Comments = _gaugingSummaryItem.Comments,
                 Party = _gaugingSummaryItem.ObserversName,
-                DischargeUnit = _context.DischargeParameter.DefaultUnit,
-                MonitoringMethod = _dischargeActivity.DischargeMethod,
-                DistanceToGageUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.DistanceToGageParameterId)
+                DischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId,
+                MonitoringMethodCode = _dischargeActivity.DischargeMethodCode,
+                DistanceToGageUnitId = ParametersAndMethodsConstants.DistanceUnitId
             };
         }
 

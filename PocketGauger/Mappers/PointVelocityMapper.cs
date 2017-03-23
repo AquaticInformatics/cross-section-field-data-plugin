@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
@@ -29,7 +28,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 Area = summaryItem.Area,
                 AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
                 ChannelMeasurement = channelMeasurement,
-                DischargeMethod = MapPointVelocityMethod(dischargeActivity.DischargeMethod),
+                DischargeMethod = MapPointVelocityMethod(dischargeActivity.DischargeMethodCode),
                 MeasurementConditions = MeasurementCondition.OpenWater,
                 StartPoint = MapStartPoint(summaryItem.StartBank),
                 TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
@@ -172,9 +171,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
         }
 
-        private static PointVelocityMethodType MapPointVelocityMethod(IMonitoringMethod gaugingMethod)
+        private static PointVelocityMethodType MapPointVelocityMethod(string gaugingMethodCode)
         {
-            switch (gaugingMethod.MethodCode)
+            switch (gaugingMethodCode)
             {
                 case ParametersAndMethodsConstants.MeanSectionMonitoringMethod:
                     return PointVelocityMethodType.MeanSection;

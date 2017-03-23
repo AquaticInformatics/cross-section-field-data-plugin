@@ -90,7 +90,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
 
-            Assert.That(dischargeActivity.DischargeMethod.MethodCode, Is.EqualTo(ParametersAndMethodsConstants.MeanSectionMonitoringMethod));
+            Assert.That(dischargeActivity.DischargeMethodCode, Is.EqualTo(ParametersAndMethodsConstants.MeanSectionMonitoringMethod));
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
 
-            Assert.That(dischargeActivity.DischargeMethod.MethodCode, Is.EqualTo(ParametersAndMethodsConstants.MidSectionMonitoringMethod));
+            Assert.That(dischargeActivity.DischargeMethodCode, Is.EqualTo(ParametersAndMethodsConstants.MidSectionMonitoringMethod));
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
 
-            Assert.That(dischargeActivity.DischargeMethod.MethodCode, Is.EqualTo(ParametersAndMethodsConstants.DefaultMonitoringMethod));
+            Assert.That(dischargeActivity.DischargeMethodCode, Is.EqualTo(ParametersAndMethodsConstants.DefaultMonitoringMethod));
         }
 
         [Test]
@@ -155,12 +155,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             {
                 Party = _gaugingSummaryItem.ObserversName,
                 Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
-                DischargeUnit = _context.DischargeParameter.DefaultUnit,
+                DischargeMethodCode = ParametersAndMethodsConstants.MidSectionMonitoringMethod,
+                DischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId,
                 MeanGageHeight = _gaugingSummaryItem.MeanStage,
-                GageHeightUnit = _context.GageHeightParameter.DefaultUnit,
-                GageHeightMethod = _context.GetDefaultMonitoringMethod(),
+                GageHeightUnitId = ParametersAndMethodsConstants.DistanceUnitId,
+                GageHeightMethodCode = ParametersAndMethodsConstants.GageHeightMethodCode,
                 MeasurementId = _gaugingSummaryItem.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
-                VelocityUnit = _context.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId),
+                VelocityUnitId = ParametersAndMethodsConstants.VelocityUnitId,
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true
             };
