@@ -17,15 +17,6 @@ namespace Server.Plugins.FieldVisit.CrossSection
 {
     public class CrossSectionPlugin : IFieldDataPlugIn
     {
-        public ICollection<ParsedResult> ParseFile(Stream fileStream, IParseContext context, ILog logger)
-        {
-            var crossSectionSurvey = ProcessFileStream(CreateCrossSectionParser(), fileStream);
-
-            var parsedResult = CreateParsedResult(CreateParsedResultMapper(context), crossSectionSurvey);
-
-            return new[] { parsedResult };
-        }
-
         public void ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
         {
             var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);

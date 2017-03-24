@@ -5,11 +5,14 @@ using Common.TestHelpers.NUnitExtensions;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using log4net;
+using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
-using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
+using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
+using DataModel = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
@@ -21,7 +24,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         private PocketGaugerParser _pocketGaugerParser;
 
         private Stream _stream;
-        private IParseContext _parseContext;
+        private IFieldDataResultsAppender _fieldDataResultsAppender;
         private ILog _logger;
 
         private IFixture _fixture;
@@ -33,7 +36,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             _pocketGaugerParser = new PocketGaugerParser();
             _logger = null;
-            _parseContext = new ParseContextTestHelper().CreateMockParseContext();
+            _fieldDataResultsAppender = Substitute.For<IFieldDataResultsAppender>();
 
             const string testPath = @"Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData.PGData.zip";
             _stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(testPath);
@@ -52,7 +55,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _stream = new MemoryStream(_fixture.Create<byte[]>());
 
             TestDelegate testDelegate =
-                () => _pocketGaugerParser.ParseFile(_stream, _parseContext, _logger);
+                () => _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
 
             Assert.That(testDelegate,
                 Throws.Exception.TypeOf<FormatNotSupportedException>().With.Message.Contains("not a zip file"));
@@ -63,7 +66,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         {
             _stream = CreateZipStream(_fixture.Create<string>());
 
-            TestDelegate testDelegate = () => _pocketGaugerParser.ParseFile(_stream, _parseContext, _logger);
+            TestDelegate testDelegate = () => _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
 
             Assert.That(testDelegate,
                 Throws.Exception.TypeOf<FormatNotSupportedException>()
@@ -98,11 +101,17 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         [Test]
         public void ParseFile_ValidFileStreamZip_ReturnsExpectedNumberOfParsedResults()
         {
-            const int expectedNumberOfParsedResults = 3;
+            const int expectedNumberOfDischargeActivities = 3;
 
-            var results = _pocketGaugerParser.ParseFile(_stream, _parseContext, _logger);
+            _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
 
-            Assert.That(results, Has.Count.EqualTo(expectedNumberOfParsedResults));
+            _fieldDataResultsAppender
+                .Received(expectedNumberOfDischargeActivities)
+                .AddFieldVisit(Arg.Any<string>(), Arg.Any<DataModel.FieldVisit>());
+
+            _fieldDataResultsAppender
+                .Received(expectedNumberOfDischargeActivities)
+                .AddDischargeActivity(Arg.Any<IFieldVisitInfo>(), Arg.Any<DischargeActivity>());
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
@@ -11,29 +10,13 @@ using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.Parsers;
 using DataModel = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
+using static System.FormattableString;
 
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
     public class PocketGaugerParser : IFieldDataPlugIn
     {
-        public ICollection<ParsedResult> ParseFile(Stream fileStream, IParseContext context, ILog logger)
-        {
-            using (var zipArchive = GetZipArchive(fileStream))
-            using (var zipContents = GetZipContents(zipArchive))
-            {
-                if (!zipContents.ContainsKey(FileNames.GaugingSummary))
-                {
-                    throw new FormatNotSupportedException(
-                        string.Format("Zip file does not contain file {0}", FileNames.GaugingSummary));
-                }
-
-                var gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
-
-                return CreateParsedResults(context, gaugingSummary);
-            }
-        }
-
         public void ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
         {
             using (var zipArchive = GetZipArchive(fileStream))
@@ -42,7 +25,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 if (!zipContents.ContainsKey(FileNames.GaugingSummary))
                 {
                     throw new FormatNotSupportedException(
-                        string.Format("Zip file does not contain file {0}", FileNames.GaugingSummary));
+                        Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
                 }
 
                 var gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
@@ -71,7 +54,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             }
             catch (InvalidDataException)
             {
-                throw new FormatNotSupportedException("fileStream is not a zip file");
+                throw new FormatNotSupportedException("File is not a zip file");
             }
         }
 
@@ -89,17 +72,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger
         private static GaugingSummaryAssembler CreateGaugingSummaryAssembler()
         {
             return new GaugingSummaryAssembler(new GaugingSummaryParser(), new MeterDetailsParser(), new PanelParser());
-        }
-
-        public List<ParsedResult> CreateParsedResults(IParseContext context, GaugingSummary gaugingSummary)
-        {
-            var meterCalibrationMapper = new MeterCalibrationMapper(context);
-            var verticalMapper = new VerticalMapper(meterCalibrationMapper);
-            var pointVelocityMapper = new PointVelocityMapper(verticalMapper);
-            var dischargeActivityMapper = new DischargeActivityMapper(pointVelocityMapper);
-            var parsedResultMapper = new ParsedResultMapper(context, dischargeActivityMapper);
-
-            return parsedResultMapper.CreateParsedResults(gaugingSummary);
         }
 
         public void ProcessGaugingSummary(GaugingSummary gaugingSummary, IFieldDataResultsAppender fieldDataResultsAppender)
