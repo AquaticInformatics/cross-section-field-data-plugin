@@ -1,17 +1,9 @@
 ﻿using System.Collections.Generic;
-using NSubstitute;
-using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData
 {
     public class TestHelpers
     {
-        public static void RegisterMockTypes(IFixture fixture)
-        {
-            fixture.Register(() => SetupMockUnit(fixture.Create<string>()));
-        }
-
         public static IDictionary<string, string> CreateExpectedCrossSectionFields()
         {
             return new Dictionary<string, string>
@@ -27,22 +19,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData
                 { "StartBank", "Left bank" },
                 { "Comment", "Cross-section survey comments" }
             };
-        }
-
-        public static ILocationInfo SetupMockLocationInfo(string locationIdentifier)
-        {
-            var relativeLocation = Substitute.For<ILocationInfo>();
-            relativeLocation.LocationIdentifier.Returns(locationIdentifier);
-
-            return relativeLocation;
-        }
-
-        public static IUnit SetupMockUnit(string unitName)
-        {
-            var unit = Substitute.For<IUnit>();
-            unit.Name.Returns(unitName);
-
-            return unit;
         }
     }
 }

@@ -5,7 +5,6 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
@@ -20,21 +19,17 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
     public class PointVelocityMapperTests
     {
         private IFixture _fixture;
-        private ILocationInfo _locationInfo;
 
         private IVerticalMapper _mockVerticalMapper;
         private IPointVelocityMapper _mapper;
         private GaugingSummaryItem _gaugingSummaryItem;
         private DischargeActivity _dischargeActivity;
 
-        private const int LocationUtcOffset = 3;
-
         [TestFixtureSetUp]
         public void SetupForAllTests()
         {
             SetupAutoFixture();
 
-            SetupMockLocationInfo();
             SetupMockVerticalMapper();
 
             _gaugingSummaryItem = _fixture.Create<GaugingSummaryItem>();
@@ -52,16 +47,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _fixture = new Fixture();
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
-            ParameterRegistrar.Register(_fixture);
             CollectionRegistrar.Register(_fixture);
             _fixture.Register<MeasurementConditionData>(() => new OpenWaterData());
-        }
-
-        private void SetupMockLocationInfo()
-        {
-            _locationInfo = Substitute.For<ILocationInfo>();
-
-            _locationInfo.UtcOffsetHours.ReturnsForAnyArgs(LocationUtcOffset);
         }
 
         [SetUp]

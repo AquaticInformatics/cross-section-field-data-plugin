@@ -4,7 +4,6 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
@@ -19,7 +18,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
     public class DischargeActivityMapperTests
     {
         private IFixture _fixture;
-        private IParseContext _context;
         private IPointVelocityMapper _mockPointVelocityMapper;
         private GaugingSummaryItem _gaugingSummaryItem;
 
@@ -33,8 +31,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _fixture = new Fixture();
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
             CollectionRegistrar.Register(_fixture);
-
-            _context = new ParseContextTestHelper().CreateMockParseContext();
 
             SetupMockPointVelocityMapper();
 
@@ -144,7 +140,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 .Excluding(activity => activity.StartTime)
                 .Excluding(activity => activity.EndTime)
                 .Excluding(activity => activity.MeasurementTime)
-                .Excluding(activity => activity.DischargeMethod)
                 .Excluding(activity => activity.MeanIndexVelocity)
                 .Excluding(activity => activity.DischargeSubActivities));
         }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
@@ -91,21 +90,6 @@ namespace Server.Plugins.FieldVisit.CrossSection
         private static ICrossSectionParser CreateCrossSectionParser()
         {
             return new CrossSectionSurveyParser();
-        }
-
-        private static ParsedResult CreateParsedResult(IParsedResultMapper mapper, CrossSectionSurvey crossSectionSurvey)
-        {
-            return mapper.CreateParsedResult(crossSectionSurvey);
-        }
-
-        private static IParsedResultMapper CreateParsedResultMapper(IParseContext context)
-        {
-            return new ParsedResultMapper(context, CreateCrossSectionMapper(context));
-        }
-
-        private static ICrossSectionMapper CreateCrossSectionMapper(IParseContext context)
-        {
-            return new CrossSectionMapper(context, new CrossSectionPointMapper());
         }
 
         private static ICrossSectionMapper CreateCrossSectionMapper()

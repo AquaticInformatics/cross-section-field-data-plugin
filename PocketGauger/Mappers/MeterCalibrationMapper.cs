@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
@@ -13,16 +12,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
     public class MeterCalibrationMapper : IMeterCalibrationMapper
     {
         public static string NonApplicable = "N/A";
-        private readonly IParseContext _parseContext;
-
-        public MeterCalibrationMapper()
-        {
-        }
-
-        public MeterCalibrationMapper(IParseContext parseContext)
-        {
-            _parseContext = parseContext;
-        }
 
         public MeterCalibration Map(MeterDetailsItem meterDetailsItem)
         {
@@ -97,7 +86,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 RangeEnd = GetRangeEnd(pocketGaugerCalibrations, i),
                 Slope = calibration.Factor.GetValueOrDefault(),
                 Intercept = calibration.Constant.GetValueOrDefault(),
-                InterceptUnit = _parseContext?.GetParameterDefaultUnit(ParametersAndMethodsConstants.VelocityParameterId),
                 InterceptUnitId = ParametersAndMethodsConstants.VelocityUnitId
             };
         }

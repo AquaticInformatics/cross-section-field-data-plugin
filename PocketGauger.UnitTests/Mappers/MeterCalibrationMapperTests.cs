@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using FluentAssertions;
-using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
@@ -20,11 +17,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
     {
         private IFixture _fixture;
 
-        private IParseContext _parseContext;
         private MeterCalibrationMapper _mapper;
 
         private MeterDetailsItem _input;
-        private IUnit _velocityDefaultUnit;
 
         [SetUp]
         public void SetUp()
@@ -33,29 +28,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
             CollectionRegistrar.Register(_fixture);
 
-            _parseContext = Substitute.For<IParseContext>();
-            SetupVelocityParameter();
-            _mapper = new MeterCalibrationMapper(_parseContext);
+            _mapper = new MeterCalibrationMapper();
 
             _input = _fixture.Create<MeterDetailsItem>();
-        }
-
-        private void SetupVelocityParameter()
-        {
-            var velocityParameter = Substitute.For<IParameter>();
-            velocityParameter.Id.Returns(ParametersAndMethodsConstants.VelocityParameterId);
-
-            _velocityDefaultUnit = Substitute.For<IUnit>();
-            velocityParameter.DefaultUnit.Returns(_velocityDefaultUnit);
-
-            _parseContext.AllParameters.ReturnsForAnyArgs(new List<IParameter> { velocityParameter });
         }
 
         [Test]
         public void Map_CorrectlyMapsCalibrationValues()
         {
             var result = _mapper.Map(_input);
-            
+
             Assert.That(result.SerialNumber, Is.EqualTo(_input.MeterNumber));
             Assert.That(result.Model, Is.EqualTo(_input.ImpellerNumber));
             Assert.That(result.Configuration, Is.EqualTo(_input.Description));
