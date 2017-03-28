@@ -34,13 +34,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             }
         }
 
-        public void ParseFile(Stream fileStream, string locationIdentifier, IFieldDataResultsAppender fieldDataResultsAppender,
+        public void ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             ParseFile(fileStream, fieldDataResultsAppender, logger);
         }
 
-        public void ParseFile(Stream fileStream, IFieldVisitInfo fieldVisitInfo, IFieldDataResultsAppender fieldDataResultsAppender,
+        public void ParseFile(Stream fileStream, IFieldVisitInfo selectedFieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             ParseFile(fileStream, fieldDataResultsAppender, logger);

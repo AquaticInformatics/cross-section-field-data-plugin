@@ -28,15 +28,15 @@ namespace Server.Plugins.FieldVisit.CrossSection
             fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisitInfo, crossSectionSurvey);
         }
 
-        public void ParseFile(Stream fileStream, string locationIdentifier, IFieldDataResultsAppender fieldDataResultsAppender,
+        public void ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
-            CheckForExpectedLocation(locationIdentifier, parsedFileContents);
+            CheckForExpectedLocation(selectedLocation.LocationIdentifier, parsedFileContents);
 
             var crossSectionSurvey = MapToCrossSectionSurvey(parsedFileContents);
 
-            var fieldVisitInfo = CreateFieldVisitForCrossSection(locationIdentifier, crossSectionSurvey, fieldDataResultsAppender);
+            var fieldVisitInfo = CreateFieldVisitForCrossSection(selectedLocation.LocationIdentifier, crossSectionSurvey, fieldDataResultsAppender);
 
             fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisitInfo, crossSectionSurvey);
         }
