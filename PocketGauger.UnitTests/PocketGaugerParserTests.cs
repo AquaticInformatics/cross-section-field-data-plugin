@@ -107,11 +107,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
-                .AddFieldVisit(Arg.Any<string>(), Arg.Any<DataModel.FieldVisit>());
+                .AddFieldVisit(Arg.Any<ILocation>(), Arg.Any<DataModel.FieldVisitDetails>());
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
-                .AddDischargeActivity(Arg.Any<IFieldVisitInfo>(), Arg.Any<DischargeActivity>());
+                .AddDischargeActivity(Arg.Any<IFieldVisit>(), Arg.Any<DischargeActivity>());
         }
     }
 }

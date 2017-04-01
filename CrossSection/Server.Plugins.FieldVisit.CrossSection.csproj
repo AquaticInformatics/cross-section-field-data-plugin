@@ -55,7 +55,6 @@
     <Compile Include="CrossSectionPlugin.cs" />
     <Compile Include="Mappers\CrossSectionPointMapper.cs" />
     <Compile Include="Parsers\CrossSectionSurveyParser.cs" />
-    <Compile Include="Interfaces\IParsedResultMapper.cs" />
     <Compile Include="Model\CrossSectionSurvey.cs" />
     <Compile Include="Model\CrossSectionPoint.cs" />
     <Compile Include="Helpers\CrossSectionDataFields.cs" />

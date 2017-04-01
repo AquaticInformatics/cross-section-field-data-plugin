@@ -3,13 +3,13 @@ using System.IO.Compression;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.Parsers;
-using DataModel = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using static System.FormattableString;
 
 
@@ -40,7 +40,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             ParseFile(fileStream, fieldDataResultsAppender, logger);
         }
 
-        public void ParseFile(Stream fileStream, IFieldVisitInfo selectedFieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
+        public void ParseFile(Stream fileStream, IFieldVisit selectedFieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             ParseFile(fileStream, fieldDataResultsAppender, logger);
@@ -81,12 +81,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             foreach (var gaugingSummaryItem in gaugingSummary.GaugingSummaryItems)
             {
                 var locationIdentifier = gaugingSummaryItem.SiteId;
-                var timeZoneOffsetAtLocation = fieldDataResultsAppender.GetTimeZoneOffsetAtLocation(locationIdentifier);
+                var location = fieldDataResultsAppender.GetLocationByIdentifier(locationIdentifier);
 
-                var dischargeActivity = dischargeActivityMapper.Map(gaugingSummaryItem, timeZoneOffsetAtLocation);
+                var dischargeActivity = dischargeActivityMapper.Map(gaugingSummaryItem, location.UtcOffset);
 
                 var fieldVisit = CreateFieldVisit(dischargeActivity);
-                var fieldVisitInfo = fieldDataResultsAppender.AddFieldVisit(locationIdentifier, fieldVisit);
+                var fieldVisitInfo = fieldDataResultsAppender.AddFieldVisit(location, fieldVisit);
 
                 fieldDataResultsAppender.AddDischargeActivity(fieldVisitInfo, dischargeActivity);
             }
@@ -100,9 +100,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             return new DischargeActivityMapper(pointVelocityMapper);
         }
 
-        private static DataModel.FieldVisit CreateFieldVisit(DischargeActivity dischargeActivity)
+        private static FieldVisitDetails CreateFieldVisit(DischargeActivity dischargeActivity)
         {
-            return new DataModel.FieldVisit
+            return new FieldVisitDetails
             {
                 StartDate = dischargeActivity.StartTime,
                 EndDate = dischargeActivity.EndTime,
