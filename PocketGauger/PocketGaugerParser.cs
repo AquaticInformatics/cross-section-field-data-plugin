@@ -2,6 +2,7 @@
 using System.IO.Compression;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
+using Server.BusinessInterfaces.FieldDataPlugInCore.Builders;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
@@ -102,12 +103,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
         private static FieldVisitDetails CreateFieldVisit(DischargeActivity dischargeActivity)
         {
-            return new FieldVisitDetails
-            {
-                StartDate = dischargeActivity.StartTime,
-                EndDate = dischargeActivity.EndTime,
-                Party = dischargeActivity.Party
-            };
+            return new FieldVisitDetailsBuilder(dischargeActivity).Build();
         }
     }
 }
