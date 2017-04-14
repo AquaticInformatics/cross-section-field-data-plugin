@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Builders;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
@@ -57,7 +56,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
         private static IFieldVisit CreateFieldVisitForCrossSection(ILocation location,
             DataModel.CrossSection.CrossSectionSurvey crossSectionSurvey, IFieldDataResultsAppender fieldDataResultsAppender)
         {
-            var fieldVisit = new FieldVisitDetailsBuilder(crossSectionSurvey).Build();
+            var fieldVisit = new DataModel.FieldVisitDetails(crossSectionSurvey.SurveyPeriod, crossSectionSurvey.Party);
 
             return fieldDataResultsAppender.AddFieldVisit(location, fieldVisit);
         }

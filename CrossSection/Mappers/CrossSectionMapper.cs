@@ -1,4 +1,5 @@
-﻿using Server.Plugins.FieldVisit.CrossSection.Helpers;
+﻿using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
+using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using CrossSectionSurvey = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection.CrossSectionSurvey;
 using static Server.Plugins.FieldVisit.CrossSection.Helpers.CrossSectionDataFields;
@@ -18,19 +19,22 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         {
             var commonUnit = crossSectionSurvey.GetFieldValue(Unit);
 
-            return new CrossSectionSurvey
+            var startTime = crossSectionSurvey.GetFieldValue(StartDate).ToDateTimeOffset();
+            var endTime = crossSectionSurvey.GetFieldValue(EndDate).ToDateTimeOffset();
+            var party = crossSectionSurvey.GetFieldValue(Party);
+
+            var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToDouble();
+            var stageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, commonUnit);
+
+            return new CrossSectionSurvey(new DateTimeInterval(startTime, endTime), party)
             {
-                Party = crossSectionSurvey.GetFieldValue(Party),
                 Comments = crossSectionSurvey.GetFieldValue(Comment),
-                StartTime = crossSectionSurvey.GetFieldValue(StartDate).ToDateTimeOffset(),
-                EndTime = crossSectionSurvey.GetFieldValue(EndDate).ToDateTimeOffset(),
-                Stage = crossSectionSurvey.GetFieldValue(Stage).ToDouble(),
+                StageMeasurement = stageMeasurement,
                 StartPoint = crossSectionSurvey.GetFieldValue(StartBank).ToStartPointType(),
                 RelativeLocationName = crossSectionSurvey.GetFieldValueWithDefault(RelativeLocation, CrossSectionParserConstants.DefaultRelativeLocationName),
                 ChannelName = crossSectionSurvey.GetFieldValueWithDefault(Channel, CrossSectionParserConstants.DefaultChannelName),
                 DepthUnitId = commonUnit,
                 DistanceUnitId = commonUnit,
-                StageUnitId = commonUnit,
                 CrossSectionPoints = _crossSectionPointMapper.MapPoints(crossSectionSurvey.Points)
             };
         }

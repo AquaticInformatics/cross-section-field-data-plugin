@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
@@ -47,17 +48,17 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
         private PluginFramework.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
         {
-            return new PluginFramework.CrossSectionSurvey
+            DateTimeOffset startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
+            DateTimeOffset endTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7));
+            string party = "Cross-Section Party";
+
+            return new PluginFramework.CrossSectionSurvey(new DateTimeInterval(startTime, endTime), party)
             {
-                StartTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7)),
-                EndTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7)),
-                Party = "Cross-Section Party",
                 ChannelName = "Right overflow",
                 RelativeLocationName = "At the Gage",
                 StartPoint = StartPointType.LeftEdgeOfWater,
                 Comments = "Cross-section survey comments",
-                Stage = 12.2,
-                StageUnitId = "ft",
+                StageMeasurement = new Measurement(12.2, "ft"),
                 DepthUnitId = "ft",
                 DistanceUnitId = "ft",
                 CrossSectionPoints = new List<PluginFramework.CrossSectionPoint>()
