@@ -1,4 +1,5 @@
 ﻿using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using CrossSectionSurvey = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection.CrossSectionSurvey;
@@ -19,24 +20,30 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         {
             var commonUnit = crossSectionSurvey.GetFieldValue(Unit);
 
+            var crossSectionSurveyFactory = new CrossSectionSurveyFactory()
+            {
+                DefaultChannelName = crossSectionSurvey.GetFieldValueWithDefault(Channel, CrossSectionParserConstants.DefaultChannelName),
+                DefaultRelativeLocationName = crossSectionSurvey.GetFieldValueWithDefault(RelativeLocation, CrossSectionParserConstants.DefaultRelativeLocationName),
+                DefaultStartPointType = crossSectionSurvey.GetFieldValue(StartBank).ToStartPointType(),
+                DefaultDistanceUnitId = commonUnit,
+                DefaultDepthUnitId = commonUnit
+            };
+
             var startTime = crossSectionSurvey.GetFieldValue(StartDate).ToDateTimeOffset();
             var endTime = crossSectionSurvey.GetFieldValue(EndDate).ToDateTimeOffset();
+            var surveyPeriod = new DateTimeInterval(startTime, endTime);
+
             var party = crossSectionSurvey.GetFieldValue(Party);
 
-            var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToDouble();
-            var stageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, commonUnit);
+            var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod, party);
 
-            return new CrossSectionSurvey(new DateTimeInterval(startTime, endTime), party)
-            {
-                Comments = crossSectionSurvey.GetFieldValue(Comment),
-                StageMeasurement = stageMeasurement,
-                StartPoint = crossSectionSurvey.GetFieldValue(StartBank).ToStartPointType(),
-                RelativeLocationName = crossSectionSurvey.GetFieldValueWithDefault(RelativeLocation, CrossSectionParserConstants.DefaultRelativeLocationName),
-                ChannelName = crossSectionSurvey.GetFieldValueWithDefault(Channel, CrossSectionParserConstants.DefaultChannelName),
-                DepthUnitId = commonUnit,
-                DistanceUnitId = commonUnit,
-                CrossSectionPoints = _crossSectionPointMapper.MapPoints(crossSectionSurvey.Points)
-            };
+            var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToDouble();
+            newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, commonUnit);
+            newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);
+
+            newCrossSectionSurvey.AddPoints(_crossSectionPointMapper.MapPoints(crossSectionSurvey.Points));
+
+            return newCrossSectionSurvey;
         }
     }
 }

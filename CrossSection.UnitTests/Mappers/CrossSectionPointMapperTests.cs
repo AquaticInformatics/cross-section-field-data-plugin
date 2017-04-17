@@ -34,7 +34,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             AssertPointsMatchExpected(actual, points);
         }
 
-        private static void AssertPointsMatchExpected(IEnumerable<PluginFramework.CrossSectionPoint> actualPoints,
+        private static void AssertPointsMatchExpected(IEnumerable<PluginFramework.ElevationMeasurement> actualPoints,
             IEnumerable<CrossSectionPoint> expectedPoints)
         {
             foreach (var point in actualPoints.Zip(expectedPoints, Tuple.Create))
@@ -46,12 +46,11 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             }
         }
 
-        private static void AssertPointIsEqual(PluginFramework.CrossSectionPoint actual, CrossSectionPoint expectation)
+        private static void AssertPointIsEqual(PluginFramework.ElevationMeasurement actual, CrossSectionPoint expectation)
         {
             Assert.That(actual.Distance, Is.EqualTo(expectation.Distance));
             Assert.That(actual.Elevation, Is.EqualTo(expectation.Elevation));
             Assert.That(actual.Comments, Is.EqualTo(expectation.Comment));
-            Assert.That(actual.Depth, Is.Null);
         }
 
         [Test]

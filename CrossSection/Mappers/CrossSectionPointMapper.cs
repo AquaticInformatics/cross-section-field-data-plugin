@@ -10,7 +10,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 {
     public class CrossSectionPointMapper : ICrossSectionPointMapper
     {
-        public ICollection<CrossSectionPoint> MapPoints(List<Model.CrossSectionPoint> points)
+        public ICollection<ElevationMeasurement> MapPoints(List<Model.CrossSectionPoint> points)
         {
             if (points == null)
                 throw new ArgumentNullException(nameof(points));
@@ -18,12 +18,12 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             return points.Where(point => point != null && !point.IsEmptyPoint()).Select(ToPoint).ToList();
         }
 
-        private static CrossSectionPoint ToPoint(Model.CrossSectionPoint point)
+        private static ElevationMeasurement ToPoint(Model.CrossSectionPoint point)
         {
             if (!IsValidPoint(point))
                 throw new ParsingFailedException(Invariant($"The Cross-Section Point: '{point}' must have both a Distance and Elevation"));
 
-            return new CrossSectionPoint
+            return new ElevationMeasurement
             {
                 Distance = point.Distance.GetValueOrDefault(),
                 Elevation = point.Elevation.GetValueOrDefault(),

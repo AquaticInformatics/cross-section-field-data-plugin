@@ -26,7 +26,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         {
             _mockCrossSectionPointMapper = Substitute.For<ICrossSectionPointMapper>();
             _mockCrossSectionPointMapper.MapPoints(Arg.Any<List<CrossSectionPoint>>())
-                .Returns(new List<PluginFramework.CrossSectionPoint>());
+                .Returns(new List<PluginFramework.ElevationMeasurement>());
 
             _crossSectionMapper = new CrossSectionMapper(_mockCrossSectionPointMapper);
 
@@ -48,21 +48,28 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
         private PluginFramework.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
         {
-            DateTimeOffset startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
-            DateTimeOffset endTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7));
-            string party = "Cross-Section Party";
-
-            return new PluginFramework.CrossSectionSurvey(new DateTimeInterval(startTime, endTime), party)
+            var crossSectionSurveyFactory = new PluginFramework.CrossSectionSurveyFactory
             {
-                ChannelName = "Right overflow",
-                RelativeLocationName = "At the Gage",
-                StartPoint = StartPointType.LeftEdgeOfWater,
-                Comments = "Cross-section survey comments",
-                StageMeasurement = new Measurement(12.2, "ft"),
-                DepthUnitId = "ft",
-                DistanceUnitId = "ft",
-                CrossSectionPoints = new List<PluginFramework.CrossSectionPoint>()
+                DefaultChannelName = "Right overflow",
+                DefaultRelativeLocationName = "At the Gage",
+                DefaultStartPointType = StartPointType.LeftEdgeOfWater,
+                DefaultDepthUnitId = "ft",
+                DefaultDistanceUnitId = "ft"
             };
+
+            var startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
+            var endTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7));
+            var surveyPeriod = new DateTimeInterval(startTime, endTime);
+            var party = "Cross-Section Party";
+
+            var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod, party);
+
+            newCrossSectionSurvey.Comments = "Cross-section survey comments";
+            newCrossSectionSurvey.StageMeasurement = new Measurement(12.2, "ft");
+
+            newCrossSectionSurvey.AddPoints(new List<PluginFramework.ElevationMeasurement>());
+
+            return newCrossSectionSurvey;
         }
 
         [Test]
