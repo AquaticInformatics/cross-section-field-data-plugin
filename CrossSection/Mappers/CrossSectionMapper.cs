@@ -41,7 +41,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, commonUnit);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);
 
-            newCrossSectionSurvey.AddPoints(_crossSectionPointMapper.MapPoints(crossSectionSurvey.Points));
+            newCrossSectionSurvey.Points(_crossSectionPointMapper.MapPoints(crossSectionSurvey.Points));
 
             return newCrossSectionSurvey;
         }

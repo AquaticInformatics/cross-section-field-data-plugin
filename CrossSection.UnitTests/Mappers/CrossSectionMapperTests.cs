@@ -67,7 +67,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             newCrossSectionSurvey.Comments = "Cross-section survey comments";
             newCrossSectionSurvey.StageMeasurement = new Measurement(12.2, "ft");
 
-            newCrossSectionSurvey.AddPoints(new List<PluginFramework.ElevationMeasurement>());
+            newCrossSectionSurvey.Points(new List<PluginFramework.ElevationMeasurement>());
 
             return newCrossSectionSurvey;
         }
