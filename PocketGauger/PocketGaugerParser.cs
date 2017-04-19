@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
@@ -17,33 +18,43 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 {
     public class PocketGaugerParser : IFieldDataPlugIn
     {
-        public void ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
+        public ParseFileStatus ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
+            ILog logger)
         {
-            using (var zipArchive = GetZipArchive(fileStream))
-            using (var zipContents = GetZipContents(zipArchive))
+            try
             {
-                if (!zipContents.ContainsKey(FileNames.GaugingSummary))
+                using (var zipArchive = GetZipArchive(fileStream))
+                using (var zipContents = GetZipContents(zipArchive))
                 {
-                    throw new FormatNotSupportedException(
-                        Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
+                    if (!zipContents.ContainsKey(FileNames.GaugingSummary))
+                    {
+                        throw new FormatNotSupportedException(
+                            Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
+                    }
+
+                    var gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
+
+                    ProcessGaugingSummary(gaugingSummary, fieldDataResultsAppender);
                 }
 
-                var gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
-
-                ProcessGaugingSummary(gaugingSummary, fieldDataResultsAppender);
+                return ParseFileStatus.Succeeded;
+            }
+            catch (Exception)
+            {
+                return ParseFileStatus.Failed;
             }
         }
 
-        public void ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileStatus ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
-            ParseFile(fileStream, fieldDataResultsAppender, logger);
+            return ParseFile(fileStream, fieldDataResultsAppender, logger);
         }
 
-        public void ParseFile(Stream fileStream, IFieldVisit selectedFieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileStatus ParseFile(Stream fileStream, IFieldVisit selectedFieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
-            ParseFile(fileStream, fieldDataResultsAppender, logger);
+            return ParseFile(fileStream, fieldDataResultsAppender, logger);
         }
 
         private static ZipArchive GetZipArchive(Stream fileStream)

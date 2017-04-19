@@ -1,82 +1,70 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using log4net;
 using Server.BusinessInterfaces.FieldDataPlugInCore;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
+using Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using Server.Plugins.FieldVisit.CrossSection.Parsers;
 using DataModel = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection
 {
     public class CrossSectionPlugin : IFieldDataPlugIn
     {
-        public void ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
-        {
-            var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
-
-            var locationIdentifier = GetLocationIdentifier(parsedFileContents);
-            var location = fieldDataResultsAppender.GetLocationByIdentifier(locationIdentifier);
-            var crossSectionSurvey = MapToCrossSectionSurvey(parsedFileContents);
-
-            var fieldVisitInfo = CreateFieldVisitForCrossSection(location, crossSectionSurvey, fieldDataResultsAppender);
-
-            fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisitInfo, crossSectionSurvey);
-        }
-
-        public void ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileStatus ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
-            var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
-            CheckForExpectedLocation(selectedLocation, parsedFileContents);
+            var fieldVisitHandler = new UnknownLocationHandler(fieldDataResultsAppender);
 
-            var crossSectionSurvey = MapToCrossSectionSurvey(parsedFileContents);
-
-            var fieldVisitInfo = CreateFieldVisitForCrossSection(selectedLocation, crossSectionSurvey, fieldDataResultsAppender);
-
-            fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisitInfo, crossSectionSurvey);
+            return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
         }
 
-        public void ParseFile(Stream fileStream, IFieldVisit fieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileStatus ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
-            var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
-            CheckForExpectedLocation(fieldVisit.Location, parsedFileContents);
+            var fieldVisitHandler = new KnownLocationHandler(selectedLocation, fieldDataResultsAppender);
 
-            var crossSectionSurvey = MapToCrossSectionSurvey(parsedFileContents);
-
-            fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisit, crossSectionSurvey);
+            return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
         }
 
-        private static IFieldVisit CreateFieldVisitForCrossSection(ILocation location,
-            DataModel.CrossSection.CrossSectionSurvey crossSectionSurvey, IFieldDataResultsAppender fieldDataResultsAppender)
+        public ParseFileStatus ParseFile(Stream fileStream, IFieldVisit fieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
+            ILog logger)
         {
-            var fieldVisit = new DataModel.FieldVisitDetails(crossSectionSurvey.SurveyPeriod, crossSectionSurvey.Party);
+            var fieldVisitHandler = new KnownFieldVisitHandler(fieldVisit);
 
-            return fieldDataResultsAppender.AddFieldVisit(location, fieldVisit);
+            return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
+        }
+
+        private static ParseFileStatus ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
+            IFieldVisitHandler fieldVisitHandler)
+        {
+            try
+            {
+                var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
+                var crossSectionSurvey = MapToCrossSectionSurvey(parsedFileContents);
+
+                var locationIdentifier = GetLocationIdentifier(parsedFileContents);
+                var fieldVisitInfo = fieldVisitHandler.GetFieldVisit(locationIdentifier, crossSectionSurvey);
+
+                fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisitInfo, crossSectionSurvey);
+
+                return ParseFileStatus.Succeeded;
+            }
+            catch (Exception)
+            {
+                return ParseFileStatus.Failed;
+            }
         }
 
         private static DataModel.CrossSection.CrossSectionSurvey MapToCrossSectionSurvey(CrossSectionSurvey parsedFileContents)
         {
             var crossSectionMapper = CreateCrossSectionMapper();
             return crossSectionMapper.MapCrossSection(parsedFileContents);
-        }
-
-        private static void CheckForExpectedLocation(ILocation selectedLocation, CrossSectionSurvey parsedFileContents)
-        {
-            var locationIdentifierFromFile = GetLocationIdentifier(parsedFileContents);
-            var seletedLocationIdentifier = selectedLocation.LocationIdentifier;
-
-            if (locationIdentifierFromFile.EqualsOrdinalIgnoreCase(seletedLocationIdentifier))
-                return;
-
-            throw new ParsingFailedException(
-                Invariant($"Location identifier '{seletedLocationIdentifier}' does not match the identifier in the file: '{locationIdentifierFromFile}'"));
         }
 
         private static string GetLocationIdentifier(CrossSectionSurvey crossSectionSurvey)

@@ -11,6 +11,7 @@ using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using static Server.Plugins.FieldVisit.CrossSection.Helpers.CrossSectionParserConstants;
+using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Parsers
 {
@@ -136,7 +137,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
             var data = ParseCrossSectionData(line);
 
             if (CrossSectionSurvey.Fields.ContainsKey(data.Key))
-                throw new ParsingFailedException(FormattableString.Invariant($"File has duplicate {data.Key} records"));
+                throw new ParsingFailedException(Invariant($"File has duplicate {data.Key} records"));
 
             CrossSectionSurvey.Fields.Add(data.Key, data.Value);
         }

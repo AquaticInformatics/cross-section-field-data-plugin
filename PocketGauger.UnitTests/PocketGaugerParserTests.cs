@@ -2,18 +2,18 @@
 using System.Linq;
 using System.Reflection;
 using Common.TestHelpers.NUnitExtensions;
+using FluentAssertions;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using log4net;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
+using Server.BusinessInterfaces.FieldDataPlugInCore;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
 using DataModel = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 {
@@ -50,27 +50,21 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void ParseFile_FileStreamIsNotAValidZipFile_Throws()
+        public void ParseFile_FileStreamIsNotAValidZipFile_ReturnsFailureStatus()
         {
             _stream = new MemoryStream(_fixture.Create<byte[]>());
 
-            TestDelegate testDelegate =
-                () => _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-
-            Assert.That(testDelegate,
-                Throws.Exception.TypeOf<FormatNotSupportedException>().With.Message.Contains("not a zip file"));
+            var parseStatus = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
+            parseStatus.Should().Be(ParseFileStatus.Failed);
         }
 
         [Test]
-        public void ParseFile_FileStreamZipDoesNotContainGaugingSummary_Throws()
+        public void ParseFile_FileStreamZipDoesNotContainGaugingSummary_ReturnsFailureStatus()
         {
             _stream = CreateZipStream(_fixture.Create<string>());
 
-            TestDelegate testDelegate = () => _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-
-            Assert.That(testDelegate,
-                Throws.Exception.TypeOf<FormatNotSupportedException>()
-                    .With.Message.Contains(Invariant($"does not contain file {FileNames.GaugingSummary}")));
+            var parseStatus = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
+            parseStatus.Should().Be(ParseFileStatus.Failed);
         }
 
         private Stream CreateZipStream(string zipEntryName)
@@ -103,7 +97,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         {
             const int expectedNumberOfDischargeActivities = 3;
 
-            _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
+            var parseStatus = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
+            parseStatus.Should().Be(ParseFileStatus.Succeeded);
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
