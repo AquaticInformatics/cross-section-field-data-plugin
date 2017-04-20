@@ -20,13 +20,11 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         {
             var commonUnit = crossSectionSurvey.GetFieldValue(Unit);
 
-            var crossSectionSurveyFactory = new CrossSectionSurveyFactory()
+            var crossSectionSurveyFactory = new CrossSectionSurveyFactory(commonUnit)
             {
                 DefaultChannelName = crossSectionSurvey.GetFieldValueWithDefault(Channel, CrossSectionParserConstants.DefaultChannelName),
                 DefaultRelativeLocationName = crossSectionSurvey.GetFieldValueWithDefault(RelativeLocation, CrossSectionParserConstants.DefaultRelativeLocationName),
-                DefaultStartPointType = crossSectionSurvey.GetFieldValue(StartBank).ToStartPointType(),
-                DefaultDistanceUnitId = commonUnit,
-                DefaultDepthUnitId = commonUnit
+                DefaultStartPointType = crossSectionSurvey.GetFieldValue(StartBank).ToStartPointType()
             };
 
             var startTime = crossSectionSurvey.GetFieldValue(StartDate).ToDateTimeOffset();

@@ -48,13 +48,11 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
         private PluginFramework.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
         {
-            var crossSectionSurveyFactory = new PluginFramework.CrossSectionSurveyFactory
+            var crossSectionSurveyFactory = new PluginFramework.CrossSectionSurveyFactory("ft")
             {
                 DefaultChannelName = "Right overflow",
                 DefaultRelativeLocationName = "At the Gage",
-                DefaultStartPointType = StartPointType.LeftEdgeOfWater,
-                DefaultDepthUnitId = "ft",
-                DefaultDistanceUnitId = "ft"
+                DefaultStartPointType = StartPointType.LeftEdgeOfWater
             };
 
             var startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
