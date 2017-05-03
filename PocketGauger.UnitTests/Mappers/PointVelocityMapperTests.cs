@@ -8,6 +8,7 @@ using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
+using Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests.TestHelpers;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
@@ -47,6 +48,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _fixture = new Fixture();
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
+            _fixture.AddFieldDataPlugInCoreTestingExtensions();
             CollectionRegistrar.Register(_fixture);
             _fixture.Register<MeasurementConditionData>(() => new OpenWaterData());
         }

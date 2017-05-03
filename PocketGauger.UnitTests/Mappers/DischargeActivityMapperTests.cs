@@ -4,6 +4,7 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
@@ -40,7 +41,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [SetUp]
         public void SetupForEachTest()
         {
-            _gaugingSummaryItem = _fixture.Create<GaugingSummaryItem>();
+            var startDate = _fixture.Create<DateTime>();
+            var duration = _fixture.Create<TimeSpan>().Duration();
+
+            _gaugingSummaryItem = _fixture.Build<GaugingSummaryItem>()
+                .With(x => x.StartDate, startDate)
+                .With(x => x.EndDate, startDate.Add(duration))
+                .Create();
         }
 
         private void SetupMockPointVelocityMapper()
@@ -146,9 +153,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private DischargeActivity CreateExpectedDischargeActivity()
         {
-            return new DischargeActivity
+            var startTime = new DateTimeOffset(_gaugingSummaryItem.StartDate, LocationUtcOffset);
+            var endTime = new DateTimeOffset(_gaugingSummaryItem.EndDate, LocationUtcOffset);
+            var surveyPeriod = new DateTimeInterval(startTime, endTime);
+            var party = _gaugingSummaryItem.ObserversName;
+
+            return new DischargeActivity(surveyPeriod, party)
             {
-                Party = _gaugingSummaryItem.ObserversName,
                 Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
                 DischargeMethodCode = ParametersAndMethodsConstants.MidSectionMonitoringMethod,
                 DischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId,

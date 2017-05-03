@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
@@ -40,13 +41,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             var startTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset);
             var endTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset);
+            var surveyPeriod = new DateTimeInterval(startTime, endTime);
+            var party = gaugingSummary.ObserversName;
 
-            return new DischargeActivity
+            return new DischargeActivity(surveyPeriod, party)
             {
-                StartTime = startTime,
-                EndTime = endTime,
                 MeasurementTime = DateTimeHelper.GetMeanTime(startTime, endTime),
-                Party = gaugingSummary.ObserversName,
                 Discharge = gaugingSummary.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 DischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId,
                 DischargeMethodCode = GetDischargeMonitoringMethodCode(gaugingSummary.FlowCalculationMethod),
