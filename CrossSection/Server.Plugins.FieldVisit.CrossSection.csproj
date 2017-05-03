@@ -38,7 +38,7 @@
       <HintPath>$(SolutionDir)NuGetPackages\FileHelpers-Stable.2.9.9\lib\4.0\FileHelpers.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>$(SolutionDir)NuGetPackages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <HintPath>$(SolutionDir)NuGetPackages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
