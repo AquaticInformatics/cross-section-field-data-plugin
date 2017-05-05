@@ -42,11 +42,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             var startTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset);
             var endTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset);
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
-            var party = gaugingSummary.ObserversName;
             var dischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId;
 
-            return new DischargeActivity(surveyPeriod, party, dischargeUnitId)
+            return new DischargeActivity(surveyPeriod, dischargeUnitId)
             {
+                Party = gaugingSummary.ObserversName,
                 Discharge = gaugingSummary.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 DischargeMethodCode = GetDischargeMonitoringMethodCode(gaugingSummary.FlowCalculationMethod),
                 MeanGageHeight = gaugingSummary.MeanStage,

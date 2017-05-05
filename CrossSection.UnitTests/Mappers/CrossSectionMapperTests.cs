@@ -52,15 +52,15 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             {
                 DefaultChannelName = "Right overflow",
                 DefaultRelativeLocationName = "At the Gage",
-                DefaultStartPointType = StartPointType.LeftEdgeOfWater
+                DefaultStartPointType = StartPointType.LeftEdgeOfWater,
+                DefaultParty = "Cross-Section Party"
             };
 
             var startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
             var endTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7));
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
-            var party = "Cross-Section Party";
 
-            var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod, party);
+            var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod);
 
             newCrossSectionSurvey.Comments = "Cross-section survey comments";
             newCrossSectionSurvey.StageMeasurement = new Measurement(12.2, "ft");

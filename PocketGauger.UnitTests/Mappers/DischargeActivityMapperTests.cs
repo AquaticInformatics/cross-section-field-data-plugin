@@ -147,11 +147,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var startTime = new DateTimeOffset(_gaugingSummaryItem.StartDate, LocationUtcOffset);
             var endTime = new DateTimeOffset(_gaugingSummaryItem.EndDate, LocationUtcOffset);
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
-            var party = _gaugingSummaryItem.ObserversName;
             var dischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId;
 
-            return new DischargeActivity(surveyPeriod, party, dischargeUnitId)
+            return new DischargeActivity(surveyPeriod, dischargeUnitId)
             {
+                Party = _gaugingSummaryItem.ObserversName,
                 Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
                 DischargeMethodCode = ParametersAndMethodsConstants.MidSectionMonitoringMethod,
                 MeanGageHeight = _gaugingSummaryItem.MeanStage,

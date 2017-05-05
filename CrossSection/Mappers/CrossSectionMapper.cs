@@ -31,12 +31,11 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             var endTime = crossSectionSurvey.GetFieldValue(EndDate).ToDateTimeOffset();
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
 
-            var party = crossSectionSurvey.GetFieldValue(Party);
-
-            var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod, party);
+            var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod);
 
             var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToDouble();
             newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, commonUnit);
+            newCrossSectionSurvey.Party = crossSectionSurvey.GetFieldValue(Party);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);
 
             newCrossSectionSurvey.Points(_crossSectionPointMapper.MapPoints(crossSectionSurvey.Points));

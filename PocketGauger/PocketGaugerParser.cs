@@ -113,7 +113,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
         private static FieldVisitDetails CreateFieldVisit(DischargeActivity dischargeActivity)
         {
-            return new FieldVisitDetails(new DateTimeInterval(dischargeActivity.StartTime, dischargeActivity.EndTime), dischargeActivity.Party);
+            return new FieldVisitDetails(new DateTimeInterval(dischargeActivity.StartTime, dischargeActivity.EndTime));
         }
     }
 }
