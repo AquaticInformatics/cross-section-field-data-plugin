@@ -47,7 +47,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
             return new DischargeActivity(surveyPeriod, party, dischargeUnitId)
             {
-                MeasurementTime = DateTimeHelper.GetMeanTime(startTime, endTime),
                 Discharge = gaugingSummary.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 DischargeMethodCode = GetDischargeMonitoringMethodCode(gaugingSummary.FlowCalculationMethod),
                 MeanGageHeight = gaugingSummary.MeanStage,

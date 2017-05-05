@@ -79,14 +79,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_DischargeActivityMeasurementTime_IsMappedDateTimeOffsetWithLocationUtcOffset()
-        {
-            var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
-
-            AssertDateTimeOffsetIsNotDefault(dischargeActivity.MeasurementTime);
-        }
-
-        [Test]
         public void Map_GaugingSummaryFlowCalculationMethodIsMean_SetMonitoringMethodAsMeanSection()
         {
             _gaugingSummaryItem.FlowCalculationMethodProxy = FlowCalculationMethod.Mean.ToString();
@@ -146,7 +138,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             dischargeActivity.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
                 .Excluding(activity => activity.StartTime)
                 .Excluding(activity => activity.EndTime)
-                .Excluding(activity => activity.MeasurementTime)
                 .Excluding(activity => activity.MeanIndexVelocity)
                 .Excluding(activity => activity.DischargeSubActivities));
         }
