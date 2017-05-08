@@ -37,7 +37,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
 
         protected IFieldVisit CreateFieldVisit(ILocation location, CrossSectionSurvey crossSectionSurvey)
         {
-            var fieldVisit = new FieldVisitDetails(crossSectionSurvey.SurveyPeriod, crossSectionSurvey.Party);
+            var fieldVisit = new FieldVisitDetails(crossSectionSurvey.SurveyPeriod) {Party = crossSectionSurvey.Party};
             return FieldDataResultsAppender.AddFieldVisit(location, fieldVisit);
         }
     }
