@@ -61,7 +61,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
 
-            AssertDateTimeOffsetIsNotDefault(dischargeActivity.StartTime);
+            AssertDateTimeOffsetIsNotDefault(dischargeActivity.MeasurementPeriod.Start);
         }
 
         private static void AssertDateTimeOffsetIsNotDefault(DateTimeOffset dateTimeOffset)
@@ -75,7 +75,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
 
-            AssertDateTimeOffsetIsNotDefault(dischargeActivity.EndTime);
+            AssertDateTimeOffsetIsNotDefault(dischargeActivity.MeasurementPeriod.End);
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
 
-            Assert.That(dischargeActivity.MeanIndexVelocity, Is.EqualTo(_gaugingSummaryItem.IndexVelocity));
+            Assert.That(dischargeActivity.MeanIndexVelocity.Value, Is.EqualTo(_gaugingSummaryItem.IndexVelocity));
         }
 
         [Test]
@@ -136,8 +136,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
 
             dischargeActivity.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
-                .Excluding(activity => activity.StartTime)
-                .Excluding(activity => activity.EndTime)
+                .Excluding(activity => activity.MeasurementPeriod)
                 .Excluding(activity => activity.MeanIndexVelocity)
                 .Excluding(activity => activity.DischargeSubActivities));
         }
@@ -147,18 +146,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var startTime = new DateTimeOffset(_gaugingSummaryItem.StartDate, LocationUtcOffset);
             var endTime = new DateTimeOffset(_gaugingSummaryItem.EndDate, LocationUtcOffset);
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
-            var dischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId;
+            var discharge = new Measurement(_gaugingSummaryItem.Flow, ParametersAndMethodsConstants.DischargeUnitId);
 
-            return new DischargeActivity(surveyPeriod, dischargeUnitId)
+            return new DischargeActivity(surveyPeriod, discharge)
             {
                 Party = _gaugingSummaryItem.ObserversName,
-                Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
                 DischargeMethodCode = ParametersAndMethodsConstants.MidSectionMonitoringMethod,
                 MeanGageHeight = _gaugingSummaryItem.MeanStage,
                 GageHeightUnitId = ParametersAndMethodsConstants.DistanceUnitId,
                 GageHeightMethodCode = ParametersAndMethodsConstants.GageHeightMethodCode,
                 MeasurementId = _gaugingSummaryItem.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
-                VelocityUnitId = ParametersAndMethodsConstants.VelocityUnitId,
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true
             };

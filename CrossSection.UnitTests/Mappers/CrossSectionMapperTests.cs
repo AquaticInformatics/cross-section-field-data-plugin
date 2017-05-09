@@ -48,22 +48,18 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
         private PluginFramework.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
         {
-            var crossSectionSurveyFactory = new PluginFramework.CrossSectionSurveyFactory("ft")
-            {
-                DefaultChannelName = "Right overflow",
-                DefaultRelativeLocationName = "At the Gage",
-                DefaultStartPointType = StartPointType.LeftEdgeOfWater,
-                DefaultParty = "Cross-Section Party"
-            };
-
             var startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
             var endTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7));
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
 
-            var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod);
+            var newCrossSectionSurvey =
+                new PluginFramework.CrossSectionSurvey(surveyPeriod, "Right overflow",  "At the Gage", "ft", StartPointType.LeftEdgeOfWater)
+                {
+                    Party = "Cross-Section Party",
+                    Comments = "Cross-section survey comments",
+                    StageMeasurement = new Measurement(12.2, "ft"),
 
-            newCrossSectionSurvey.Comments = "Cross-section survey comments";
-            newCrossSectionSurvey.StageMeasurement = new Measurement(12.2, "ft");
+                };
 
             newCrossSectionSurvey.Points(new List<PluginFramework.ElevationMeasurement>());
 

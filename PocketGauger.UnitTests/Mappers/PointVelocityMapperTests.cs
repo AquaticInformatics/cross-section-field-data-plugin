@@ -78,10 +78,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             return _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
         }
 
-        [TestCase(ParametersAndMethodsConstants.MeanSectionMonitoringMethod, PointVelocityMethodType.MeanSection)]
-        [TestCase(ParametersAndMethodsConstants.MidSectionMonitoringMethod, PointVelocityMethodType.MidSection)]
-        [TestCase(null, PointVelocityMethodType.Unknown)]
-        public void Map_DischargeMethod_IsMappedToExpectedStartPointType(string monitoringMethodCode, PointVelocityMethodType expectedPointVelocityMethod)
+        [TestCase(ParametersAndMethodsConstants.MeanSectionMonitoringMethod, DischargeMethodType.MeanSection)]
+        [TestCase(ParametersAndMethodsConstants.MidSectionMonitoringMethod, DischargeMethodType.MidSection)]
+        [TestCase(null, DischargeMethodType.Unknown)]
+        public void Map_DischargeMethod_IsMappedToExpectedStartPointType(string monitoringMethodCode, DischargeMethodType expectedPointVelocityMethod)
         {
             _dischargeActivity.DischargeMethodCode = monitoringMethodCode;
 
@@ -239,8 +239,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             return new DischargeChannelMeasurement
             {
-                StartTime = _dischargeActivity.StartTime,
-                EndTime = _dischargeActivity.EndTime,
+                StartTime = _dischargeActivity.MeasurementPeriod.Start,
+                EndTime = _dischargeActivity.MeasurementPeriod.End,
                 Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
                 ChannelName = ParametersAndMethodsConstants.DefaultChannelName,
                 Comments = _gaugingSummaryItem.Comments,

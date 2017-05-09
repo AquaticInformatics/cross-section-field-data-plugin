@@ -42,19 +42,20 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             var startTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset);
             var endTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset);
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
-            var dischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId;
+            var discharge = new Measurement(gaugingSummary.Flow, ParametersAndMethodsConstants.DischargeUnitId);
 
-            return new DischargeActivity(surveyPeriod, dischargeUnitId)
+
+            return new DischargeActivity(surveyPeriod, discharge)
             {
                 Party = gaugingSummary.ObserversName,
-                Discharge = gaugingSummary.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 DischargeMethodCode = GetDischargeMonitoringMethodCode(gaugingSummary.FlowCalculationMethod),
                 MeanGageHeight = gaugingSummary.MeanStage,
                 GageHeightUnitId = ParametersAndMethodsConstants.GageHeightUnitId,
                 GageHeightMethodCode = ParametersAndMethodsConstants.GageHeightMethodCode,
                 MeasurementId = gaugingSummary.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
-                MeanIndexVelocity = gaugingSummary.UseIndexVelocity ? gaugingSummary.IndexVelocity : default(double?),
-                VelocityUnitId = ParametersAndMethodsConstants.VelocityUnitId,
+                MeanIndexVelocity = gaugingSummary.UseIndexVelocity
+                    ? new Measurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
+                    : null,
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true
             };

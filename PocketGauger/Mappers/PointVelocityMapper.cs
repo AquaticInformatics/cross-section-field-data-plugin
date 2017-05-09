@@ -52,8 +52,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
             return new DischargeChannelMeasurement
             {
-                StartTime = dischargeActivity.StartTime,
-                EndTime = dischargeActivity.EndTime,
+                StartTime = dischargeActivity.MeasurementPeriod.Start,
+                EndTime = dischargeActivity.MeasurementPeriod.End,
                 Discharge = summaryItem.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 ChannelName = ParametersAndMethodsConstants.DefaultChannelName,
                 Comments = summaryItem.Comments,
@@ -171,16 +171,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
         }
 
-        private static PointVelocityMethodType MapPointVelocityMethod(string gaugingMethodCode)
+        private static DischargeMethodType MapPointVelocityMethod(string gaugingMethodCode)
         {
             switch (gaugingMethodCode)
             {
                 case ParametersAndMethodsConstants.MeanSectionMonitoringMethod:
-                    return PointVelocityMethodType.MeanSection;
+                    return DischargeMethodType.MeanSection;
                 case ParametersAndMethodsConstants.MidSectionMonitoringMethod:
-                    return PointVelocityMethodType.MidSection;
+                    return DischargeMethodType.MidSection;
                 default:
-                    return PointVelocityMethodType.Unknown;
+                    return DischargeMethodType.Unknown;
             }
         }
 

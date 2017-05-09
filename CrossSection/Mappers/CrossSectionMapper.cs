@@ -1,5 +1,7 @@
-﻿using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
+﻿using log4net.Config;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection;
+using Server.BusinessInterfaces.FieldDataPlugInCore.Units;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using CrossSectionSurvey = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection.CrossSectionSurvey;
@@ -18,9 +20,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 
         public CrossSectionSurvey MapCrossSection(Model.CrossSectionSurvey crossSectionSurvey)
         {
-            var commonUnit = crossSectionSurvey.GetFieldValue(Unit);
+            var unitSystem = CreateUnitSystemWithRequiredUnits(crossSectionSurvey);
 
-            var crossSectionSurveyFactory = new CrossSectionSurveyFactory(commonUnit)
+            var crossSectionSurveyFactory = new CrossSectionSurveyFactory(unitSystem)
             {
                 DefaultChannelName = crossSectionSurvey.GetFieldValueWithDefault(Channel, CrossSectionParserConstants.DefaultChannelName),
                 DefaultRelativeLocationName = crossSectionSurvey.GetFieldValueWithDefault(RelativeLocation, CrossSectionParserConstants.DefaultRelativeLocationName),
@@ -34,13 +36,19 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod);
 
             var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToDouble();
-            newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, commonUnit);
+            newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue, unitSystem.DistanceUnitId);
             newCrossSectionSurvey.Party = crossSectionSurvey.GetFieldValue(Party);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);
 
             newCrossSectionSurvey.Points(_crossSectionPointMapper.MapPoints(crossSectionSurvey.Points));
 
             return newCrossSectionSurvey;
+        }
+
+        private static UnitSystem CreateUnitSystemWithRequiredUnits(Model.CrossSectionSurvey crossSectionSurvey)
+        {
+            var distanceUnit = crossSectionSurvey.GetFieldValue(Unit);
+            return new UnitSystem(distanceUnit, null, null, null);
         }
     }
 }
