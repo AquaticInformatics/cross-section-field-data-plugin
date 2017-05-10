@@ -28,6 +28,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 CreatePointVelocitySubActivity(gaugingSummary, dischargeActivity)
             };
 
+            dischargeActivity.GageHeightMeasurements = new List<GageHeightMeasurement>();
+            dischargeActivity.GageHeightMeasurements.AddRange(CreateGageHeightMeasurements(gaugingSummary, locationTimeZoneOffset));
+
             return dischargeActivity;
         }
 
@@ -37,13 +40,37 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return _pointVelocityMapper.Map(gaugingSummary, dischargeActivity);
         }
 
-        private DischargeActivity CreateDischargeActivity(GaugingSummaryItem gaugingSummary, TimeSpan locationTimeZoneOffset)
+        private static IEnumerable<GageHeightMeasurement> CreateGageHeightMeasurements(GaugingSummaryItem gaugingSummary, TimeSpan locationTimeZoneOffset)
+        {
+            if (gaugingSummary.StartStage != null && gaugingSummary.EndStage != null)
+            {
+                yield return new GageHeightMeasurement
+                {
+                    MeasurementTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset),
+                    GageHeight = new Measurement(gaugingSummary.StartStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                };
+                yield return new GageHeightMeasurement
+                {
+                    MeasurementTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset),
+                    GageHeight = new Measurement(gaugingSummary.EndStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                };
+            }
+            else if (gaugingSummary.MeanStage != null)
+            {
+                yield return new GageHeightMeasurement
+                {
+                    MeasurementTime = new DateTimeOffset((gaugingSummary.StartDate.Ticks + gaugingSummary.EndDate.Ticks) / 2, locationTimeZoneOffset),
+                    GageHeight = new Measurement(gaugingSummary.MeanStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                };
+            }
+        }
+
+        private static DischargeActivity CreateDischargeActivity(GaugingSummaryItem gaugingSummary, TimeSpan locationTimeZoneOffset)
         {
             var startTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset);
             var endTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset);
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
             var discharge = CreateMeasurement(gaugingSummary.Flow, ParametersAndMethodsConstants.DischargeUnitId);
-
 
             return new DischargeActivity(surveyPeriod, discharge)
             {
@@ -52,13 +79,23 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 MeanGageHeight = gaugingSummary.MeanStage,
                 GageHeightUnitId = ParametersAndMethodsConstants.GageHeightUnitId,
                 GageHeightMethodCode = ParametersAndMethodsConstants.GageHeightMethodCode,
-                MeasurementId = gaugingSummary.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
-                MeanIndexVelocity = gaugingSummary.UseIndexVelocity
-                    ? CreateMeasurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
-                    : null,
+                MeasurementId = GenerateMeasurementId(gaugingSummary),
+                MeanIndexVelocity = GetMeanIndexVelocity(gaugingSummary),
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true
             };
+        }
+
+        private static string GenerateMeasurementId(GaugingSummaryItem gaugingSummary)
+        {
+            return gaugingSummary.GaugingId.ToString(NumberFormatInfo.InvariantInfo);
+        }
+
+        private static Measurement GetMeanIndexVelocity(GaugingSummaryItem gaugingSummary)
+        {
+            return gaugingSummary.UseIndexVelocity
+                ? new Measurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
+                : null;
         }
 
         private static string GetDischargeMonitoringMethodCode(FlowCalculationMethod? gaugingMethod)

@@ -78,12 +78,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             return _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
         }
 
-        [TestCase(ParametersAndMethodsConstants.MeanSectionMonitoringMethod, DischargeMethodType.MeanSection)]
-        [TestCase(ParametersAndMethodsConstants.MidSectionMonitoringMethod, DischargeMethodType.MidSection)]
+        [TestCase(FlowCalculationMethod.Mean, DischargeMethodType.MeanSection)]
+        [TestCase(FlowCalculationMethod.Mid, DischargeMethodType.MidSection)]
         [TestCase(null, DischargeMethodType.Unknown)]
-        public void Map_DischargeMethod_IsMappedToExpectedStartPointType(string monitoringMethodCode, DischargeMethodType expectedPointVelocityMethod)
+        public void Map_FlowCalculationMethod_IsMappedToExpectedDischargeMethodType(FlowCalculationMethod? flowCalculationMethod, DischargeMethodType expectedPointVelocityMethod)
         {
-            _dischargeActivity.DischargeMethodCode = monitoringMethodCode;
+            _gaugingSummaryItem.FlowCalculationMethodProxy = flowCalculationMethod?.ToString();
 
             var pointVelocityActivity = MapPointVelocityActivity();
 

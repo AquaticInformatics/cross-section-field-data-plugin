@@ -138,7 +138,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             dischargeActivity.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
                 .Excluding(activity => activity.MeasurementPeriod)
                 .Excluding(activity => activity.MeanIndexVelocity)
-                .Excluding(activity => activity.DischargeSubActivities));
+                .Excluding(activity => activity.DischargeSubActivities)
+                .Excluding(activity => activity.GageHeightMeasurements));
         }
 
         private DischargeActivity CreateExpectedDischargeActivity()
@@ -152,9 +153,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             {
                 Party = _gaugingSummaryItem.ObserversName,
                 DischargeMethodCode = ParametersAndMethodsConstants.MidSectionMonitoringMethod,
-                MeanGageHeight = _gaugingSummaryItem.MeanStage,
-                GageHeightUnitId = ParametersAndMethodsConstants.DistanceUnitId,
-                GageHeightMethodCode = ParametersAndMethodsConstants.GageHeightMethodCode,
                 MeasurementId = _gaugingSummaryItem.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true

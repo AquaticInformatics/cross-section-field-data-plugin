@@ -28,7 +28,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 Area = summaryItem.Area,
                 AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
                 ChannelMeasurement = channelMeasurement,
-                DischargeMethod = MapPointVelocityMethod(dischargeActivity.DischargeMethodCode),
+                DischargeMethod = MapDischargeMethod(summaryItem.FlowCalculationMethod),
                 MeasurementConditions = MeasurementCondition.OpenWater,
                 StartPoint = MapStartPoint(summaryItem.StartBank),
                 TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
@@ -45,7 +45,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        private DischargeChannelMeasurement CreateChannelMeasurement(GaugingSummaryItem summaryItem,
+        private static DischargeChannelMeasurement CreateChannelMeasurement(GaugingSummaryItem summaryItem,
             DischargeActivity dischargeActivity)
         {
             var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod(summaryItem);
@@ -171,13 +171,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
         }
 
-        private static DischargeMethodType MapPointVelocityMethod(string gaugingMethodCode)
+        private static DischargeMethodType MapDischargeMethod(FlowCalculationMethod? gaugingMethod)
         {
-            switch (gaugingMethodCode)
+            switch (gaugingMethod)
             {
-                case ParametersAndMethodsConstants.MeanSectionMonitoringMethod:
+                case FlowCalculationMethod.Mean:
                     return DischargeMethodType.MeanSection;
-                case ParametersAndMethodsConstants.MidSectionMonitoringMethod:
+                case FlowCalculationMethod.Mid:
                     return DischargeMethodType.MidSection;
                 default:
                     return DischargeMethodType.Unknown;
