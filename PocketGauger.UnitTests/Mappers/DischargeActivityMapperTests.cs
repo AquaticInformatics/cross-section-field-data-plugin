@@ -146,7 +146,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var startTime = new DateTimeOffset(_gaugingSummaryItem.StartDate, LocationUtcOffset);
             var endTime = new DateTimeOffset(_gaugingSummaryItem.EndDate, LocationUtcOffset);
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
-            var discharge = new Measurement(_gaugingSummaryItem.Flow, ParametersAndMethodsConstants.DischargeUnitId);
+            var discharge = new Measurement(_gaugingSummaryItem.Flow.GetValueOrDefault(), ParametersAndMethodsConstants.DischargeUnitId);
 
             return new DischargeActivity(surveyPeriod, discharge)
             {

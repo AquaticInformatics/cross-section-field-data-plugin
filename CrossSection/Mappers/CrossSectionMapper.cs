@@ -1,5 +1,4 @@
-﻿using log4net.Config;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
+﻿using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Units;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
@@ -36,7 +35,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod);
 
             var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToDouble();
-            newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue, unitSystem.DistanceUnitId);
+            newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, unitSystem.DistanceUnitId);
             newCrossSectionSurvey.Party = crossSectionSurvey.GetFieldValue(Party);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);
 
@@ -48,7 +47,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         private static UnitSystem CreateUnitSystemWithRequiredUnits(Model.CrossSectionSurvey crossSectionSurvey)
         {
             var distanceUnit = crossSectionSurvey.GetFieldValue(Unit);
-            return new UnitSystem(distanceUnit, null, null, null);
+            return new UnitSystem {DistanceUnitId = distanceUnit};
         }
     }
 }

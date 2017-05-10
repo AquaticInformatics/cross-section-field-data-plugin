@@ -42,7 +42,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             var startTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset);
             var endTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset);
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
-            var discharge = new Measurement(gaugingSummary.Flow, ParametersAndMethodsConstants.DischargeUnitId);
+            var discharge = CreateMeasurement(gaugingSummary.Flow, ParametersAndMethodsConstants.DischargeUnitId);
 
 
             return new DischargeActivity(surveyPeriod, discharge)
@@ -54,7 +54,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 GageHeightMethodCode = ParametersAndMethodsConstants.GageHeightMethodCode,
                 MeasurementId = gaugingSummary.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
                 MeanIndexVelocity = gaugingSummary.UseIndexVelocity
-                    ? new Measurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
+                    ? CreateMeasurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
                     : null,
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true
@@ -72,6 +72,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 default:
                     return ParametersAndMethodsConstants.DefaultMonitoringMethod;
             }
+        }
+
+        private static Measurement CreateMeasurement(double? value, string unit)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            return new Measurement(value.Value, unit);
         }
     }
 }
