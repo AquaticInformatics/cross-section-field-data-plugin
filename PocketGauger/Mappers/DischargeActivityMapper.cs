@@ -47,12 +47,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 yield return new GageHeightMeasurement
                 {
                     MeasurementTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset),
-                    GageHeight = new Measurement(gaugingSummary.StartStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                    GageHeight = CreateMeasurement(gaugingSummary.StartStage, ParametersAndMethodsConstants.GageHeightUnitId)
                 };
                 yield return new GageHeightMeasurement
                 {
                     MeasurementTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset),
-                    GageHeight = new Measurement(gaugingSummary.EndStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                    GageHeight = CreateMeasurement(gaugingSummary.EndStage, ParametersAndMethodsConstants.GageHeightUnitId)
                 };
             }
             else if (gaugingSummary.MeanStage != null)
@@ -60,7 +60,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 yield return new GageHeightMeasurement
                 {
                     MeasurementTime = new DateTimeOffset((gaugingSummary.StartDate.Ticks + gaugingSummary.EndDate.Ticks) / 2, locationTimeZoneOffset),
-                    GageHeight = new Measurement(gaugingSummary.MeanStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                    GageHeight = CreateMeasurement(gaugingSummary.MeanStage, ParametersAndMethodsConstants.GageHeightUnitId)
                 };
             }
         }
@@ -76,9 +76,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             {
                 Party = gaugingSummary.ObserversName,
                 DischargeMethodCode = GetDischargeMonitoringMethodCode(gaugingSummary.FlowCalculationMethod),
-                MeanGageHeight = gaugingSummary.MeanStage,
-                GageHeightUnitId = ParametersAndMethodsConstants.GageHeightUnitId,
-                GageHeightMethodCode = ParametersAndMethodsConstants.GageHeightMethodCode,
                 MeasurementId = GenerateMeasurementId(gaugingSummary),
                 MeanIndexVelocity = GetMeanIndexVelocity(gaugingSummary),
                 ShowInDataCorrection = true,
@@ -94,7 +91,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         private static Measurement GetMeanIndexVelocity(GaugingSummaryItem gaugingSummary)
         {
             return gaugingSummary.UseIndexVelocity
-                ? new Measurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
+                ? CreateMeasurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
                 : null;
         }
 

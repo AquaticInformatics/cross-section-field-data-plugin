@@ -10,7 +10,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
             return string.Equals(value, otherValue, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static double? ToDouble(this string value)
+        public static double? ToNullableDouble(this string value)
         {
             return DoubleHelper.Parse(value);
         }

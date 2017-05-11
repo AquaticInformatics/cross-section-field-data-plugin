@@ -34,7 +34,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 
             var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod);
 
-            var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToDouble();
+            var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToNullableDouble();
             newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, unitSystem.DistanceUnitId);
             newCrossSectionSurvey.Party = crossSectionSurvey.GetFieldValue(Party);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);

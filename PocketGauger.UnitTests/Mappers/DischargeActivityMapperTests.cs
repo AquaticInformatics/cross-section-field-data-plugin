@@ -129,6 +129,63 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
+        public void Map_GaugingSummaryWithStartAndEndStage_ProvidesBothStartAndEndStageMeasurements()
+        {
+            var startStage = _fixture.Create<double>();
+            var endStage = _fixture.Create<double>();
+            var meanStage = (startStage + endStage)/2D;
+
+            _gaugingSummaryItem.StartStageProxy = startStage.ToString(CultureInfo.InvariantCulture);
+            _gaugingSummaryItem.EndStageProxy = endStage.ToString(CultureInfo.InvariantCulture);
+            _gaugingSummaryItem.MeanStageProxy = meanStage.ToString(CultureInfo.InvariantCulture);
+
+            var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
+
+            var expectedGaugeHeightMeasurements = new[]
+            {
+                new GageHeightMeasurement
+                {
+                    GageHeight = new Measurement(startStage, "m"),
+                    MeasurementTime = dischargeActivity.MeasurementStartTime
+                },
+                new GageHeightMeasurement
+                {
+                    GageHeight = new Measurement(endStage, "m"),
+                    MeasurementTime = dischargeActivity.MeasurementEndTime
+                }
+            };
+
+            dischargeActivity.GageHeightMeasurements.ShouldAllBeEquivalentTo(expectedGaugeHeightMeasurements);
+        }
+
+        [Test]
+        public void Map_GaugingSummaryWithOnlyMeanStage_ProvidesSingleMeanStageMeasurement()
+        {
+            var meanStage = _fixture.Create<double>();
+
+            _gaugingSummaryItem.StartStageProxy = null;
+            _gaugingSummaryItem.EndStageProxy = null;
+            _gaugingSummaryItem.MeanStageProxy = meanStage.ToString(CultureInfo.InvariantCulture);
+
+            var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
+
+            var expectedMeasurementTime = new DateTimeOffset(
+                (_gaugingSummaryItem.StartDate.Ticks + _gaugingSummaryItem.EndDate.Ticks)/2,
+                LocationUtcOffset);
+
+            var expectedGaugeHeightMeasurements = new[]
+            {
+                new GageHeightMeasurement
+                {
+                    GageHeight = new Measurement(meanStage, "m"),
+                    MeasurementTime = expectedMeasurementTime
+                }
+            };
+
+            dischargeActivity.GageHeightMeasurements.ShouldAllBeEquivalentTo(expectedGaugeHeightMeasurements);
+        }
+
+        [Test]
         public void Map_GaugingSummaryItem_IsMappedToExpectedDischargeActivity()
         {
             var expectedDischargeActivity = CreateExpectedDischargeActivity();
