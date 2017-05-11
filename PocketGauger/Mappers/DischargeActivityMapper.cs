@@ -44,24 +44,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             if (gaugingSummary.StartStage != null && gaugingSummary.EndStage != null)
             {
-                yield return new GageHeightMeasurement
-                {
-                    MeasurementTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset),
-                    GageHeight = CreateMeasurement(gaugingSummary.StartStage, ParametersAndMethodsConstants.DistanceUnitId)
-                };
-                yield return new GageHeightMeasurement
-                {
-                    MeasurementTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset),
-                    GageHeight = CreateMeasurement(gaugingSummary.EndStage, ParametersAndMethodsConstants.DistanceUnitId)
-                };
+                yield return CreateGageHeightMeasurement(gaugingSummary.StartStage, gaugingSummary.StartDate, locationTimeZoneOffset);
+                yield return CreateGageHeightMeasurement(gaugingSummary.EndStage, gaugingSummary.EndDate, locationTimeZoneOffset);
             }
             else if (gaugingSummary.MeanStage != null)
             {
-                yield return new GageHeightMeasurement
-                {
-                    MeasurementTime = new DateTimeOffset((gaugingSummary.StartDate.Ticks + gaugingSummary.EndDate.Ticks) / 2, locationTimeZoneOffset),
-                    GageHeight = CreateMeasurement(gaugingSummary.MeanStage, ParametersAndMethodsConstants.DistanceUnitId)
-                };
+                var measurementTime = new DateTime((gaugingSummary.StartDate.Ticks + gaugingSummary.EndDate.Ticks) / 2);
+
+                yield return CreateGageHeightMeasurement(gaugingSummary.MeanStage, measurementTime, locationTimeZoneOffset);
             }
         }
 
@@ -92,6 +82,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return gaugingSummary.UseIndexVelocity
                 ? CreateMeasurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
                 : null;
+        }
+
+        private static GageHeightMeasurement CreateGageHeightMeasurement(double? value, DateTime dateTime, TimeSpan timeZoneOffset)
+        {
+            return new GageHeightMeasurement(
+                CreateMeasurement(value, ParametersAndMethodsConstants.DistanceUnitId),
+                new DateTimeOffset(dateTime, timeZoneOffset));
         }
 
         private static Measurement CreateMeasurement(double? value, string unit)

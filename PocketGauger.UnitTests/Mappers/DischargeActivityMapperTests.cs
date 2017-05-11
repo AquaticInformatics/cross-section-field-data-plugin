@@ -113,16 +113,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var expectedGaugeHeightMeasurements = new[]
             {
-                new GageHeightMeasurement
-                {
-                    GageHeight = new Measurement(startStage, "m"),
-                    MeasurementTime = dischargeActivity.MeasurementStartTime
-                },
-                new GageHeightMeasurement
-                {
-                    GageHeight = new Measurement(endStage, "m"),
-                    MeasurementTime = dischargeActivity.MeasurementEndTime
-                }
+                new GageHeightMeasurement(new Measurement(startStage, "m"), dischargeActivity.MeasurementStartTime),
+                new GageHeightMeasurement(new Measurement(endStage, "m"), dischargeActivity.MeasurementEndTime)
             };
 
             dischargeActivity.GageHeightMeasurements.ShouldAllBeEquivalentTo(expectedGaugeHeightMeasurements);
@@ -145,11 +137,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var expectedGaugeHeightMeasurements = new[]
             {
-                new GageHeightMeasurement
-                {
-                    GageHeight = new Measurement(meanStage, "m"),
-                    MeasurementTime = expectedMeasurementTime
-                }
+                new GageHeightMeasurement(new Measurement(meanStage, "m"), expectedMeasurementTime)
             };
 
             dischargeActivity.GageHeightMeasurements.ShouldAllBeEquivalentTo(expectedGaugeHeightMeasurements);
