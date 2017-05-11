@@ -79,36 +79,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_GaugingSummaryFlowCalculationMethodIsMean_SetMonitoringMethodAsMeanSection()
-        {
-            _gaugingSummaryItem.FlowCalculationMethodProxy = FlowCalculationMethod.Mean.ToString();
-
-            var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
-
-            Assert.That(dischargeActivity.DischargeMethodCode, Is.EqualTo(ParametersAndMethodsConstants.MeanSectionMonitoringMethod));
-        }
-
-        [Test]
-        public void Map_GaugingSummaryFlowCalculationMethodIsMid_SetMonitoringMethodAsMidSection()
-        {
-            _gaugingSummaryItem.FlowCalculationMethodProxy = FlowCalculationMethod.Mid.ToString();
-
-            var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
-
-            Assert.That(dischargeActivity.DischargeMethodCode, Is.EqualTo(ParametersAndMethodsConstants.MidSectionMonitoringMethod));
-        }
-
-        [Test]
-        public void Map_GaugingSummaryFlowCalculationMethodIsUnknown_SetMonitoringMethodToDefault()
-        {
-            _gaugingSummaryItem.FlowCalculationMethodProxy = _fixture.Create<string>();
-
-            var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
-
-            Assert.That(dischargeActivity.DischargeMethodCode, Is.EqualTo(ParametersAndMethodsConstants.DefaultMonitoringMethod));
-        }
-
-        [Test]
         public void Map_GaugingSummaryUseIndexVelocityFlagSet_SetsMeanIndexVelocity()
         {
             _gaugingSummaryItem.UseIndexVelocityProxy = bool.TrueString;
@@ -209,7 +179,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             return new DischargeActivity(surveyPeriod, discharge)
             {
                 Party = _gaugingSummaryItem.ObserversName,
-                DischargeMethodCode = ParametersAndMethodsConstants.MidSectionMonitoringMethod,
                 MeasurementId = _gaugingSummaryItem.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
                 ShowInDataCorrection = true,
                 ShowInRatingDevelopment = true

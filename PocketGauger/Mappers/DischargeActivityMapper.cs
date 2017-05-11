@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
@@ -28,8 +29,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 CreatePointVelocitySubActivity(gaugingSummary, dischargeActivity)
             };
 
-            dischargeActivity.GageHeightMeasurements = new List<GageHeightMeasurement>();
-            dischargeActivity.GageHeightMeasurements.AddRange(CreateGageHeightMeasurements(gaugingSummary, locationTimeZoneOffset));
+            dischargeActivity.GageHeightMeasurements = CreateGageHeightMeasurements(gaugingSummary, locationTimeZoneOffset).ToList();
 
             return dischargeActivity;
         }
@@ -47,12 +47,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 yield return new GageHeightMeasurement
                 {
                     MeasurementTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset),
-                    GageHeight = CreateMeasurement(gaugingSummary.StartStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                    GageHeight = CreateMeasurement(gaugingSummary.StartStage, ParametersAndMethodsConstants.DistanceUnitId)
                 };
                 yield return new GageHeightMeasurement
                 {
                     MeasurementTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset),
-                    GageHeight = CreateMeasurement(gaugingSummary.EndStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                    GageHeight = CreateMeasurement(gaugingSummary.EndStage, ParametersAndMethodsConstants.DistanceUnitId)
                 };
             }
             else if (gaugingSummary.MeanStage != null)
@@ -60,7 +60,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 yield return new GageHeightMeasurement
                 {
                     MeasurementTime = new DateTimeOffset((gaugingSummary.StartDate.Ticks + gaugingSummary.EndDate.Ticks) / 2, locationTimeZoneOffset),
-                    GageHeight = CreateMeasurement(gaugingSummary.MeanStage, ParametersAndMethodsConstants.GageHeightUnitId)
+                    GageHeight = CreateMeasurement(gaugingSummary.MeanStage, ParametersAndMethodsConstants.DistanceUnitId)
                 };
             }
         }
@@ -75,7 +75,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return new DischargeActivity(surveyPeriod, discharge)
             {
                 Party = gaugingSummary.ObserversName,
-                DischargeMethodCode = GetDischargeMonitoringMethodCode(gaugingSummary.FlowCalculationMethod),
                 MeasurementId = GenerateMeasurementId(gaugingSummary),
                 MeanIndexVelocity = GetMeanIndexVelocity(gaugingSummary),
                 ShowInDataCorrection = true,
@@ -93,19 +92,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return gaugingSummary.UseIndexVelocity
                 ? CreateMeasurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
                 : null;
-        }
-
-        private static string GetDischargeMonitoringMethodCode(FlowCalculationMethod? gaugingMethod)
-        {
-            switch (gaugingMethod)
-            {
-                case FlowCalculationMethod.Mean:
-                    return ParametersAndMethodsConstants.MeanSectionMonitoringMethod;
-                case FlowCalculationMethod.Mid:
-                    return ParametersAndMethodsConstants.MidSectionMonitoringMethod;
-                default:
-                    return ParametersAndMethodsConstants.DefaultMonitoringMethod;
-            }
         }
 
         private static Measurement CreateMeasurement(double? value, string unit)

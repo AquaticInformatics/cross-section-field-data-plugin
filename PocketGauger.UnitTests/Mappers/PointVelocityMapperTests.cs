@@ -212,13 +212,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             return new ManualGaugingDischargeSection
             {
                 Area = _gaugingSummaryItem.Area,
-                AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
+                AreaUnitId = "m^2",
                 MeasurementConditions = MeasurementCondition.OpenWater,
-                TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
-                DistanceToMeterUnitId = ParametersAndMethodsConstants.DistanceUnitId,
+                TaglinePointUnitId = "m",
+                DistanceToMeterUnitId = "m",
                 VelocityAverage = _gaugingSummaryItem.MeanVelocity,
-                VelocityAverageUnitId = ParametersAndMethodsConstants.VelocityUnitId,
-                WidthUnitId = ParametersAndMethodsConstants.DistanceUnitId,
+                VelocityAverageUnitId = "m/s",
+                WidthUnitId = "m",
                 AscendingSegmentDisplayOrder = true
             };
         }
@@ -242,12 +242,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 StartTime = _dischargeActivity.MeasurementPeriod.Start,
                 EndTime = _dischargeActivity.MeasurementPeriod.End,
                 Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
-                ChannelName = ParametersAndMethodsConstants.DefaultChannelName,
+                ChannelName = "Main",
                 Comments = _gaugingSummaryItem.Comments,
                 Party = _gaugingSummaryItem.ObserversName,
-                DischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId,
-                MonitoringMethodCode = _dischargeActivity.DischargeMethodCode,
-                DistanceToGageUnitId = ParametersAndMethodsConstants.DistanceUnitId
+                DischargeUnitId = "m^3/s",
+                DistanceToGageUnitId = "m"
             };
         }
 

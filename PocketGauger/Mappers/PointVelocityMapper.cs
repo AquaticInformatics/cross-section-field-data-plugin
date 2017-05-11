@@ -59,7 +59,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 Comments = summaryItem.Comments,
                 Party = summaryItem.ObserversName,
                 DischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId,
-                MonitoringMethodCode = dischargeActivity.DischargeMethodCode,
                 MeterSuspension = meterSuspensionAndDeploymentMethod.Key,
                 DeploymentMethod = meterSuspensionAndDeploymentMethod.Value,
                 DistanceToGageUnitId = ParametersAndMethodsConstants.DistanceUnitId
