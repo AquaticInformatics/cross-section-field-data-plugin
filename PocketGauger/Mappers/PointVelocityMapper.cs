@@ -18,12 +18,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             _verticalMapper = verticalMapper;
         }
 
-        public ManualGauging Map(GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
+        public ManualGaugingDischargeSection Map(GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
         {
             var channelMeasurement = CreateChannelMeasurement(summaryItem, dischargeActivity);
             var verticals = _verticalMapper.Map(summaryItem, channelMeasurement);
 
-            return new ManualGauging
+            return new ManualGaugingDischargeSection
             {
                 Area = summaryItem.Area,
                 AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,

@@ -57,7 +57,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         public void SetupForEachTest()
         {
             _dischargeActivity = _fixture.Build<DischargeActivity>()
-                .Without(activity => activity.DischargeSubActivities)
+                .Without(activity => activity.ChannelMeasurements)
                 .Create();
         }
 
@@ -68,12 +68,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _gaugingSummaryItem.StartBankProxy = bankSide?.ToString();
 
-            var pointVelocityActivity = MapPointVelocityActivity();
+            var dischargeSection = MapToManualGaugingDischargeSection();
 
-            Assert.That(pointVelocityActivity.StartPoint, Is.EqualTo(expectedStartPoint));
+            Assert.That(dischargeSection.StartPoint, Is.EqualTo(expectedStartPoint));
         }
 
-        private ManualGauging MapPointVelocityActivity()
+        private ManualGaugingDischargeSection MapToManualGaugingDischargeSection()
         {
             return _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
         }
@@ -85,9 +85,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _gaugingSummaryItem.FlowCalculationMethodProxy = flowCalculationMethod?.ToString();
 
-            var pointVelocityActivity = MapPointVelocityActivity();
+            var dischargeSection = MapToManualGaugingDischargeSection();
 
-            Assert.That(pointVelocityActivity.DischargeMethod, Is.EqualTo(expectedPointVelocityMethod));
+            Assert.That(dischargeSection.DischargeMethod, Is.EqualTo(expectedPointVelocityMethod));
         }
 
         private readonly IEnumerable<TestCaseData> _sampleDepthFlagTestCases = new List<TestCaseData>
@@ -112,9 +112,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             SetSampleFlags(sampleFlags);
 
-            var pointVelocityActivity = MapPointVelocityActivity();
+            var dischargeSection = MapToManualGaugingDischargeSection();
 
-            Assert.That(pointVelocityActivity.VelocityObservationMethod, Is.EqualTo(expectedVelocityObservationMethod));
+            Assert.That(dischargeSection.VelocityObservationMethod, Is.EqualTo(expectedVelocityObservationMethod));
         }
 
         private void SetSampleFlags(Tuple<bool, bool, bool, bool, bool, bool, bool> sampleFlags)
@@ -151,7 +151,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _gaugingSummaryItem.GaugingMethodProxy = gaugingMethod.ToString();
 
-            var pointVelocityDischarge = MapPointVelocityActivity();
+            var pointVelocityDischarge = MapToManualGaugingDischargeSection();
 
             AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.Channel,
                 expectedMeterAndDeploymentType.Item1, expectedMeterAndDeploymentType.Item2);
@@ -186,7 +186,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _gaugingSummaryItem.GaugingMethodProxy = gaugingMethod.ToString();
             _gaugingSummaryItem.StartBankProxy = bankSide.ToString();
 
-            var pointVelocityDischarge = MapPointVelocityActivity();
+            var pointVelocityDischarge = MapToManualGaugingDischargeSection();
 
             AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.Channel,
                 expectedMeterAndDeploymentType.Item1, expectedMeterAndDeploymentType.Item2);
@@ -195,9 +195,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_GaugingSummaryItem_IsMappedToExpectedPointVelocityDischarge()
         {
-            var expectedDischargeActivity = CreateExpectedPointVelocityDischarge();
+            var expectedDischargeActivity = CreateExpectedManualGaugingDischargeSection();
 
-            var pointVelocityDischarge = MapPointVelocityActivity();
+            var pointVelocityDischarge = MapToManualGaugingDischargeSection();
 
             pointVelocityDischarge.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
                 .Excluding(activity => activity.Channel)
@@ -207,9 +207,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 .Excluding(activity => activity.StartPoint));
         }
 
-        private ManualGauging CreateExpectedPointVelocityDischarge()
+        private ManualGaugingDischargeSection CreateExpectedManualGaugingDischargeSection()
         {
-            return new ManualGauging
+            return new ManualGaugingDischargeSection
             {
                 Area = _gaugingSummaryItem.Area,
                 AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
@@ -226,16 +226,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [Test]
         public void Map_GaugingSummaryItem_IsMappedToExpectedDischargeChannelMeasurement()
         {
-            var expectedDischargeActivity = CreateExpectedDischargeChannelMeasurement();
+            var expectedDischargeActivity = CreateExpectedChannel();
 
-            var pointVelocityDischarge = MapPointVelocityActivity();
+            var pointVelocityDischarge = MapToManualGaugingDischargeSection();
 
             pointVelocityDischarge.Channel.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
                 .Excluding(activity => activity.MeterSuspension)
                 .Excluding(activity => activity.DeploymentMethod));
         }
 
-        private Channel CreateExpectedDischargeChannelMeasurement()
+        private Channel CreateExpectedChannel()
         {
             return new Channel
             {

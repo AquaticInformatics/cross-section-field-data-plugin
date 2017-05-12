@@ -23,7 +23,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             var dischargeActivity = CreateDischargeActivity(gaugingSummary, locationTimeZoneOffset);
 
-            dischargeActivity.DischargeSubActivities = new List<ChannelMeasurementBase>
+            dischargeActivity.ChannelMeasurements = new List<ChannelMeasurementBase>
             {
                 CreatePointVelocitySubActivity(gaugingSummary, dischargeActivity)
             };

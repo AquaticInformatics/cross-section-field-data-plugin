@@ -53,7 +53,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private void SetupMockPointVelocityMapper()
         {
             _mockPointVelocityMapper = Substitute.For<IPointVelocityMapper>();
-            _mockPointVelocityMapper.Map(null, null).ReturnsForAnyArgs(new ManualGauging());
+            _mockPointVelocityMapper.Map(null, null).ReturnsForAnyArgs(new ManualGaugingDischargeSection());
         }
 
         [Test]
@@ -195,7 +195,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             dischargeActivity.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
                 .Excluding(activity => activity.MeasurementPeriod)
                 .Excluding(activity => activity.MeanIndexVelocity)
-                .Excluding(activity => activity.DischargeSubActivities)
+                .Excluding(activity => activity.ChannelMeasurements)
                 .Excluding(activity => activity.GageHeightMeasurements));
         }
 
