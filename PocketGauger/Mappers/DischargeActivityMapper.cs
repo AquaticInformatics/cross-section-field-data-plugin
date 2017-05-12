@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
@@ -23,7 +23,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             var dischargeActivity = CreateDischargeActivity(gaugingSummary, locationTimeZoneOffset);
 
-            dischargeActivity.DischargeSubActivities = new List<DischargeSubActivity>
+            dischargeActivity.DischargeSubActivities = new List<ChannelMeasurementBase>
             {
                 CreatePointVelocitySubActivity(gaugingSummary, dischargeActivity)
             };
@@ -34,7 +34,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return dischargeActivity;
         }
 
-        private DischargeSubActivity CreatePointVelocitySubActivity(GaugingSummaryItem gaugingSummary,
+        private ChannelMeasurementBase CreatePointVelocitySubActivity(GaugingSummaryItem gaugingSummary,
             DischargeActivity dischargeActivity)
         {
             return _pointVelocityMapper.Map(gaugingSummary, dischargeActivity);

@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
@@ -53,7 +53,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private void SetupMockPointVelocityMapper()
         {
             _mockPointVelocityMapper = Substitute.For<IPointVelocityMapper>();
-            _mockPointVelocityMapper.Map(null, null).ReturnsForAnyArgs(new PointVelocityDischarge());
+            _mockPointVelocityMapper.Map(null, null).ReturnsForAnyArgs(new ManualGauging());
         }
 
         [Test]

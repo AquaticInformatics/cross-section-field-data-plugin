@@ -4,7 +4,7 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
 using Server.Plugins.FieldVisit.CrossSection.Model;

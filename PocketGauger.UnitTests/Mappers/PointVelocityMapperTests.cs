@@ -6,7 +6,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
 using Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests.TestHelpers;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
@@ -73,7 +73,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             Assert.That(pointVelocityActivity.StartPoint, Is.EqualTo(expectedStartPoint));
         }
 
-        private PointVelocityDischarge MapPointVelocityActivity()
+        private ManualGauging MapPointVelocityActivity()
         {
             return _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
         }
@@ -153,15 +153,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = MapPointVelocityActivity();
 
-            AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.ChannelMeasurement,
+            AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.Channel,
                 expectedMeterAndDeploymentType.Item1, expectedMeterAndDeploymentType.Item2);
         }
 
-        private static void AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(DischargeChannelMeasurement channelMeasurement,
+        private static void AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(Channel channel,
             MeterSuspensionType meterSuspensionType, DeploymentMethodType expectedMeterAndDeploymentType)
         {
-            Assert.That(channelMeasurement.MeterSuspension, Is.EqualTo(meterSuspensionType));
-            Assert.That(channelMeasurement.DeploymentMethod, Is.EqualTo(expectedMeterAndDeploymentType));
+            Assert.That(channel.MeterSuspension, Is.EqualTo(meterSuspensionType));
+            Assert.That(channel.DeploymentMethod, Is.EqualTo(expectedMeterAndDeploymentType));
         }
 
         private readonly IEnumerable<TestCaseData> _bridgeGaugingMethodAndBankSideToExpectedMeterSuspensionAndDeploymentTypeTestCases = new List<TestCaseData>
@@ -188,7 +188,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = MapPointVelocityActivity();
 
-            AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.ChannelMeasurement,
+            AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.Channel,
                 expectedMeterAndDeploymentType.Item1, expectedMeterAndDeploymentType.Item2);
         }
 
@@ -200,16 +200,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var pointVelocityDischarge = MapPointVelocityActivity();
 
             pointVelocityDischarge.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
-                .Excluding(activity => activity.ChannelMeasurement)
+                .Excluding(activity => activity.Channel)
                 .Excluding(activity => activity.Verticals)
                 .Excluding(activity => activity.DischargeMethod)
                 .Excluding(activity => activity.VelocityObservationMethod)
                 .Excluding(activity => activity.StartPoint));
         }
 
-        private PointVelocityDischarge CreateExpectedPointVelocityDischarge()
+        private ManualGauging CreateExpectedPointVelocityDischarge()
         {
-            return new PointVelocityDischarge
+            return new ManualGauging
             {
                 Area = _gaugingSummaryItem.Area,
                 AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
@@ -230,14 +230,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = MapPointVelocityActivity();
 
-            pointVelocityDischarge.ChannelMeasurement.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
+            pointVelocityDischarge.Channel.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
                 .Excluding(activity => activity.MeterSuspension)
                 .Excluding(activity => activity.DeploymentMethod));
         }
 
-        private DischargeChannelMeasurement CreateExpectedDischargeChannelMeasurement()
+        private Channel CreateExpectedDischargeChannelMeasurement()
         {
-            return new DischargeChannelMeasurement
+            return new Channel
             {
                 StartTime = _dischargeActivity.MeasurementPeriod.Start,
                 EndTime = _dischargeActivity.MeasurementPeriod.End,
@@ -256,7 +256,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            _mockVerticalMapper.Received().Map(_gaugingSummaryItem, pointVelocityDischarge.ChannelMeasurement);
+            _mockVerticalMapper.Received().Map(_gaugingSummaryItem, pointVelocityDischarge.Channel);
         }
 
         [Test]
@@ -292,7 +292,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private void SetupVerticalMapperToReturn(IEnumerable<Vertical> verticals)
         {
-            _mockVerticalMapper.Map(Arg.Any<GaugingSummaryItem>(), Arg.Any<DischargeChannelMeasurement>())
+            _mockVerticalMapper.Map(Arg.Any<GaugingSummaryItem>(), Arg.Any<Channel>())
                 .Returns(verticals.ToList());
         }
 

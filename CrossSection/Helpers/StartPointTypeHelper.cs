@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers

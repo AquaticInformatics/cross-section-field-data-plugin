@@ -1,5 +1,5 @@
 ﻿using System;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 {

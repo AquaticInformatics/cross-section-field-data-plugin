@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeSubActivities;
+using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
@@ -18,16 +18,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             _verticalMapper = verticalMapper;
         }
 
-        public PointVelocityDischarge Map(GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
+        public ManualGauging Map(GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
         {
             var channelMeasurement = CreateChannelMeasurement(summaryItem, dischargeActivity);
             var verticals = _verticalMapper.Map(summaryItem, channelMeasurement);
 
-            return new PointVelocityDischarge
+            return new ManualGauging
             {
                 Area = summaryItem.Area,
                 AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
-                ChannelMeasurement = channelMeasurement,
+                Channel = channelMeasurement,
                 DischargeMethod = MapDischargeMethod(summaryItem.FlowCalculationMethod),
                 MeasurementConditions = MeasurementCondition.OpenWater,
                 StartPoint = MapStartPoint(summaryItem.StartBank),
@@ -45,12 +45,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             };
         }
 
-        private static DischargeChannelMeasurement CreateChannelMeasurement(GaugingSummaryItem summaryItem,
+        private static Channel CreateChannelMeasurement(GaugingSummaryItem summaryItem,
             DischargeActivity dischargeActivity)
         {
             var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod(summaryItem);
 
-            return new DischargeChannelMeasurement
+            return new Channel
             {
                 StartTime = dischargeActivity.MeasurementPeriod.Start,
                 EndTime = dischargeActivity.MeasurementPeriod.End,

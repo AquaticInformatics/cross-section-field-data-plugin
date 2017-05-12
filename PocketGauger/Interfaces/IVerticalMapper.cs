@@ -7,6 +7,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Interfaces
 {
     public interface IVerticalMapper
     {
-        List<Vertical> Map(GaugingSummaryItem gaugingSummaryItem, DischargeChannelMeasurement channelMeasurement);
+        List<Vertical> Map(GaugingSummaryItem gaugingSummaryItem, Channel channel);
     }
 }
