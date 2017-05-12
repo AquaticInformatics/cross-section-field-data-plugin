@@ -51,12 +51,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             return ParseFile(fileStream, fieldDataResultsAppender, logger);
         }
 
-        public ParseFileStatus ParseFile(Stream fileStream, IFieldVisit selectedFieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
-            ILog logger)
-        {
-            return ParseFile(fileStream, fieldDataResultsAppender, logger);
-        }
-
         private static ZipArchive GetZipArchive(Stream fileStream)
         {
             try
