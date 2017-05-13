@@ -56,14 +56,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         [SetUp]
         public void SetupForEachTest()
         {
-            _dischargeActivity = _fixture.Build<DischargeActivity>()
-                .Without(activity => activity.ChannelMeasurements)
-                .Create();
+            _dischargeActivity = _fixture.Create<DischargeActivity>();
         }
 
         [TestCase(BankSide.Left, StartPointType.LeftEdgeOfWater)]
         [TestCase(BankSide.Right, StartPointType.RightEdgeOfWater)]
-        [TestCase(null, StartPointType.Unspecified)]
+        [TestCase(null, default(StartPointType))]
         public void Map_BankSide_IsMappedToExpectedStartPointType(BankSide? bankSide, StartPointType expectedStartPoint)
         {
             _gaugingSummaryItem.StartBankProxy = bankSide?.ToString();
@@ -80,7 +78,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         [TestCase(FlowCalculationMethod.Mean, DischargeMethodType.MeanSection)]
         [TestCase(FlowCalculationMethod.Mid, DischargeMethodType.MidSection)]
-        [TestCase(null, DischargeMethodType.Unknown)]
+        [TestCase(null, default(DischargeMethodType))]
         public void Map_FlowCalculationMethod_IsMappedToExpectedDischargeMethodType(FlowCalculationMethod? flowCalculationMethod, DischargeMethodType expectedPointVelocityMethod)
         {
             _gaugingSummaryItem.FlowCalculationMethodProxy = flowCalculationMethod?.ToString();

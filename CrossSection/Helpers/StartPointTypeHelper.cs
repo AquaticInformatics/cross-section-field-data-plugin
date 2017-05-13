@@ -20,9 +20,10 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 
             if (Enum.TryParse(startPoint, true, out startPointEnum))
             {
-                if (startPointEnum == StartPointType.Unspecified) throw CreateInvalidStartBankException();
+                if (startPointEnum == StartPointType.LeftEdgeOfWater || startPointEnum == StartPointType.RightEdgeOfWater)
+                    return startPointEnum;
 
-                return startPointEnum;
+                throw CreateInvalidStartBankException();
             }
 
             return AttemptToInferStartPoint(startPoint);

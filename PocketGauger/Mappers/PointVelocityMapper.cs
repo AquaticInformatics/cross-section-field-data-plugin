@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
@@ -109,7 +110,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
         private static DeploymentMethodType DetermineBridgeDeploymentMethod(GaugingSummaryItem summaryItem)
         {
-            var startPoint = MapStartPoint(summaryItem.StartBank);
+            var startPoint = MapNullableStartPoint(summaryItem.StartBank);
 
             switch (startPoint)
             {
@@ -117,6 +118,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                     return DeploymentMethodType.BridgeDownstreamSide;
                 case StartPointType.RightEdgeOfWater:
                     return DeploymentMethodType.BridgeUpstreamSide;
+                case null:
+                    return DeploymentMethodType.Unspecified;
                 default:
                     return DeploymentMethodType.Unspecified;
             }
@@ -161,25 +164,34 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             switch (startBank)
             {
+                case null:
+                    return default(StartPointType);
                 case BankSide.Left:
                     return StartPointType.LeftEdgeOfWater;
                 case BankSide.Right:
                     return StartPointType.RightEdgeOfWater;
                 default:
-                    return StartPointType.Unspecified;
+                    throw new ArgumentException("Invalid start bank value", nameof(startBank));
             }
+        }
+
+        private static StartPointType? MapNullableStartPoint(BankSide? startBank)
+        {
+            return startBank.HasValue ? MapStartPoint(startBank) : default(StartPointType?);
         }
 
         private static DischargeMethodType MapDischargeMethod(FlowCalculationMethod? gaugingMethod)
         {
             switch (gaugingMethod)
             {
+                case null:
+                    return default(DischargeMethodType);
                 case FlowCalculationMethod.Mean:
                     return DischargeMethodType.MeanSection;
                 case FlowCalculationMethod.Mid:
                     return DischargeMethodType.MidSection;
                 default:
-                    return DischargeMethodType.Unknown;
+                    throw new ArgumentException("Invalid flow calculation value", nameof(gaugingMethod));
             }
         }
 

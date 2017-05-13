@@ -12,6 +12,5 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 
         public const string DefaultChannelName = "Main";
         public const string DefaultRelativeLocationName = "At the control";
-        public const StartPointType DefaultStartPointType = StartPointType.Unspecified;
     }
 }

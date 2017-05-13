@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
@@ -24,18 +23,17 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         {
             var dischargeActivity = CreateDischargeActivity(gaugingSummary, locationTimeZoneOffset);
 
-            dischargeActivity.ChannelMeasurements = new List<ChannelMeasurementBase>
-            {
-                CreatePointVelocitySubActivity(gaugingSummary, dischargeActivity)
-            };
+            dischargeActivity.ChannelMeasurements.Add(CreatePointVelocitySubActivity(gaugingSummary, dischargeActivity));
 
-            dischargeActivity.GageHeightMeasurements = CreateGageHeightMeasurements(gaugingSummary, locationTimeZoneOffset).ToList();
+            foreach (var gageHeightMeasurement in CreateGageHeightMeasurements(gaugingSummary, locationTimeZoneOffset))
+            {
+                dischargeActivity.GageHeightMeasurements.Add(gageHeightMeasurement);
+            }
 
             return dischargeActivity;
         }
 
-        private ChannelMeasurementBase CreatePointVelocitySubActivity(GaugingSummaryItem gaugingSummary,
-            DischargeActivity dischargeActivity)
+        private ChannelMeasurementBase CreatePointVelocitySubActivity(GaugingSummaryItem gaugingSummary, DischargeActivity dischargeActivity)
         {
             return _pointVelocityMapper.Map(gaugingSummary, dischargeActivity);
         }
@@ -49,7 +47,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
             else if (gaugingSummary.MeanStage != null)
             {
-                var measurementTime = new DateTime((gaugingSummary.StartDate.Ticks + gaugingSummary.EndDate.Ticks) / 2);
+                var measurementTime = DateTimeHelper.GetMean(gaugingSummary.StartDate, gaugingSummary.EndDate);
 
                 yield return CreateGageHeightMeasurement(gaugingSummary.MeanStage, measurementTime, locationTimeZoneOffset);
             }
