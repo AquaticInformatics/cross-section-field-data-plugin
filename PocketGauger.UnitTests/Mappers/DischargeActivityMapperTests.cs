@@ -132,7 +132,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var dischargeActivity = _dischargeActivityMapper.Map(_gaugingSummaryItem, LocationUtcOffset);
 
             var expectedMeasurementTime = new DateTimeOffset(
-                (_gaugingSummaryItem.StartDate.Ticks + _gaugingSummaryItem.EndDate.Ticks)/2,
+                DateTimeHelper.GetMean(_gaugingSummaryItem.StartDate, _gaugingSummaryItem.EndDate),
                 LocationUtcOffset);
 
             var expectedGaugeHeightMeasurements = new[]

@@ -79,7 +79,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
         {
             var expectedMeanTime = new DateTimeOffset(2010, 01, 01, 13, 45, 00, UtcOffset);
 
-            var result = DateTimeHelper.GetMeanTime(_startDate, _endDate);
+            var result = DateTimeHelper.GetMean(_startDate, _endDate);
 
             Assert.That(result, Is.EqualTo(expectedMeanTime));
         }
