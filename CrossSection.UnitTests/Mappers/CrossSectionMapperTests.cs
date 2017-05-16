@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData;
-using PluginFramework = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection;
+using PluginFramework = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 {

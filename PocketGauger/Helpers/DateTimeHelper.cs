@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {

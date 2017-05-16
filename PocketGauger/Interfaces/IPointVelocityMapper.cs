@@ -1,6 +1,5 @@
-﻿using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Interfaces

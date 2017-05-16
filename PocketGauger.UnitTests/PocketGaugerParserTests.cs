@@ -9,11 +9,11 @@ using log4net;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
-using DataModel = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
+using Server.BusinessInterfaces.FieldDataPluginCore.Context;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
+using Server.BusinessInterfaces.FieldDataPluginCore.Results;
+using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
+using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 {

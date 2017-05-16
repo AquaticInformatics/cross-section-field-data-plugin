@@ -1,4 +1,4 @@
-﻿using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection;
+﻿using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Interfaces
 {

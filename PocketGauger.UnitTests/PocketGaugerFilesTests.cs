@@ -3,7 +3,7 @@ using System.IO;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests

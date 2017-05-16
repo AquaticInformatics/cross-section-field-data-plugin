@@ -5,13 +5,13 @@ using Common.Utils;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
-using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
+using MeterCalibration = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Meters.MeterCalibration;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 {

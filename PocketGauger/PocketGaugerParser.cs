@@ -2,12 +2,12 @@
 using System.IO;
 using System.IO.Compression;
 using log4net;
-using Server.BusinessInterfaces.FieldDataPlugInCore;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
+using Server.BusinessInterfaces.FieldDataPluginCore;
+using Server.BusinessInterfaces.FieldDataPluginCore.Context;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.Parsers;
@@ -16,7 +16,7 @@ using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
-    public class PocketGaugerParser : IFieldDataPlugIn
+    public class PocketGaugerParser : IFieldDataPlugin
     {
         public ParseFileStatus ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)

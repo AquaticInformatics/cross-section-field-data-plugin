@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers

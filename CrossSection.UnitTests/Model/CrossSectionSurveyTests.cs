@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Model

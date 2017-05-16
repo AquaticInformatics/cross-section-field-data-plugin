@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.ChannelMeasurements;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers

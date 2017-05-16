@@ -8,7 +8,7 @@ using Common.TestHelpers.NUnitExtensions;
 using FluentAssertions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Model;

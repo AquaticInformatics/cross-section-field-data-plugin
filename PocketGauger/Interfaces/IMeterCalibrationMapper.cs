@@ -1,5 +1,5 @@
 ﻿using Server.Plugins.FieldVisit.PocketGauger.Dtos;
-using MeterCalibration = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Meters.MeterCalibration;
+using MeterCalibration = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Meters.MeterCalibration;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Interfaces
 {

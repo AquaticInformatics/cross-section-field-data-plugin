@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
 using Server.Plugins.FieldVisit.CrossSection.Model;
-using PluginFramework = Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection;
+using PluginFramework = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 {

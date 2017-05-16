@@ -1,6 +1,6 @@
-﻿using Server.BusinessInterfaces.FieldDataPlugInCore.Context;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Results;
+﻿using Server.BusinessInterfaces.FieldDataPluginCore.Context;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
+using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 
 namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
 {

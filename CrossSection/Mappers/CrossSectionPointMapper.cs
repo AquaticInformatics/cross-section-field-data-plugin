@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.CrossSection;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using static System.FormattableString;
 

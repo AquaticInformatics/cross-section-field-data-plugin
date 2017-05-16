@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPlugInCore.DataModel.Verticals;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 

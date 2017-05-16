@@ -96,9 +96,9 @@
       <Project>{3ac153f4-740d-4a11-b86a-3e8816417ccf}</Project>
       <Name>Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPlugInCore.csproj">
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
-      <Name>Server.BusinessInterfaces.FieldDataPlugInCore</Name>
+      <Name>Server.BusinessInterfaces.FieldDataPluginCore</Name>
     </ProjectReference>
     <ProjectReference Include="..\PocketGauger\Server.Plugins.FieldVisit.PocketGauger.csproj">
       <Project>{6d325ff6-c0ad-4944-b5be-32d7eedf3cf1}</Project>

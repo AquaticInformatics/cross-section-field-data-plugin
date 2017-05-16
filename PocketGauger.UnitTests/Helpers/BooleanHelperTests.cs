@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPlugInCore.Exceptions;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
