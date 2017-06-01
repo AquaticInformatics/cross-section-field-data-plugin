@@ -5,19 +5,19 @@ using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 using Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers;
 using Server.BusinessInterfaces.FieldDataPluginCore;
 using Server.BusinessInterfaces.FieldDataPluginCore.Context;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using Server.Plugins.FieldVisit.CrossSection.Parsers;
 using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection
 {
     public class CrossSectionPlugin : IFieldDataPlugin
     {
-        public ParseFileStatus ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileResult ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             var fieldVisitHandler = new UnknownLocationHandler(fieldDataResultsAppender);
@@ -25,7 +25,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
             return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
         }
 
-        public ParseFileStatus ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileResult ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             var fieldVisitHandler = new KnownLocationHandler(selectedLocation, fieldDataResultsAppender);
@@ -33,25 +33,35 @@ namespace Server.Plugins.FieldVisit.CrossSection
             return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
         }
 
-        private static ParseFileStatus ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
+        private static ParseFileResult ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
             IFieldVisitHandler fieldVisitHandler)
         {
             try
             {
                 var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
-                var crossSectionSurvey = MapToCrossSectionSurvey(parsedFileContents);
-
-                var locationIdentifier = GetLocationIdentifier(parsedFileContents);
-                var fieldVisitInfo = fieldVisitHandler.GetFieldVisit(locationIdentifier, crossSectionSurvey);
-
-                fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisitInfo, crossSectionSurvey);
-
-                return ParseFileStatus.Succeeded;
+                return ProcessParsedFileContents(parsedFileContents, fieldDataResultsAppender, fieldVisitHandler);
             }
-            catch (Exception)
+            catch (FormatNotSupportedException)
             {
-                return ParseFileStatus.Failed;
+                return ParseFileResult.FileFormatNotSupported();
             }
+            catch (Exception e)
+            {
+                return ParseFileResult.ParsingFailed(e.Message);
+            }
+        }
+
+        private static ParseFileResult ProcessParsedFileContents(CrossSectionSurvey parsedFileContents,
+            IFieldDataResultsAppender fieldDataResultsAppender, IFieldVisitHandler fieldVisitHandler)
+        {
+            var crossSectionSurvey = MapToCrossSectionSurvey(parsedFileContents);
+
+            var locationIdentifier = GetLocationIdentifier(parsedFileContents);
+            var fieldVisitInfo = fieldVisitHandler.GetFieldVisit(locationIdentifier, crossSectionSurvey);
+
+            fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisitInfo, crossSectionSurvey);
+
+            return ParseFileResult.Success();
         }
 
         private static DataModel.CrossSection.CrossSectionSurvey MapToCrossSectionSurvey(CrossSectionSurvey parsedFileContents)
