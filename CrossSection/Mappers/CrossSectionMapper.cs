@@ -36,8 +36,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 
             var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod);
 
-            var stageMeasurement = CreateStageMeasurement(crossSectionSurvey, unitSystem);
-            newCrossSectionSurvey.StageMeasurement = stageMeasurement;
+            newCrossSectionSurvey.StageMeasurement = CreateStageMeasurement(crossSectionSurvey, unitSystem);
 
             newCrossSectionSurvey.Party = crossSectionSurvey.GetFieldValue(Party);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);

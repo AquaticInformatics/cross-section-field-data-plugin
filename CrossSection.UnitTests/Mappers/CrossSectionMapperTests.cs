@@ -73,5 +73,18 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
             _mockCrossSectionPointMapper.Received(1).MapPoints(Arg.Any<List<CrossSectionPoint>>());
         }
+
+        [TestCase("Unit")]
+        [TestCase("Stage")]
+        public void MapCrossSection_MissingRequiredHeaderProperty_ThrowsException(string propertyName)
+        {
+            _crossSectionSurvey.Fields.Remove(propertyName);
+
+            TestDelegate testDelegate =
+                () => _crossSectionMapper.MapCrossSection(_crossSectionSurvey);
+
+            Assert.That(testDelegate,
+                Throws.Exception.With.Message.Contains(propertyName));
+        }
     }
 }
