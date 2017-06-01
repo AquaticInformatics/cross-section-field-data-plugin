@@ -33,14 +33,6 @@ namespace Server.Plugins.FieldVisit.CrossSection
             return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
         }
 
-        public ParseFileStatus ParseFile(Stream fileStream, IFieldVisit fieldVisit, IFieldDataResultsAppender fieldDataResultsAppender,
-            ILog logger)
-        {
-            var fieldVisitHandler = new KnownFieldVisitHandler(fieldVisit);
-
-            return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
-        }
-
         private static ParseFileStatus ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
             IFieldVisitHandler fieldVisitHandler)
         {
