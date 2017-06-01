@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Common.TestHelpers.NUnitExtensions;
@@ -12,6 +13,7 @@ using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
+using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using static System.FormattableString;
 
@@ -107,6 +109,38 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
                 .AddDischargeActivity(Arg.Any<IFieldVisit>(), Arg.Any<DischargeActivity>());
+        }
+
+        [Test]
+        public void ProcessGaugingSummary_ValidGaugingSummary_MapsObserverToParty()
+        {
+            var expectedNumberOfItems = 3;
+
+            var startDate = _fixture.Create<DateTime>();
+            var duration = _fixture.Create<TimeSpan>().Duration();
+            var observer = _fixture.Create<string>();
+
+            var gaugingSummaryItems = _fixture.Build<GaugingSummaryItem>()
+                .OmitAutoProperties()
+                .With(x => x.StartDate, startDate)
+                .With(x => x.EndDate, startDate.Add(duration))
+                .With(x => x.ObserversName, observer)
+                .With(x => x.GaugingId)
+                .With(x => x.Flow)
+                .With(x => x.PanelItems, new PanelItem[]{})
+                .CreateMany(expectedNumberOfItems).ToList();
+
+            var gaugingSummary = new GaugingSummary { GaugingSummaryItems = gaugingSummaryItems };
+
+            _pocketGaugerParser.ProcessGaugingSummary(gaugingSummary, _fieldDataResultsAppender);
+
+            _fieldDataResultsAppender
+                .Received(expectedNumberOfItems)
+                .AddFieldVisit(Arg.Any<ILocation>(), Arg.Is<DataModel.FieldVisitDetails>(x => x.Party == observer));
+
+            _fieldDataResultsAppender
+                .Received(expectedNumberOfItems)
+                .AddDischargeActivity(Arg.Any<IFieldVisit>(), Arg.Is<DischargeActivity>(x => x.Party == observer));
         }
     }
 }
