@@ -49,21 +49,21 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void ParseFile_FileStreamIsNotAValidZipFile_ReturnsFileFormatNotSupported()
+        public void ParseFile_FileStreamIsNotAValidZipFile_ReturnsCannotParse()
         {
             _stream = new MemoryStream(_fixture.Create<byte[]>());
 
             var parseFileResult = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-            parseFileResult.Status.Should().Be(ParseFileStatus.FileFormatNotSupported);
+            parseFileResult.Status.Should().Be(ParseFileStatus.CannotParse);
         }
 
         [Test]
-        public void ParseFile_FileStreamZipDoesNotContainGaugingSummary_ReturnsFileFormatNotSupported()
+        public void ParseFile_FileStreamZipDoesNotContainGaugingSummary_ReturnsCannotParse()
         {
             _stream = CreateZipStream(_fixture.Create<string>());
 
             var parseFileResult = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-            parseFileResult.Status.Should().Be(ParseFileStatus.FileFormatNotSupported);
+            parseFileResult.Status.Should().Be(ParseFileStatus.CannotParse);
         }
 
         private Stream CreateZipStream(string zipEntryName)
@@ -97,7 +97,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             const int expectedNumberOfDischargeActivities = 3;
 
             var parseFileResult = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-            parseFileResult.Status.Should().Be(ParseFileStatus.Success);
+            parseFileResult.Status.Should().Be(ParseFileStatus.ParsedSuccessfully);
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
