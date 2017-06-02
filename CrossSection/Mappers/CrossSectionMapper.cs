@@ -1,6 +1,7 @@
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
 using Server.BusinessInterfaces.FieldDataPluginCore.Units;
 ﻿using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
+using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using CrossSectionSurvey = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection.CrossSectionSurvey;
@@ -32,10 +33,12 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             var endTime = crossSectionSurvey.GetFieldValue(EndDate).ToDateTimeOffset();
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
 
+
             var newCrossSectionSurvey = crossSectionSurveyFactory.CreateCrossSectionSurvey(surveyPeriod);
 
-            var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToNullableDouble();
-            newCrossSectionSurvey.StageMeasurement = stageValue == null ? null : new Measurement(stageValue.Value, unitSystem.DistanceUnitId);
+            var stageMeasurement = CreateStageMeasurement(crossSectionSurvey, unitSystem);
+            newCrossSectionSurvey.StageMeasurement = stageMeasurement;
+
             newCrossSectionSurvey.Party = crossSectionSurvey.GetFieldValue(Party);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);
 
@@ -48,6 +51,15 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         {
             var distanceUnit = crossSectionSurvey.GetFieldValue(Unit);
             return new UnitSystem {DistanceUnitId = distanceUnit};
+        }
+
+        private static Measurement CreateStageMeasurement(Model.CrossSectionSurvey crossSectionSurvey, UnitSystem unitSystem)
+        {
+            var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToNullableDouble();
+            if (stageValue == null)
+                throw new ValidationException("Stage value is required");
+
+            return new Measurement(stageValue.Value, unitSystem.DistanceUnitId);
         }
     }
 }

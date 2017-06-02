@@ -18,7 +18,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 {
     public class PocketGaugerParser : IFieldDataPlugin
     {
-        public ParseFileStatus ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileResult ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             try
@@ -37,15 +37,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                     ProcessGaugingSummary(gaugingSummary, fieldDataResultsAppender);
                 }
 
-                return ParseFileStatus.Succeeded;
+                return ParseFileResult.ParsedSuccessfully();
             }
-            catch (Exception)
+            catch (FormatNotSupportedException)
             {
-                return ParseFileStatus.Failed;
+                return ParseFileResult.CannotParse();
+            }
+            catch (Exception e)
+            {
+                return ParseFileResult.ParsingFailed(e);
             }
         }
 
-        public ParseFileStatus ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileResult ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             return ParseFile(fileStream, fieldDataResultsAppender, logger);
