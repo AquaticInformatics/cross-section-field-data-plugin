@@ -37,15 +37,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                     ProcessGaugingSummary(gaugingSummary, fieldDataResultsAppender);
                 }
 
-                return ParseFileResult.Success();
+                return ParseFileResult.ParsedSuccessfully();
             }
             catch (FormatNotSupportedException)
             {
-                return ParseFileResult.FileFormatNotSupported();
+                return ParseFileResult.CannotParse();
             }
             catch (Exception e)
             {
-                return ParseFileResult.ParsingFailed(e.Message);
+                return ParseFileResult.ParsingFailed(e);
             }
         }
 
