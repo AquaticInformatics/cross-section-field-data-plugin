@@ -111,7 +111,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
         private static FieldVisitDetails CreateFieldVisit(DischargeActivity dischargeActivity)
         {
-            return new FieldVisitDetails(dischargeActivity.MeasurementPeriod);
+            return new FieldVisitDetails(dischargeActivity.MeasurementPeriod)
+            {
+                Party = dischargeActivity.Party
+            };
         }
     }
 }
