@@ -15,7 +15,6 @@ using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivitie
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 {
@@ -52,21 +51,21 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void ParseFile_FileStreamIsNotAValidZipFile_ReturnsFailureStatus()
+        public void ParseFile_FileStreamIsNotAValidZipFile_ReturnsCannotParse()
         {
             _stream = new MemoryStream(_fixture.Create<byte[]>());
 
-            var parseStatus = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-            parseStatus.Should().Be(ParseFileStatus.Failed);
+            var parseFileResult = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
+            parseFileResult.Status.Should().Be(ParseFileStatus.CannotParse);
         }
 
         [Test]
-        public void ParseFile_FileStreamZipDoesNotContainGaugingSummary_ReturnsFailureStatus()
+        public void ParseFile_FileStreamZipDoesNotContainGaugingSummary_ReturnsCannotParse()
         {
             _stream = CreateZipStream(_fixture.Create<string>());
 
-            var parseStatus = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-            parseStatus.Should().Be(ParseFileStatus.Failed);
+            var parseFileResult = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
+            parseFileResult.Status.Should().Be(ParseFileStatus.CannotParse);
         }
 
         private Stream CreateZipStream(string zipEntryName)
@@ -99,8 +98,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         {
             const int expectedNumberOfDischargeActivities = 3;
 
-            var parseStatus = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-            parseStatus.Should().Be(ParseFileStatus.Succeeded);
+            var parseFileResult = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
+            parseFileResult.Status.Should().Be(ParseFileStatus.ParsedSuccessfully);
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
