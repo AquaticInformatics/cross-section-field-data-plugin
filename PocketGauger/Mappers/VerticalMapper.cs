@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
@@ -17,7 +17,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             _meterCalibrationMapper = meterCalibrationMapper;
         }
 
-        public List<Vertical> Map(GaugingSummaryItem gaugingSummaryItem, Channel channel)
+        public List<Vertical> Map(GaugingSummaryItem gaugingSummaryItem, DeploymentMethodType deploymentMethod)
         {
             var verticals = new List<Vertical>();
             foreach (var panelItem in gaugingSummaryItem.PanelItems)
@@ -25,7 +25,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 var vertical = CreateVertical(panelItem);
                 vertical.Segment = CreateSegment(panelItem);
                 vertical.VelocityObservation = CreateVelocityObservation(
-                    channel, panelItem, gaugingSummaryItem.MeterDetailsItem);
+                    deploymentMethod, panelItem, gaugingSummaryItem.MeterDetailsItem);
 
                 verticals.Add(vertical);
             }
@@ -71,7 +71,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return Math.Abs(panelItem.Area.GetValueOrDefault()/panelItem.Depth.GetValueOrDefault());
         }
 
-        private VelocityObservation CreateVelocityObservation(Channel channel,
+        private VelocityObservation CreateVelocityObservation(DeploymentMethodType deploymentMethod,
             PanelItem panelItem, MeterDetailsItem meterDetails)
         {
             var observations = CreateObservations(panelItem.Verticals);
@@ -80,7 +80,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             {
                 MeterCalibration = _meterCalibrationMapper.Map(meterDetails),
                 VelocityObservationMethod = DetermineVelocityObservationMethodFromVerticals(panelItem.Verticals),
-                DeploymentMethod = channel.DeploymentMethod,
+                DeploymentMethod = deploymentMethod,
                 MeanVelocity = panelItem.MeanVelocity.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
                 Observations = observations
             };
