@@ -90,9 +90,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPlugInCore.csproj">
       <Project>{A37B4978-D615-4092-BEC8-27AABFD2681E}</Project>
-      <Name>Server.BusinessInterfaces.FieldDataPluginCore</Name>
+      <Name>Server.BusinessInterfaces.FieldDataPlugInCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
