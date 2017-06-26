@@ -41,7 +41,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private void SetupMockVerticalMapper()
         {
             _mockVerticalMapper = Substitute.For<IVerticalMapper>();
-            _mockVerticalMapper.Map(null, null).ReturnsForAnyArgs(new List<Vertical>());
+            _mockVerticalMapper.Map(null, default(DeploymentMethodType)).ReturnsForAnyArgs(new List<Vertical>());
         }
 
         private void SetupAutoFixture()
@@ -151,15 +151,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = MapToManualGaugingDischargeSection();
 
-            AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.Channel,
+            AssertDischargeSectionHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge,
                 expectedMeterAndDeploymentType.Item1, expectedMeterAndDeploymentType.Item2);
         }
 
-        private static void AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(Channel channel,
+        private static void AssertDischargeSectionHasExpectedSuspensionAndDeploymentType(ManualGaugingDischargeSection dischargeSection,
             MeterSuspensionType meterSuspensionType, DeploymentMethodType expectedMeterAndDeploymentType)
         {
-            Assert.That(channel.MeterSuspension, Is.EqualTo(meterSuspensionType));
-            Assert.That(channel.DeploymentMethod, Is.EqualTo(expectedMeterAndDeploymentType));
+            Assert.That(dischargeSection.MeterSuspension, Is.EqualTo(meterSuspensionType));
+            Assert.That(dischargeSection.DeploymentMethod, Is.EqualTo(expectedMeterAndDeploymentType));
         }
 
         private readonly IEnumerable<TestCaseData> _bridgeGaugingMethodAndBankSideToExpectedMeterSuspensionAndDeploymentTypeTestCases = new List<TestCaseData>
@@ -184,9 +184,9 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _gaugingSummaryItem.GaugingMethodProxy = gaugingMethod.ToString();
             _gaugingSummaryItem.StartBankProxy = bankSide.ToString();
 
-            var pointVelocityDischarge = MapToManualGaugingDischargeSection();
+            var manualGaugingDischargeSection = MapToManualGaugingDischargeSection();
 
-            AssertChannelMeasurementHasExpectedSuspensionAndDeploymentType(pointVelocityDischarge.Channel,
+            AssertDischargeSectionHasExpectedSuspensionAndDeploymentType(manualGaugingDischargeSection,
                 expectedMeterAndDeploymentType.Item1, expectedMeterAndDeploymentType.Item2);
         }
 
@@ -198,17 +198,27 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var pointVelocityDischarge = MapToManualGaugingDischargeSection();
 
             pointVelocityDischarge.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
-                .Excluding(activity => activity.Channel)
                 .Excluding(activity => activity.Verticals)
                 .Excluding(activity => activity.DischargeMethod)
                 .Excluding(activity => activity.VelocityObservationMethod)
-                .Excluding(activity => activity.StartPoint));
+                .Excluding(activity => activity.StartPoint)
+                .Excluding(activity => activity.MeterSuspension)
+                .Excluding(activity => activity.DeploymentMethod));
         }
 
         private ManualGaugingDischargeSection CreateExpectedManualGaugingDischargeSection()
         {
             return new ManualGaugingDischargeSection
             {
+                StartTime = _dischargeActivity.MeasurementPeriod.Start,
+                EndTime = _dischargeActivity.MeasurementPeriod.End,
+                Party = _gaugingSummaryItem.ObserversName,
+                ChannelName = "Main",
+
+                Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
+                DischargeUnitId = "m^3/s",
+                Comments = _gaugingSummaryItem.Comments,
+
                 Area = _gaugingSummaryItem.Area,
                 AreaUnitId = "m^2",
                 MeasurementConditions = MeasurementCondition.OpenWater,
@@ -222,38 +232,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_GaugingSummaryItem_IsMappedToExpectedDischargeChannelMeasurement()
-        {
-            var expectedDischargeActivity = CreateExpectedChannel();
-
-            var pointVelocityDischarge = MapToManualGaugingDischargeSection();
-
-            pointVelocityDischarge.Channel.ShouldBeEquivalentTo(expectedDischargeActivity, options => options
-                .Excluding(activity => activity.MeterSuspension)
-                .Excluding(activity => activity.DeploymentMethod));
-        }
-
-        private Channel CreateExpectedChannel()
-        {
-            return new Channel
-            {
-                StartTime = _dischargeActivity.MeasurementPeriod.Start,
-                EndTime = _dischargeActivity.MeasurementPeriod.End,
-                Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
-                ChannelName = "Main",
-                Comments = _gaugingSummaryItem.Comments,
-                Party = _gaugingSummaryItem.ObserversName,
-                DischargeUnitId = "m^3/s",
-                DistanceToGageUnitId = "m"
-            };
-        }
-
-        [Test]
         public void Map_RetrievesVerticalsFromVerticalMapper()
         {
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            _mockVerticalMapper.Received().Map(_gaugingSummaryItem, pointVelocityDischarge.Channel);
+            _mockVerticalMapper.Received().Map(_gaugingSummaryItem, pointVelocityDischarge.DeploymentMethod);
         }
 
         [Test]
@@ -289,7 +272,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private void SetupVerticalMapperToReturn(IEnumerable<Vertical> verticals)
         {
-            _mockVerticalMapper.Map(Arg.Any<GaugingSummaryItem>(), Arg.Any<Channel>())
+            _mockVerticalMapper.Map(Arg.Any<GaugingSummaryItem>(), Arg.Any<DeploymentMethodType>())
                 .Returns(verticals.ToList());
         }
 
