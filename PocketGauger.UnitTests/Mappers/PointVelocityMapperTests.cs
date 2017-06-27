@@ -221,13 +221,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
                 Area = _gaugingSummaryItem.Area,
                 AreaUnitId = "m^2",
-                MeasurementConditions = MeasurementCondition.OpenWater,
                 TaglinePointUnitId = "m",
-                DistanceToMeterUnitId = "m",
                 VelocityAverage = _gaugingSummaryItem.MeanVelocity,
                 VelocityAverageUnitId = "m/s",
                 WidthUnitId = "m",
-                AscendingSegmentDisplayOrder = true
+                TaglinePolarity = TaglinePolarityType.Increasing
             };
         }
 
@@ -345,15 +343,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         }
 
         [Test]
-        public void Map_EmptyVerticalsList_SetsAscendingDisplayOrderToTrue()
+        public void Map_EmptyVerticalsList_SetsTaglinePolarityToIncreasing()
         {
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.True);
+            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Increasing));
         }
 
         [Test]
-        public void Map_TaglinePositionForFirstVerticalIsSmallerThanThatOfLastVertical_SetsAscendingDisplayOrderToTrue()
+        public void Map_TaglinePositionForFirstVerticalIsSmallerThanThatOfLastVertical_SetsTaglinePolarityToIncreasing()
         {
             var verticals = _fixture.CreateMany<Vertical>(2).ToList();
             verticals.First().TaglinePosition = 0;
@@ -363,11 +361,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.True);
+            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Increasing));
         }
 
         [Test]
-        public void Map_TaglinePositionForFirstVerticalIsLargerThanThatOfLastVertical_SetsAscendingDisplayOrderToFalse()
+        public void Map_TaglinePositionForFirstVerticalIsLargerThanThatOfLastVertical_SetsTaglinePolarityToDecreasing()
         {
             var verticals = _fixture.CreateMany<Vertical>(2).ToList();
             verticals.First().TaglinePosition = 10;
@@ -377,7 +375,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.False);
+            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Decreasing));
         }
 
         [Test]

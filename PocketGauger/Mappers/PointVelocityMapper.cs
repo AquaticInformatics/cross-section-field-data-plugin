@@ -53,17 +53,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 Area = summaryItem.Area,
                 AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
                 DischargeMethod = MapDischargeMethod(summaryItem.FlowCalculationMethod),
-                MeasurementConditions = MeasurementCondition.OpenWater,
                 StartPoint = MapStartPoint(summaryItem.StartBank),
                 TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
-                DistanceToMeterUnitId = ParametersAndMethodsConstants.DistanceUnitId,
                 VelocityAverage = summaryItem.MeanVelocity,
                 VelocityAverageUnitId = ParametersAndMethodsConstants.VelocityUnitId,
                 VelocityObservationMethod = CalculateVelocityObservationMethod(summaryItem),
                 MeanObservationDuration = CalculateMeanObservationDuration(verticals),
                 Width = CalculateTotalWidth(verticals),
                 WidthUnitId = ParametersAndMethodsConstants.DistanceUnitId,
-                AscendingSegmentDisplayOrder = IsAscendingDisplayOrder(verticals),
+                TaglinePolarity = MapTaglinePolarity(verticals),
                 MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals),
                 Verticals = verticals
             };
@@ -191,6 +189,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
         }
 
+        private static TaglinePolarityType MapTaglinePolarity(IReadOnlyCollection<Vertical> verticals)
+        {
+            if (!verticals.Any())
+                return default(TaglinePolarityType);
+
+            var firstVertical = verticals.First();
+            var lastVertical = verticals.Last();
+
+            return firstVertical.TaglinePosition <= lastVertical.TaglinePosition
+                ? TaglinePolarityType.Increasing
+                : TaglinePolarityType.Decreasing;
+        }
+
         private static double? CalculateMeanObservationDuration(IReadOnlyCollection<Vertical> verticals)
         {
             if (!verticals.Any())
@@ -213,17 +224,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 return null;
 
             return verticals.Sum(vertical => vertical.Segment.Width);
-        }
-
-        private static bool IsAscendingDisplayOrder(IReadOnlyCollection<Vertical> verticals)
-        {
-            if (!verticals.Any())
-                return true;
-
-            var firstVertical = verticals.First();
-            var lastVertical = verticals.Last();
-
-            return firstVertical.TaglinePosition < lastVertical.TaglinePosition;
         }
 
         private static double? CalculateMaximumSegmentDischarge(IReadOnlyCollection<Vertical> verticals)
