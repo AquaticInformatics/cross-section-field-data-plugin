@@ -52,7 +52,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
             _fixture.AddFieldDataPluginCoreTestingExtensions();
             CollectionRegistrar.Register(_fixture);
-            _fixture.Register<MeasurementConditionData>(() => new OpenWaterData());
         }
 
         [SetUp]
@@ -215,16 +214,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 MeasurementPeriod = _dischargeActivity.MeasurementPeriod,
                 Party = _gaugingSummaryItem.ObserversName,
                 ChannelName = "Main",
-                Discharge = new Measurement(_gaugingSummaryItem.Flow.Value, "m^3/s"),
                 Comments = _gaugingSummaryItem.Comments,
 
-                Area = _gaugingSummaryItem.Area,
-                AreaUnitId = "m^2",
+                Area = new Measurement(_gaugingSummaryItem.Area.Value, "m^2"),
+                Discharge = new Measurement(_gaugingSummaryItem.Flow.Value, "m^3/s"),
+                VelocityAverage = new Measurement(_gaugingSummaryItem.MeanVelocity.Value, "m/s"),
+
+                TaglinePolarity = TaglinePolarityType.Increasing,
                 TaglinePointUnitId = "m",
-                VelocityAverage = _gaugingSummaryItem.MeanVelocity,
-                VelocityAverageUnitId = "m/s",
-                WidthUnitId = "m",
-                TaglinePolarity = TaglinePolarityType.Increasing
             };
         }
 
@@ -338,7 +335,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            Assert.That(pointVelocityDischarge.Width, Is.EqualTo(expectedTotalWidth));
+            Assert.That(pointVelocityDischarge.Width.Value, Is.EqualTo(expectedTotalWidth));
         }
 
         [Test]

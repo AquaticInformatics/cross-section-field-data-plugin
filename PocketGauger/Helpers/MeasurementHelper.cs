@@ -5,27 +5,32 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
     public static class MeasurementHelper
     {
+        public static Measurement AsDistanceMeasurement(this double value)
+        {
+            return new Measurement(value, ParametersAndMethodsConstants.DistanceUnitId);
+        }
+
         public static Measurement AsDischargeMeasurement(this double? value)
         {
-            return CreateMeasurement(value, ParametersAndMethodsConstants.DischargeUnitId);
+            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsConstants.DischargeUnitId);
         }
 
         public static Measurement AsDistanceMeasurement(this double? value)
         {
-            return CreateMeasurement(value, ParametersAndMethodsConstants.DistanceUnitId);
+            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsConstants.DistanceUnitId);
         }
 
         public static Measurement AsAreaMeasurement(this double? value)
         {
-            return CreateMeasurement(value, ParametersAndMethodsConstants.AreaUnitId);
+            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsConstants.AreaUnitId);
         }
 
         public static Measurement AsVelocityMeasurement(this double? value)
         {
-            return CreateMeasurement(value, ParametersAndMethodsConstants.VelocityUnitId);
+            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsConstants.VelocityUnitId);
         }
 
-        private static Measurement CreateMeasurement(double? value, string unit)
+        private static Measurement CreateMeasurementOrThrowIfNull(double? value, string unit)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));

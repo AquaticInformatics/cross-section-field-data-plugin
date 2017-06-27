@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
@@ -41,26 +42,24 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 MeasurementPeriod = dischargeActivity.MeasurementPeriod,
                 Party = summaryItem.ObserversName,
                 ChannelName = ParametersAndMethodsConstants.DefaultChannelName,
-
-                Discharge = summaryItem.Flow.AsDischargeMeasurement(),
+                Comments = summaryItem.Comments,
 
                 MeterSuspension = meterSuspensionAndDeploymentMethod.MeterSuspension,
                 DeploymentMethod = meterSuspensionAndDeploymentMethod.DeploymentMethod,
-                Comments = summaryItem.Comments,
-
-                Area = summaryItem.Area,
-                AreaUnitId = ParametersAndMethodsConstants.AreaUnitId,
                 DischargeMethod = MapDischargeMethod(summaryItem.FlowCalculationMethod),
                 StartPoint = MapStartPoint(summaryItem.StartBank),
-                TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
-                VelocityAverage = summaryItem.MeanVelocity,
-                VelocityAverageUnitId = ParametersAndMethodsConstants.VelocityUnitId,
-                VelocityObservationMethod = CalculateVelocityObservationMethod(summaryItem),
-                MeanObservationDuration = CalculateMeanObservationDuration(verticals),
-                Width = CalculateTotalWidth(verticals),
-                WidthUnitId = ParametersAndMethodsConstants.DistanceUnitId,
                 TaglinePolarity = MapTaglinePolarity(verticals),
+                TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
+                VelocityObservationMethod = DetermineVelocityObservationMethod(summaryItem),
+
+                Area = summaryItem.Area.AsAreaMeasurement(),
+                Discharge = summaryItem.Flow.AsDischargeMeasurement(),
+                VelocityAverage = summaryItem.MeanVelocity.AsVelocityMeasurement(),
+
+                Width = CalculateTotalWidth(verticals),
                 MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals),
+                MeanObservationDuration = CalculateMeanObservationDuration(verticals),
+
                 Verticals = verticals
             };
         }
@@ -123,7 +122,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return new MeterSuspensionAndDeploymentPair(meterSuspensionType, DeploymentMethodType.Boat);
         }
 
-        private static PointVelocityObservationType CalculateVelocityObservationMethod(GaugingSummaryItem summaryItem)
+        private static PointVelocityObservationType DetermineVelocityObservationMethod(GaugingSummaryItem summaryItem)
         {
             if (summaryItem.SampleAt2 && summaryItem.SampleAt4 && summaryItem.SampleAt5 && summaryItem.SampleAt6 && summaryItem.SampleAt8 && summaryItem.SampleAtSurface && summaryItem.SampleAtBed)
                 return PointVelocityObservationType.Unknown;
@@ -216,12 +215,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return observationsWithInterval.Average(observation => observation.ObservationInterval);
         }
 
-        private static double? CalculateTotalWidth(IReadOnlyCollection<Vertical> verticals)
+        private static Measurement CalculateTotalWidth(IReadOnlyCollection<Vertical> verticals)
         {
             if (!verticals.Any())
                 return null;
 
-            return verticals.Sum(vertical => vertical.Segment.Width);
+            return verticals.Sum(vertical => vertical.Segment.Width).AsDistanceMeasurement();
         }
 
         private static double? CalculateMaximumSegmentDischarge(IReadOnlyCollection<Vertical> verticals)
