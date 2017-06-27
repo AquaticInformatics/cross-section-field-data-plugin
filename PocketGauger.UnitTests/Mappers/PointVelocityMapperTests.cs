@@ -1,10 +1,12 @@
-﻿using System;
+﻿// ReSharper disable PossibleInvalidOperationException
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
@@ -210,13 +212,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             return new ManualGaugingDischargeSection
             {
-                StartTime = _dischargeActivity.MeasurementPeriod.Start,
-                EndTime = _dischargeActivity.MeasurementPeriod.End,
+                MeasurementPeriod = _dischargeActivity.MeasurementPeriod,
                 Party = _gaugingSummaryItem.ObserversName,
                 ChannelName = "Main",
-
-                Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
-                DischargeUnitId = "m^3/s",
+                Discharge = new Measurement(_gaugingSummaryItem.Flow.Value, "m^3/s"),
                 Comments = _gaugingSummaryItem.Comments,
 
                 Area = _gaugingSummaryItem.Area,

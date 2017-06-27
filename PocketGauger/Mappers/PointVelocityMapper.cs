@@ -38,13 +38,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
             return new ManualGaugingDischargeSection
             {
-                StartTime = dischargeActivity.MeasurementPeriod.Start,
-                EndTime = dischargeActivity.MeasurementPeriod.End,
+                MeasurementPeriod = dischargeActivity.MeasurementPeriod,
                 Party = summaryItem.ObserversName,
                 ChannelName = ParametersAndMethodsConstants.DefaultChannelName,
 
-                Discharge = summaryItem.Flow.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
-                DischargeUnitId = ParametersAndMethodsConstants.DischargeUnitId,
+                Discharge = summaryItem.Flow.AsDischargeMeasurement(),
 
                 MeterSuspension = meterSuspensionAndDeploymentMethod.MeterSuspension,
                 DeploymentMethod = meterSuspensionAndDeploymentMethod.DeploymentMethod,

@@ -47,6 +47,7 @@
     <Compile Include="GaugingSummaryAssembler.cs" />
     <Compile Include="Helpers\DoubleHelper.cs" />
     <Compile Include="Helpers\IntHelper.cs" />
+    <Compile Include="Helpers\MeasurementHelper.cs" />
     <Compile Include="Interfaces\IDischargeActivityMapper.cs" />
     <Compile Include="Interfaces\IGaugingSummaryParser.cs" />
     <Compile Include="Interfaces\IMeterCalibrationMapper.cs" />
