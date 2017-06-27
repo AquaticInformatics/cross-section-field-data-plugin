@@ -64,9 +64,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             {
                 Party = gaugingSummary.ObserversName,
                 MeasurementId = GenerateMeasurementId(gaugingSummary),
-                MeanIndexVelocity = GetMeanIndexVelocity(gaugingSummary),
-                ShowInDataCorrection = true,
-                ShowInRatingDevelopment = true
+                MeanIndexVelocity = GetMeanIndexVelocity(gaugingSummary)
             };
         }
 
