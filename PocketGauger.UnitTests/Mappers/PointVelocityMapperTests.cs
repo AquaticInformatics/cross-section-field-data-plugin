@@ -209,15 +209,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private ManualGaugingDischargeSection CreateExpectedManualGaugingDischargeSection()
         {
-            return new ManualGaugingDischargeSection
+            return new ManualGaugingDischargeSection(_dischargeActivity.MeasurementPeriod, "Main",
+                new Measurement(_gaugingSummaryItem.Flow.Value, "m^3/s"))
             {
-                MeasurementPeriod = _dischargeActivity.MeasurementPeriod,
                 Party = _gaugingSummaryItem.ObserversName,
-                ChannelName = "Main",
                 Comments = _gaugingSummaryItem.Comments,
 
                 Area = new Measurement(_gaugingSummaryItem.Area.Value, "m^2"),
-                Discharge = new Measurement(_gaugingSummaryItem.Flow.Value, "m^3/s"),
                 VelocityAverage = new Measurement(_gaugingSummaryItem.MeanVelocity.Value, "m/s"),
 
                 TaglinePolarity = TaglinePolarityType.Increasing,

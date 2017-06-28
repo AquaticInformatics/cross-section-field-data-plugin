@@ -34,34 +34,53 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
         public ManualGaugingDischargeSection Map(GaugingSummaryItem summaryItem, DischargeActivity dischargeActivity)
         {
-            var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod(summaryItem);
-            var verticals = _verticalMapper.Map(summaryItem, meterSuspensionAndDeploymentMethod.DeploymentMethod);
+            var dischargeSection = CreateDischargeSectionWithRawValuesFromSummaryItem(dischargeActivity.MeasurementPeriod, summaryItem);
 
-            return new ManualGaugingDischargeSection
+            UpdateDischargeSectionWithDerivedValues(dischargeSection, summaryItem);
+            UpdateDischargeSectionWithVerticals(dischargeSection, summaryItem);
+
+            return dischargeSection;
+        }
+
+        private static ManualGaugingDischargeSection CreateDischargeSectionWithRawValuesFromSummaryItem(DateTimeInterval measurementPeriod, GaugingSummaryItem summaryItem)
+        {
+            var channnelName = ParametersAndMethodsConstants.DefaultChannelName;
+
+            return new ManualGaugingDischargeSection(measurementPeriod, channnelName, summaryItem.Flow.AsDischargeMeasurement())
             {
-                MeasurementPeriod = dischargeActivity.MeasurementPeriod,
                 Party = summaryItem.ObserversName,
-                ChannelName = ParametersAndMethodsConstants.DefaultChannelName,
                 Comments = summaryItem.Comments,
 
-                MeterSuspension = meterSuspensionAndDeploymentMethod.MeterSuspension,
-                DeploymentMethod = meterSuspensionAndDeploymentMethod.DeploymentMethod,
-                DischargeMethod = MapDischargeMethod(summaryItem.FlowCalculationMethod),
-                StartPoint = MapStartPoint(summaryItem.StartBank),
-                TaglinePolarity = MapTaglinePolarity(verticals),
-                TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId,
-                VelocityObservationMethod = DetermineVelocityObservationMethod(summaryItem),
-
                 Area = summaryItem.Area.AsAreaMeasurement(),
-                Discharge = summaryItem.Flow.AsDischargeMeasurement(),
                 VelocityAverage = summaryItem.MeanVelocity.AsVelocityMeasurement(),
-
-                Width = CalculateTotalWidth(verticals),
-                MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals),
-                MeanObservationDuration = CalculateMeanObservationDuration(verticals),
-
-                Verticals = verticals
             };
+        }
+
+        private static void UpdateDischargeSectionWithDerivedValues(ManualGaugingDischargeSection dischargeSection, GaugingSummaryItem summaryItem)
+        {
+            dischargeSection.DischargeMethod = MapDischargeMethod(summaryItem.FlowCalculationMethod);
+            dischargeSection.StartPoint = MapStartPoint(summaryItem.StartBank);
+            dischargeSection.VelocityObservationMethod = DetermineVelocityObservationMethod(summaryItem);
+
+            var meterSuspensionAndDeploymentMethod = MapMeterSuspensionAndDeploymentMethod(summaryItem);
+            dischargeSection.MeterSuspension = meterSuspensionAndDeploymentMethod.MeterSuspension;
+            dischargeSection.DeploymentMethod = meterSuspensionAndDeploymentMethod.DeploymentMethod;
+        }
+
+        private void UpdateDischargeSectionWithVerticals(ManualGaugingDischargeSection dischargeSection, GaugingSummaryItem summaryItem)
+        {
+            var verticals = _verticalMapper.Map(summaryItem, dischargeSection.DeploymentMethod);
+
+            foreach (var vertical in verticals)
+            {
+                dischargeSection.Verticals.Add(vertical);
+            }
+
+            dischargeSection.TaglinePolarity = MapTaglinePolarity(verticals);
+            dischargeSection.TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId;
+            dischargeSection.Width = CalculateTotalWidth(verticals);
+            dischargeSection.MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals);
+            dischargeSection.MeanObservationDuration = CalculateMeanObservationDuration(verticals);
         }
 
         private static MeterSuspensionAndDeploymentPair MapMeterSuspensionAndDeploymentMethod(GaugingSummaryItem summaryItem)
