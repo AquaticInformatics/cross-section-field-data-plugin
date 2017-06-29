@@ -1,10 +1,12 @@
-﻿using System;
+﻿// ReSharper disable PossibleInvalidOperationException
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
+using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
@@ -50,7 +52,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
             _fixture.AddFieldDataPluginCoreTestingExtensions();
             CollectionRegistrar.Register(_fixture);
-            _fixture.Register<MeasurementConditionData>(() => new OpenWaterData());
         }
 
         [SetUp]
@@ -208,26 +209,17 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private ManualGaugingDischargeSection CreateExpectedManualGaugingDischargeSection()
         {
-            return new ManualGaugingDischargeSection
+            return new ManualGaugingDischargeSection(_dischargeActivity.MeasurementPeriod, "Main",
+                new Measurement(_gaugingSummaryItem.Flow.Value, "m^3/s"))
             {
-                StartTime = _dischargeActivity.MeasurementPeriod.Start,
-                EndTime = _dischargeActivity.MeasurementPeriod.End,
                 Party = _gaugingSummaryItem.ObserversName,
-                ChannelName = "Main",
-
-                Discharge = _gaugingSummaryItem.Flow.GetValueOrDefault(),
-                DischargeUnitId = "m^3/s",
                 Comments = _gaugingSummaryItem.Comments,
 
-                Area = _gaugingSummaryItem.Area,
-                AreaUnitId = "m^2",
-                MeasurementConditions = MeasurementCondition.OpenWater,
+                Area = new Measurement(_gaugingSummaryItem.Area.Value, "m^2"),
+                VelocityAverage = new Measurement(_gaugingSummaryItem.MeanVelocity.Value, "m/s"),
+
+                TaglinePolarity = TaglinePolarityType.Increasing,
                 TaglinePointUnitId = "m",
-                DistanceToMeterUnitId = "m",
-                VelocityAverage = _gaugingSummaryItem.MeanVelocity,
-                VelocityAverageUnitId = "m/s",
-                WidthUnitId = "m",
-                AscendingSegmentDisplayOrder = true
             };
         }
 
@@ -341,19 +333,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            Assert.That(pointVelocityDischarge.Width, Is.EqualTo(expectedTotalWidth));
+            Assert.That(pointVelocityDischarge.Width.Value, Is.EqualTo(expectedTotalWidth));
         }
 
         [Test]
-        public void Map_EmptyVerticalsList_SetsAscendingDisplayOrderToTrue()
+        public void Map_EmptyVerticalsList_SetsTaglinePolarityToIncreasing()
         {
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.True);
+            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Increasing));
         }
 
         [Test]
-        public void Map_TaglinePositionForFirstVerticalIsSmallerThanThatOfLastVertical_SetsAscendingDisplayOrderToTrue()
+        public void Map_TaglinePositionForFirstVerticalIsSmallerThanThatOfLastVertical_SetsTaglinePolarityToIncreasing()
         {
             var verticals = _fixture.CreateMany<Vertical>(2).ToList();
             verticals.First().TaglinePosition = 0;
@@ -363,11 +355,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.True);
+            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Increasing));
         }
 
         [Test]
-        public void Map_TaglinePositionForFirstVerticalIsLargerThanThatOfLastVertical_SetsAscendingDisplayOrderToFalse()
+        public void Map_TaglinePositionForFirstVerticalIsLargerThanThatOfLastVertical_SetsTaglinePolarityToDecreasing()
         {
             var verticals = _fixture.CreateMany<Vertical>(2).ToList();
             verticals.First().TaglinePosition = 10;
@@ -377,7 +369,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
-            Assert.That(pointVelocityDischarge.AscendingSegmentDisplayOrder, Is.False);
+            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Decreasing));
         }
 
         [Test]

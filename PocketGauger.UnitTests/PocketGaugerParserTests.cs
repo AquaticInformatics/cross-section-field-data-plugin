@@ -126,6 +126,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
                 .With(x => x.ObserversName, observer)
                 .With(x => x.GaugingId)
                 .With(x => x.Flow)
+                .With(x => x.Area)
+                .With(x => x.MeanVelocity)
                 .With(x => x.PanelItems, new PanelItem[]{})
                 .CreateMany(expectedNumberOfItems).ToList();
 

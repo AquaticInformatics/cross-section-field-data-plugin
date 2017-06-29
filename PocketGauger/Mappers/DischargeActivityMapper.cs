@@ -58,15 +58,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             var startTime = new DateTimeOffset(gaugingSummary.StartDate, locationTimeZoneOffset);
             var endTime = new DateTimeOffset(gaugingSummary.EndDate, locationTimeZoneOffset);
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
-            var discharge = CreateMeasurement(gaugingSummary.Flow, ParametersAndMethodsConstants.DischargeUnitId);
+            var discharge = gaugingSummary.Flow.AsDischargeMeasurement();
 
             return new DischargeActivity(surveyPeriod, discharge)
             {
                 Party = gaugingSummary.ObserversName,
                 MeasurementId = GenerateMeasurementId(gaugingSummary),
-                MeanIndexVelocity = GetMeanIndexVelocity(gaugingSummary),
-                ShowInDataCorrection = true,
-                ShowInRatingDevelopment = true
+                MeanIndexVelocity = GetMeanIndexVelocity(gaugingSummary)
             };
         }
 
@@ -78,23 +76,15 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         private static Measurement GetMeanIndexVelocity(GaugingSummaryItem gaugingSummary)
         {
             return gaugingSummary.UseIndexVelocity
-                ? CreateMeasurement(gaugingSummary.IndexVelocity, ParametersAndMethodsConstants.VelocityUnitId)
+                ? gaugingSummary.IndexVelocity.AsVelocityMeasurement()
                 : null;
         }
 
         private static GageHeightMeasurement CreateGageHeightMeasurement(double? value, DateTime dateTime, TimeSpan timeZoneOffset)
         {
             return new GageHeightMeasurement(
-                CreateMeasurement(value, ParametersAndMethodsConstants.DistanceUnitId),
+                value.AsDistanceMeasurement(),
                 new DateTimeOffset(dateTime, timeZoneOffset));
-        }
-
-        private static Measurement CreateMeasurement(double? value, string unit)
-        {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            return new Measurement(value.Value, unit);
         }
     }
 }

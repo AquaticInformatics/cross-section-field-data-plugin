@@ -53,7 +53,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private void SetupMockPointVelocityMapper()
         {
             _mockPointVelocityMapper = Substitute.For<IPointVelocityMapper>();
-            _mockPointVelocityMapper.Map(null, null).ReturnsForAnyArgs(new ManualGaugingDischargeSection());
+            _mockPointVelocityMapper.Map(null, null).ReturnsForAnyArgs((ManualGaugingDischargeSection)null);
         }
 
         [Test]
@@ -167,9 +167,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             return new DischargeActivity(surveyPeriod, discharge)
             {
                 Party = _gaugingSummaryItem.ObserversName,
-                MeasurementId = _gaugingSummaryItem.GaugingId.ToString(NumberFormatInfo.InvariantInfo),
-                ShowInDataCorrection = true,
-                ShowInRatingDevelopment = true
+                MeasurementId = _gaugingSummaryItem.GaugingId.ToString(NumberFormatInfo.InvariantInfo)
             };
         }
     }
