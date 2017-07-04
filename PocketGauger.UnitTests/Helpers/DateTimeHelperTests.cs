@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
@@ -55,7 +55,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
         {
             TestDelegate testDelegate = () => DateTimeHelper.Parse(_fixture.Create<string>());
 
-            Assert.That(testDelegate, Throws.TypeOf<ParsingFailedException>());
+            Assert.That(testDelegate, Throws.TypeOf<PocketGaugerDataFormatException>());
         }
 
         [TestCaseSource(nameof(GetTestData))]

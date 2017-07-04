@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
+using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
 {
@@ -30,7 +30,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Helpers
         {
             TestDelegate testDelegate = () => BooleanHelper.Parse(_fixture.Create<string>());
 
-            Assert.That(testDelegate, Throws.TypeOf<ParsingFailedException>());
+            Assert.That(testDelegate, Throws.TypeOf<PocketGaugerDataFormatException>());
         }
 
         [TestCase(true, BooleanHelper.True)]

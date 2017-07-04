@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
@@ -18,7 +18,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
             }
             catch (InvalidOperationException ex)
             {
-                throw new ParsingFailedException(string.Format("Parsing {0} failed", FileNames.FileNameTypeMap[pocketGaugerType]), ex);
+                throw new PocketGaugerDataFormatException(string.Format("Parsing {0} failed", FileNames.FileNameTypeMap[pocketGaugerType]), ex);
             }
         }
     }

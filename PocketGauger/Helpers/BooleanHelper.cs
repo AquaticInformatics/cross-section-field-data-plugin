@@ -1,4 +1,5 @@
 ﻿using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
@@ -12,7 +13,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
             if (value == True) return true;
             if (value == False) return false;
 
-            throw new ParsingFailedException(string.Format("{0} is not a valid boolean value", value));
+            throw new PocketGaugerDataFormatException(string.Format("{0} is not a valid boolean value", value));
         }
 
         public static string Serialize(bool value)

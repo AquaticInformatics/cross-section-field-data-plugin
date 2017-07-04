@@ -24,8 +24,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -44,10 +44,13 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Exceptions\PocketGaugerZipFileException.cs" />
+    <Compile Include="Exceptions\PocketGaugerZipFileMissingRequiredContentException.cs" />
     <Compile Include="GaugingSummaryAssembler.cs" />
     <Compile Include="Helpers\DoubleHelper.cs" />
     <Compile Include="Helpers\IntHelper.cs" />
     <Compile Include="Helpers\MeasurementHelper.cs" />
+    <Compile Include="Exceptions\PocketGaugerDataFormatException.cs" />
     <Compile Include="Interfaces\IDischargeActivityMapper.cs" />
     <Compile Include="Interfaces\IGaugingSummaryParser.cs" />
     <Compile Include="Interfaces\IMeterCalibrationMapper.cs" />
@@ -96,5 +99,6 @@
       <Name>Server.BusinessInterfaces.FieldDataPlugInCore</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

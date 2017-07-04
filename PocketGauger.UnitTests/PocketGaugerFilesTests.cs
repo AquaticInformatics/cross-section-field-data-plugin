@@ -3,8 +3,8 @@ using System.IO;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 {
@@ -53,11 +53,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         }
 
         [Test]
-        public void ParseType_TypeInFileNameTypeMapButFileIsNotPresent_ThrowsParsingFailedException()
+        public void ParseType_TypeInFileNameTypeMapButFileIsNotPresent_ThrowsPocketGaugerZipFileMissingRequiredContentException()
         {
             TestDelegate testDelegate = () => _pocketGaugerFiles.ParseType<GaugingSummary>();
 
-            Assert.That(testDelegate, Throws.Exception.TypeOf<ParsingFailedException>());
+            Assert.That(testDelegate, Throws.Exception.TypeOf<PocketGaugerZipFileMissingRequiredContentException>());
         }
     }
 }

@@ -6,13 +6,12 @@ using Server.BusinessInterfaces.FieldDataPluginCore;
 using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.Parsers;
 using static System.FormattableString;
-
+using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
 {
@@ -28,7 +27,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 {
                     if (!zipContents.ContainsKey(FileNames.GaugingSummary))
                     {
-                        throw new FormatNotSupportedException(
+                        throw new PocketGaugerZipFileMissingRequiredContentException(
                             Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
                     }
 
@@ -39,7 +38,8 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
                 return ParseFileResult.ParsedSuccessfully();
             }
-            catch (FormatNotSupportedException)
+            catch(Exception ex) 
+            when (ex is PocketGaugerZipFileMissingRequiredContentException || ex is PocketGaugerZipFileException)
             {
                 return ParseFileResult.CannotParse();
             }
@@ -63,7 +63,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             }
             catch (InvalidDataException)
             {
-                throw new FormatNotSupportedException("File is not a zip file");
+                throw new PocketGaugerZipFileException("File is not a zip file");
             }
         }
 

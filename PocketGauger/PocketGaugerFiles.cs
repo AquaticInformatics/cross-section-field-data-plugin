@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 
 namespace Server.Plugins.FieldVisit.PocketGauger
@@ -36,7 +36,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
         private TPocketGaugerDto DeserializeFile<TPocketGaugerDto>(string fileName)
         {
             if (!ContainsKey(fileName))
-                throw new ParsingFailedException(
+                throw new PocketGaugerZipFileMissingRequiredContentException(
                     string.Format("Zip file does not contain file {0}", fileName));
 
             return XmlDeserializerHelper.Deserialize<TPocketGaugerDto>(this[fileName]);
