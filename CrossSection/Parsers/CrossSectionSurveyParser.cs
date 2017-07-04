@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using FileHelpers;
 using FileHelpers.Events;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Model;
@@ -64,7 +64,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
         private static void VerifyIsCrossSectionCsvFile(string firstLine)
         {
             if (string.IsNullOrWhiteSpace(firstLine) || !IsHeaderRecord(firstLine))
-                throw new FormatNotSupportedException("Uploaded file is not an AQUARIUS Cross-Section");
+                throw new CrossSectionCsvFormatException("Uploaded file is not an AQUARIUS Cross-Section");
         }
 
         private static bool IsHeaderRecord(string header)
@@ -137,7 +137,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Parsers
             var data = ParseCrossSectionData(line);
 
             if (CrossSectionSurvey.Fields.ContainsKey(data.Key))
-                throw new ParsingFailedException(Invariant($"File has duplicate {data.Key} records"));
+                throw new CrossSectionSurveyDataFormatException(Invariant($"File has duplicate {data.Key} records"));
 
             CrossSectionSurvey.Fields.Add(data.Key, data.Value);
         }

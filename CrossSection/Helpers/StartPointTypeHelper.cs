@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 {
@@ -29,9 +29,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
             return AttemptToInferStartPoint(startPoint);
         }
 
-        private static ParsingFailedException CreateInvalidStartBankException()
+        private static InvalidStartBankException CreateInvalidStartBankException()
         {
-            return new ParsingFailedException("StartBank must be set to 'LeftEdgeOfWater' or 'RightEdgeOfWater'");
+            return new InvalidStartBankException("StartBank must be set to 'LeftEdgeOfWater' or 'RightEdgeOfWater'");
         }
 
         private static StartPointType AttemptToInferStartPoint(string startPoint)

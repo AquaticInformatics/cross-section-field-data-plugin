@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
@@ -14,7 +14,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
         {
             TestDelegate testDelegate = () => DateTimeOffsetHelper.Parse(unsupportedDateTimeOffset);
 
-            Assert.That(testDelegate, Throws.TypeOf<ParsingFailedException>().With.Message.Contains("not in the expected DateTime format"));
+            Assert.That(testDelegate, Throws.TypeOf<CrossSectionSurveyDataFormatException>().With.Message.Contains("not in the expected DateTime format"));
         }
 
         private static readonly List<string> InvalidDateTimeStrings = new List<string>

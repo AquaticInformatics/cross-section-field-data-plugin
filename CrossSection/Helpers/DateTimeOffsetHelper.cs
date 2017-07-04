@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers
@@ -35,7 +35,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 
             var dateFormats = string.Join(" or ", SupportedDateFormats);
 
-            throw new ParsingFailedException(Invariant($"{date} is not in the expected DateTime format: {dateFormats}"));
+            throw new CrossSectionSurveyDataFormatException(Invariant($"{date} is not in the expected DateTime format: {dateFormats}"));
         }
     }
 }

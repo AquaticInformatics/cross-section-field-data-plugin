@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Model
@@ -27,7 +27,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Model
 
             TestDelegate testDelegate = () => crossSection.GetFieldValue(field);
 
-            Assert.That(testDelegate, Throws.Exception.TypeOf<ParsingFailedException>().With.Message.Contains(field));
+            Assert.That(testDelegate, Throws.Exception.TypeOf<CrossSectionCsvFormatException>().With.Message.Contains(field));
         }
 
         [Test]

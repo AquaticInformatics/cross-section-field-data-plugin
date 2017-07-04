@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
@@ -15,7 +15,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Helpers
         {
             TestDelegate testDelegate = () => StartPointTypeHelper.Parse(invalidOrUnknownStartPointTypeStrings);
 
-            Assert.That(testDelegate, Throws.TypeOf<ParsingFailedException>());
+            Assert.That(testDelegate, Throws.TypeOf<InvalidStartBankException>());
         }
 
         private static readonly List<string> InvalidStartPointTypeStrings = new List<string>

@@ -50,6 +50,7 @@
     <Compile Include="Helpers\DateTimeOffsetHelper.cs" />
     <Compile Include="Helpers\DoubleHelper.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Exceptions\InvalidStartBankException.cs" />
     <Compile Include="Helpers\StartPointTypeHelper.cs" />
     <Compile Include="Interfaces\ICrossSectionParser.cs" />
     <Compile Include="Interfaces\ICrossSectionMapper.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="Mappers\CrossSectionMapper.cs" />
     <Compile Include="CrossSectionPlugin.cs" />
     <Compile Include="Mappers\CrossSectionPointMapper.cs" />
+    <Compile Include="Exceptions\CrossSectionCsvFormatException.cs" />
+    <Compile Include="Exceptions\CrossSectionSurveyDataFormatException.cs" />
     <Compile Include="Parsers\CrossSectionSurveyParser.cs" />
     <Compile Include="Model\CrossSectionSurvey.cs" />
     <Compile Include="Model\CrossSectionPoint.cs" />
@@ -73,6 +76,11 @@
       <Project>{A37B4978-D615-4092-BEC8-27AABFD2681E}</Project>
       <Name>Server.BusinessInterfaces.FieldDataPlugInCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\BusinessObjects\FieldDataPlugIn\Server.BusinessObjects.FieldDataPlugin.csproj">
+      <Project>{80158CC8-7D3C-4C8D-94DE-1A53F7FD9D53}</Project>
+      <Name>Server.BusinessObjects.FieldDataPlugin</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

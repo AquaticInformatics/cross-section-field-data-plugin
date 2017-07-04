@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using static System.FormattableString;
 
@@ -21,7 +21,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         private static ElevationMeasurement ToPoint(Model.CrossSectionPoint point)
         {
             if (!IsValidPoint(point))
-                throw new ParsingFailedException(Invariant($"The Cross-Section Point: '{point}' must have both a Distance and Elevation"));
+                throw new CrossSectionSurveyDataFormatException(Invariant($"The Cross-Section Point: '{point}' must have both a Distance and Elevation"));
 
             return new ElevationMeasurement
             {

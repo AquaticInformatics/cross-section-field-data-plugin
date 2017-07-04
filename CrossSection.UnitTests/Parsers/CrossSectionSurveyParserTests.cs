@@ -8,7 +8,7 @@ using Common.TestHelpers.NUnitExtensions;
 using FluentAssertions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Model;
@@ -54,7 +54,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
                 () => _crossSectionParser.ParseFile(_stream);
 
             Assert.That(testDelegate,
-                Throws.Exception.TypeOf<FormatNotSupportedException>().With.Message.Contains("not an AQUARIUS Cross-Section"));
+                Throws.Exception.TypeOf<CrossSectionCsvFormatException>().With.Message.Contains("not an AQUARIUS Cross-Section"));
         }
 
         private static readonly IEnumerable<string> ValidFileHeaders = new[]
@@ -134,7 +134,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
                 () => _crossSectionParser.ParseFile(_stream);
 
             Assert.That(testDelegate,
-                Throws.Exception.TypeOf<ParsingFailedException>().With.Message.Contains("File has duplicate Location records"));
+                Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>().With.Message.Contains("File has duplicate Location records"));
         }
 
         [Test]

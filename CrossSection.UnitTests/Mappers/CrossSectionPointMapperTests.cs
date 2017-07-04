@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
 using Server.Plugins.FieldVisit.CrossSection.Model;
@@ -88,7 +88,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
             TestDelegate testDelegate = () => _crossSectionPointMapper.MapPoints(points);
 
-            Assert.That(testDelegate, Throws.Exception.TypeOf<ParsingFailedException>()
+            Assert.That(testDelegate, Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>()
                 .With.Message.Contains("must have both a Distance and Elevation"));
         }
 

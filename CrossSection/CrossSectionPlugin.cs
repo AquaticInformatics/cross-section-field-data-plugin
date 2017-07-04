@@ -6,6 +6,7 @@ using Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers;
 using Server.BusinessInterfaces.FieldDataPluginCore;
 using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
@@ -41,7 +42,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
                 var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
                 return ProcessParsedFileContents(parsedFileContents, fieldDataResultsAppender, fieldVisitHandler);
             }
-            catch (FormatNotSupportedException)
+            catch (CrossSectionCsvFormatException)
             {
                 return ParseFileResult.CannotParse();
             }

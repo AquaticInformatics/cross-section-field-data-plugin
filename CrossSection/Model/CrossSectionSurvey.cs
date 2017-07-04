@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using static System.FormattableString;
 
@@ -31,7 +31,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Model
                 return Fields[field];
             }
 
-            throw new ParsingFailedException(Invariant($"Field '{field}' was not found in the file."));
+            throw new CrossSectionCsvFormatException(Invariant($"Field '{field}' was not found in the file."));
         }
 
         public string GetFieldValueWithDefault(string field, string defaultValue)

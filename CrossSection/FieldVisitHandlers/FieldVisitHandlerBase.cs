@@ -1,8 +1,8 @@
 ﻿using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
+using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using static System.FormattableString;
@@ -31,7 +31,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
             if (locationIdentifier.EqualsOrdinalIgnoreCase(seletedLocationIdentifier))
                 return;
 
-            throw new ParsingFailedException(
+            throw new CrossSectionSurveyDataFormatException(
                 Invariant($"Location identifier '{seletedLocationIdentifier}' does not match the identifier in the file: '{locationIdentifier}'"));
         }
 
