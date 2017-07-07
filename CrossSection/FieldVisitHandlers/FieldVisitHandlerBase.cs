@@ -26,13 +26,13 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
 
         protected static void CheckForExpectedLocation(string locationIdentifier, ILocation selectedLocation)
         {
-            var seletedLocationIdentifier = selectedLocation.LocationIdentifier;
+            var selectedLocationLocationIdentifier = selectedLocation.LocationIdentifier;
 
-            if (locationIdentifier.EqualsOrdinalIgnoreCase(seletedLocationIdentifier))
+            if (locationIdentifier.EqualsOrdinalIgnoreCase(selectedLocationLocationIdentifier))
                 return;
 
             throw new CrossSectionSurveyDataFormatException(
-                Invariant($"Location identifier '{seletedLocationIdentifier}' does not match the identifier in the file: '{locationIdentifier}'"));
+                Invariant($"Location identifier '{selectedLocationLocationIdentifier}' does not match the identifier in the file: '{locationIdentifier}'"));
         }
 
         protected IFieldVisit CreateFieldVisit(ILocation location, CrossSectionSurvey crossSectionSurvey)
