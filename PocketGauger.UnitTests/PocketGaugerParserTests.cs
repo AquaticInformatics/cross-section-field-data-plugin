@@ -99,7 +99,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             const int expectedNumberOfDischargeActivities = 3;
 
             var parseFileResult = _pocketGaugerParser.ParseFile(_stream, _fieldDataResultsAppender, _logger);
-            parseFileResult.Status.Should().Be(ParseFileStatus.ParsedSuccessfully);
+            parseFileResult.Status.Should().Be(ParseFileStatus.SuccessfullyParsedAndDataValid);
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
