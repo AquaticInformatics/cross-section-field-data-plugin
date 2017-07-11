@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using log4net;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 using Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers;
 using Server.BusinessInterfaces.FieldDataPluginCore;
