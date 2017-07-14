@@ -11,7 +11,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
         {
         }
 
-        public override IFieldVisit GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSectionSurvey)
+        public override NewFieldVisitInfo GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSectionSurvey)
         {
             var location = FieldDataResultsAppender.GetLocationByIdentifier(locationIdentifier);
             return CreateFieldVisit(location, crossSectionSurvey);

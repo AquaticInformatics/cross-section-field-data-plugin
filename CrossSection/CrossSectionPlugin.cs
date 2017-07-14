@@ -25,7 +25,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
             return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
         }
 
-        public ParseFileResult ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             var fieldVisitHandler = new KnownLocationHandler(selectedLocation, fieldDataResultsAppender);
