@@ -6,15 +6,15 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
 {
     public class KnownLocationHandler : FieldVisitHandlerBase
     {
-        private ILocation SelectedLocation { get; }
+        private LocationInfo SelectedLocation { get; }
 
-        public KnownLocationHandler(ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender)
+        public KnownLocationHandler(LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender)
             : base(fieldDataResultsAppender)
         {
             SelectedLocation = selectedLocation;
         }
 
-        public override IFieldVisit GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSectionSurvey)
+        public override NewFieldVisitInfo GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSectionSurvey)
         {
             CheckForExpectedLocation(locationIdentifier, SelectedLocation);
 

@@ -48,7 +48,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             }
         }
 
-        public ParseFileResult ParseFile(Stream fileStream, ILocation selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
+        public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
             return ParseFile(fileStream, fieldDataResultsAppender, logger);

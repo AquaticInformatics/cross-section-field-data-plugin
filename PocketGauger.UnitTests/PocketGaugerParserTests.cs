@@ -13,6 +13,7 @@ using Server.BusinessInterfaces.FieldDataPluginCore;
 using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
+using Server.BusinessInterfaces.Location.Dto;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 
@@ -27,6 +28,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
         private Stream _stream;
         private IFieldDataResultsAppender _fieldDataResultsAppender;
         private ILog _logger;
+        private LocationInfo _locationInfo;
 
         private IFixture _fixture;
 
@@ -38,6 +40,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _pocketGaugerParser = new PocketGaugerParser();
             _logger = null;
             _fieldDataResultsAppender = Substitute.For<IFieldDataResultsAppender>();
+            _locationInfo = new LocationInfo(new Location());
+            _fieldDataResultsAppender
+                .GetLocationByIdentifier(Arg.Any<string>())
+                .Returns(_locationInfo);
 
             const string testPath = @"Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData.PGData.zip";
             _stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(testPath);
@@ -103,11 +109,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
-                .AddFieldVisit(Arg.Any<ILocation>(), Arg.Any<DataModel.FieldVisitDetails>());
+                .AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<DataModel.FieldVisitDetails>());
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
-                .AddDischargeActivity(Arg.Any<IFieldVisit>(), Arg.Any<DischargeActivity>());
+                .AddDischargeActivity(Arg.Any<NewFieldVisitInfo>(), Arg.Any<DischargeActivity>());
         }
 
         [Test]
@@ -137,11 +143,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfItems)
-                .AddFieldVisit(Arg.Any<ILocation>(), Arg.Is<DataModel.FieldVisitDetails>(x => x.Party == observer));
+                .AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Is<DataModel.FieldVisitDetails>(x => x.Party == observer));
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfItems)
-                .AddDischargeActivity(Arg.Any<IFieldVisit>(), Arg.Is<DischargeActivity>(x => x.Party == observer));
+                .AddDischargeActivity(Arg.Any<NewFieldVisitInfo>(), Arg.Is<DischargeActivity>(x => x.Party == observer));
         }
     }
 }
