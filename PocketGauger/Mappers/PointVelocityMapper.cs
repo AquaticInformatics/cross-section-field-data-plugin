@@ -44,15 +44,20 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
         private static ManualGaugingDischargeSection CreateDischargeSectionWithRawValuesFromSummaryItem(DateTimeInterval measurementPeriod, GaugingSummaryItem summaryItem)
         {
+            if (!summaryItem.Area.HasValue)
+                throw new ArgumentNullException(nameof(summaryItem.Area));
+            if (!summaryItem.MeanVelocity.HasValue)
+                throw new ArgumentNullException(nameof(summaryItem.MeanVelocity));
+
             var channnelName = ParametersAndMethodsConstants.DefaultChannelName;
 
-            return new ManualGaugingDischargeSection(measurementPeriod, channnelName, summaryItem.Flow.AsDischargeMeasurement())
+            return new ManualGaugingDischargeSection(measurementPeriod, channnelName, summaryItem.Flow.AsDischargeMeasurement(), 
+                ParametersAndMethodsConstants.DistanceUnitId, ParametersAndMethodsConstants.AreaUnitId, ParametersAndMethodsConstants.VelocityUnitId)
             {
                 Party = summaryItem.ObserversName,
                 Comments = summaryItem.Comments,
-
-                Area = summaryItem.Area.AsAreaMeasurement(),
-                VelocityAverage = summaryItem.MeanVelocity.AsVelocityMeasurement(),
+                AreaValue = summaryItem.Area.Value,
+                VelocityAverageValue = summaryItem.MeanVelocity.Value
             };
         }
 
@@ -78,7 +83,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 
             dischargeSection.TaglinePolarity = MapTaglinePolarity(verticals);
             dischargeSection.TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId;
-            dischargeSection.Width = CalculateTotalWidth(verticals);
+            dischargeSection.WidthValue = CalculateTotalWidth(verticals);
             dischargeSection.MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals);
             dischargeSection.MeanObservationDuration = CalculateMeanObservationDuration(verticals);
         }
@@ -234,12 +239,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             return observationsWithInterval.Average(observation => observation.ObservationInterval);
         }
 
-        private static Measurement CalculateTotalWidth(IReadOnlyCollection<Vertical> verticals)
+        private static double? CalculateTotalWidth(IReadOnlyCollection<Vertical> verticals)
         {
             if (!verticals.Any())
                 return null;
 
-            return verticals.Sum(vertical => vertical.Segment.Width).AsDistanceMeasurement();
+            return verticals.Sum(vertical => vertical.Segment.Width);
         }
 
         private static double? CalculateMaximumSegmentDischarge(IReadOnlyCollection<Vertical> verticals)
