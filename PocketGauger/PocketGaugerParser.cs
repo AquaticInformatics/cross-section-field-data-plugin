@@ -91,7 +91,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                 var locationIdentifier = gaugingSummaryItem.SiteId;
                 var location = fieldDataResultsAppender.GetLocationByIdentifier(locationIdentifier);
 
-                var dischargeActivity = dischargeActivityMapper.Map(gaugingSummaryItem, location.UtcOffset);
+                var dischargeActivity = dischargeActivityMapper.Map(gaugingSummaryItem, TimeSpan.FromHours(location.UtcOffsetHours));
 
                 var fieldVisit = CreateFieldVisit(dischargeActivity);
                 var fieldVisitInfo = fieldDataResultsAppender.AddFieldVisit(location, fieldVisit);

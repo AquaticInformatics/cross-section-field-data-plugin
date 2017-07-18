@@ -13,7 +13,6 @@ using Server.BusinessInterfaces.FieldDataPluginCore;
 using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
-using Server.BusinessInterfaces.Location.Dto;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 
@@ -40,7 +39,20 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _pocketGaugerParser = new PocketGaugerParser();
             _logger = null;
             _fieldDataResultsAppender = Substitute.For<IFieldDataResultsAppender>();
-            _locationInfo = new LocationInfo(new Location());
+
+            const double validUtcOffsetHour = -8.5;
+
+            _locationInfo = new LocationInfo(
+                _fixture.Create<string>(),
+                _fixture.Create<string>(),
+                _fixture.Create<Int64>(),
+                _fixture.Create<Guid>(),
+                validUtcOffsetHour);
+
+            _fieldDataResultsAppender
+                .GetLocationByUniqueId(Arg.Any<string>())
+                .Returns(_locationInfo);
+
             _fieldDataResultsAppender
                 .GetLocationByIdentifier(Arg.Any<string>())
                 .Returns(_locationInfo);
