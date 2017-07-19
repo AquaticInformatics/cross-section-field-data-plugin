@@ -5,6 +5,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.Interfaces
 {
     public interface IFieldVisitHandler
     {
-        NewFieldVisitInfo GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSection);
+        FieldVisitInfo GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSection);
     }
 }

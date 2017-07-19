@@ -22,7 +22,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
         {
         }
 
-        public abstract NewFieldVisitInfo GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSectionSurvey);
+        public abstract FieldVisitInfo GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSectionSurvey);
 
         protected static void CheckForExpectedLocation(string locationIdentifier, LocationInfo selectedLocation)
         {
@@ -35,7 +35,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
                 Invariant($"Location identifier '{selectedLocationLocationIdentifier}' does not match the identifier in the file: '{locationIdentifier}'"));
         }
 
-        protected NewFieldVisitInfo CreateFieldVisit(LocationInfo location, CrossSectionSurvey crossSectionSurvey)
+        protected FieldVisitInfo CreateFieldVisit(LocationInfo location, CrossSectionSurvey crossSectionSurvey)
         {
             var fieldVisit = new FieldVisitDetails(crossSectionSurvey.SurveyPeriod) {Party = crossSectionSurvey.Party};
             return FieldDataResultsAppender.AddFieldVisit(location, fieldVisit);

@@ -14,7 +14,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
             SelectedLocation = selectedLocation;
         }
 
-        public override NewFieldVisitInfo GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSectionSurvey)
+        public override FieldVisitInfo GetFieldVisit(string locationIdentifier, CrossSectionSurvey crossSectionSurvey)
         {
             CheckForExpectedLocation(locationIdentifier, SelectedLocation);
 

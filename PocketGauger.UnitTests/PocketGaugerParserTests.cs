@@ -125,7 +125,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
-                .AddDischargeActivity(Arg.Any<NewFieldVisitInfo>(), Arg.Any<DischargeActivity>());
+                .AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfItems)
-                .AddDischargeActivity(Arg.Any<NewFieldVisitInfo>(), Arg.Is<DischargeActivity>(x => x.Party == observer));
+                .AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Is<DischargeActivity>(x => x.Party == observer));
         }
     }
 }
