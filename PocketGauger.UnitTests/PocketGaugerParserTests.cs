@@ -14,6 +14,7 @@ using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
+using Server.TestHelpers.FieldVisitTestHelpers.TestHelpers;
 using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
@@ -40,14 +41,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _logger = null;
             _fieldDataResultsAppender = Substitute.For<IFieldDataResultsAppender>();
 
-            const double validUtcOffsetHour = -8.5;
-
-            _locationInfo = new LocationInfo(
-                _fixture.Create<string>(),
-                _fixture.Create<string>(),
-                _fixture.Create<Int64>(),
-                _fixture.Create<Guid>(),
-                validUtcOffsetHour);
+            _locationInfo = LocationInfoHelper.GetTestLocationInfo(_fixture);
 
             _fieldDataResultsAppender
                 .GetLocationByUniqueId(Arg.Any<string>())

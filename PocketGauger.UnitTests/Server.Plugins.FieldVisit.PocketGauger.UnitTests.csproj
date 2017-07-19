@@ -104,6 +104,10 @@
       <Project>{f8bbf570-72dc-4284-b94d-f3e7d536c62e}</Project>
       <Name>Server.BusinessInterfaces.Location</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\TestHelpers\FieldVisitTestHelpers\Server.TestHelpers.FieldVisitTestHelpers.csproj">
+      <Project>{D49419AC-C2CC-495F-BD80-C205EB2541FA}</Project>
+      <Name>Server.TestHelpers.FieldVisitTestHelpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PocketGauger\Server.Plugins.FieldVisit.PocketGauger.csproj">
       <Project>{6d325ff6-c0ad-4944-b5be-32d7eedf3cf1}</Project>
       <Name>Server.Plugins.FieldVisit.PocketGauger</Name>
