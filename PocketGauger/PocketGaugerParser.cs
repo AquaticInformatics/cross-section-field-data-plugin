@@ -37,10 +37,14 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
                 return ParseFileResult.ParsedSuccessfully();
             }
-            catch(Exception ex) 
-            when (ex is PocketGaugerZipFileMissingRequiredContentException || ex is PocketGaugerZipFileException)
+            catch (Exception ex)
+                when (ex is PocketGaugerZipFileMissingRequiredContentException || ex is PocketGaugerZipFileException)
             {
                 return ParseFileResult.CannotParse();
+            }
+            catch (PocketGaugerDataFormatException e)
+            {
+                return ParseFileResult.DataInvalid(e);
             }
             catch (Exception e)
             {
@@ -84,20 +88,28 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
         public void ProcessGaugingSummary(GaugingSummary gaugingSummary, IFieldDataResultsAppender fieldDataResultsAppender)
         {
-            var dischargeActivityMapper = CreateDischargeActivityMapper();
-
-            foreach (var gaugingSummaryItem in gaugingSummary.GaugingSummaryItems)
+            try
             {
-                var locationIdentifier = gaugingSummaryItem.SiteId;
-                var location = fieldDataResultsAppender.GetLocationByIdentifier(locationIdentifier);
+                var dischargeActivityMapper = CreateDischargeActivityMapper();
 
-                var dischargeActivity = dischargeActivityMapper.Map(gaugingSummaryItem, location.UtcOffset);
+                foreach (var gaugingSummaryItem in gaugingSummary.GaugingSummaryItems)
+                {
+                    var locationIdentifier = gaugingSummaryItem.SiteId;
+                    var location = fieldDataResultsAppender.GetLocationByIdentifier(locationIdentifier);
 
-                var fieldVisit = CreateFieldVisit(dischargeActivity);
-                var fieldVisitInfo = fieldDataResultsAppender.AddFieldVisit(location, fieldVisit);
+                    var dischargeActivity = dischargeActivityMapper.Map(gaugingSummaryItem, location.UtcOffset);
 
-                fieldDataResultsAppender.AddDischargeActivity(fieldVisitInfo, dischargeActivity);
+                    var fieldVisit = CreateFieldVisit(dischargeActivity);
+                    var fieldVisitInfo = fieldDataResultsAppender.AddFieldVisit(location, fieldVisit);
+
+                    fieldDataResultsAppender.AddDischargeActivity(fieldVisitInfo, dischargeActivity);
+                }
             }
+            catch (Exception e)
+            {
+                throw new PocketGaugerDataPersistanceException("Failed to persist pocket gauger data", e);
+            }
+
         }
 
         private static DischargeActivityMapper CreateDischargeActivityMapper()

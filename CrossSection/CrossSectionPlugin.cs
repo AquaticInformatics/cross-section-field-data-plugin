@@ -35,10 +35,10 @@ namespace Server.Plugins.FieldVisit.CrossSection
         private static ParseFileResult ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
             IFieldVisitHandler fieldVisitHandler)
         {
+            CrossSectionSurvey parsedFileContents;
             try
             {
-                var parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
-                return ProcessParsedFileContents(parsedFileContents, fieldDataResultsAppender, fieldVisitHandler);
+                parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
             }
             catch (CrossSectionCsvFormatException)
             {
@@ -47,6 +47,16 @@ namespace Server.Plugins.FieldVisit.CrossSection
             catch (Exception e)
             {
                 return ParseFileResult.ParsingFailed(e);
+            }
+
+            // TODO: refactor...
+            try
+            {
+                return ProcessParsedFileContents(parsedFileContents, fieldDataResultsAppender, fieldVisitHandler);
+            }
+            catch (Exception e)
+            {
+                return ParseFileResult.DataInvalid(e);
             }
         }
 
