@@ -81,7 +81,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 dischargeSection.Verticals.Add(vertical);
             }
 
-            dischargeSection.TaglinePolarity = MapTaglinePolarity(verticals);
             dischargeSection.TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId;
             dischargeSection.WidthValue = CalculateTotalWidth(verticals);
             dischargeSection.MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals);
@@ -208,19 +207,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 default:
                     throw new ArgumentException("Invalid flow calculation value", nameof(gaugingMethod));
             }
-        }
-
-        private static TaglinePolarityType MapTaglinePolarity(IReadOnlyCollection<Vertical> verticals)
-        {
-            if (!verticals.Any())
-                return default(TaglinePolarityType);
-
-            var firstVertical = verticals.First();
-            var lastVertical = verticals.Last();
-
-            return firstVertical.TaglinePosition <= lastVertical.TaglinePosition
-                ? TaglinePolarityType.Increasing
-                : TaglinePolarityType.Decreasing;
         }
 
         private static double? CalculateMeanObservationDuration(IReadOnlyCollection<Vertical> verticals)

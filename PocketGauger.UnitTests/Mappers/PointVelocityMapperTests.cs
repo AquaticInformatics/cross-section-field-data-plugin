@@ -217,7 +217,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                 AreaValue = _gaugingSummaryItem.Area.Value,
                 VelocityAverageValue = _gaugingSummaryItem.MeanVelocity.Value,
 
-                TaglinePolarity = TaglinePolarityType.Increasing,
                 TaglinePointUnitId = "m",
             };
         }
@@ -333,42 +332,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
             var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
 
             Assert.That(pointVelocityDischarge.Width.Value, Is.EqualTo(expectedTotalWidth));
-        }
-
-        [Test]
-        public void Map_EmptyVerticalsList_SetsTaglinePolarityToIncreasing()
-        {
-            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
-
-            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Increasing));
-        }
-
-        [Test]
-        public void Map_TaglinePositionForFirstVerticalIsSmallerThanThatOfLastVertical_SetsTaglinePolarityToIncreasing()
-        {
-            var verticals = _fixture.CreateMany<Vertical>(2).ToList();
-            verticals.First().TaglinePosition = 0;
-            verticals.Last().TaglinePosition = 10;
-
-            SetupVerticalMapperToReturn(verticals);
-
-            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
-
-            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Increasing));
-        }
-
-        [Test]
-        public void Map_TaglinePositionForFirstVerticalIsLargerThanThatOfLastVertical_SetsTaglinePolarityToDecreasing()
-        {
-            var verticals = _fixture.CreateMany<Vertical>(2).ToList();
-            verticals.First().TaglinePosition = 10;
-            verticals.Last().TaglinePosition = 0;
-
-            SetupVerticalMapperToReturn(verticals);
-
-            var pointVelocityDischarge = _mapper.Map(_gaugingSummaryItem, _dischargeActivity);
-
-            Assert.That(pointVelocityDischarge.TaglinePolarity, Is.EqualTo(TaglinePolarityType.Decreasing));
         }
 
         [Test]
