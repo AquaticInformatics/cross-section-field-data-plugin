@@ -72,7 +72,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                             e.RangeStart == calibration.MinRotationSpeed &&
                             DoubleHelper.AreEqual(e.Slope, calibration.Factor.GetValueOrDefault()) &&
                             DoubleHelper.AreEqual(e.Intercept, calibration.Constant.GetValueOrDefault()) &&
-                            e.InterceptUnitId == ParametersAndMethodsConstants.VelocityUnitId);
+                            e.InterceptUnitId == ParametersAndMethodsHelper.VelocityUnitId);
             }
         }
 

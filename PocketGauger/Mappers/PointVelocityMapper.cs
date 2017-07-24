@@ -49,16 +49,18 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             if (!summaryItem.MeanVelocity.HasValue)
                 throw new ArgumentNullException(nameof(summaryItem.MeanVelocity));
 
-            var channnelName = ParametersAndMethodsConstants.DefaultChannelName;
-
-            return new ManualGaugingDischargeSection(measurementPeriod, channnelName, summaryItem.Flow.AsDischargeMeasurement(), 
-                ParametersAndMethodsConstants.DistanceUnitId, ParametersAndMethodsConstants.AreaUnitId, ParametersAndMethodsConstants.VelocityUnitId)
+            var factory = new ManualGaugingDischargeSectionFactory(ParametersAndMethodsHelper.DischargeSectionUnitSystem)
             {
-                Party = summaryItem.ObserversName,
-                Comments = summaryItem.Comments,
-                AreaValue = summaryItem.Area.Value,
-                VelocityAverageValue = summaryItem.MeanVelocity.Value
+                DefaultChannelName = ParametersAndMethodsHelper.DefaultChannelName
             };
+
+            var dischargeSection = factory.CreateManualGaugingDischargeSection(measurementPeriod, summaryItem.Flow.AsDischargeMeasurement().Value);
+            dischargeSection.Party = summaryItem.ObserversName;
+            dischargeSection.Comments = summaryItem.Comments;
+            dischargeSection.AreaValue = summaryItem.Area.Value;
+            dischargeSection.VelocityAverageValue = summaryItem.MeanVelocity.Value;
+
+            return dischargeSection;
         }
 
         private static void UpdateDischargeSectionWithDerivedValues(ManualGaugingDischargeSection dischargeSection, GaugingSummaryItem summaryItem)
@@ -81,7 +83,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 dischargeSection.Verticals.Add(vertical);
             }
 
-            dischargeSection.TaglinePointUnitId = ParametersAndMethodsConstants.DistanceUnitId;
+            dischargeSection.TaglinePointUnitId = ParametersAndMethodsHelper.DistanceUnitId;
             dischargeSection.WidthValue = CalculateTotalWidth(verticals);
             dischargeSection.MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals);
             dischargeSection.MeanObservationDuration = CalculateMeanObservationDuration(verticals);

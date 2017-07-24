@@ -1,6 +1,8 @@
-﻿namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
+﻿using Server.BusinessInterfaces.FieldDataPluginCore.Units;
+
+namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
-    public class ParametersAndMethodsConstants
+    public static class ParametersAndMethodsHelper
     {
         public const string VelocityParameterId = "WV";
         public const string AreaParameterId = "RiverSectionArea";
@@ -16,5 +18,14 @@
         public const string GageHeightMethodCode = "HGFLOAT";
 
         public const string DefaultChannelName = "Main";
+
+        public static UnitSystem DischargeSectionUnitSystem =
+            new UnitSystem
+            {
+                AreaUnitId = AreaUnitId,
+                DischargeUnitId = DischargeUnitId,
+                DistanceUnitId = DistanceUnitId,
+                VelocityUnitId = VelocityUnitId
+            };
     }
 }

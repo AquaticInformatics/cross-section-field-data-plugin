@@ -86,7 +86,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 RangeEnd = GetRangeEnd(pocketGaugerCalibrations, i),
                 Slope = calibration.Factor.GetValueOrDefault(),
                 Intercept = calibration.Constant.GetValueOrDefault(),
-                InterceptUnitId = ParametersAndMethodsConstants.VelocityUnitId
+                InterceptUnitId = ParametersAndMethodsHelper.VelocityUnitId
             };
         }
 

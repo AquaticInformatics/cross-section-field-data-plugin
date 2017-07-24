@@ -6,7 +6,6 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
@@ -209,16 +208,19 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private ManualGaugingDischargeSection CreateExpectedManualGaugingDischargeSection()
         {
-            return new ManualGaugingDischargeSection(_dischargeActivity.MeasurementPeriod, "Main", new Measurement(_gaugingSummaryItem.Flow.Value, "m^3/s"),
-                ParametersAndMethodsConstants.DistanceUnitId, ParametersAndMethodsConstants.AreaUnitId, ParametersAndMethodsConstants.VelocityUnitId)
+            var factory = new ManualGaugingDischargeSectionFactory(ParametersAndMethodsHelper.DischargeSectionUnitSystem)
             {
-                Party = _gaugingSummaryItem.ObserversName,
-                Comments = _gaugingSummaryItem.Comments,
-                AreaValue = _gaugingSummaryItem.Area.Value,
-                VelocityAverageValue = _gaugingSummaryItem.MeanVelocity.Value,
-
-                TaglinePointUnitId = "m",
+                DefaultChannelName = ParametersAndMethodsHelper.DefaultChannelName
             };
+
+            var dischargeSection = factory.CreateManualGaugingDischargeSection(_dischargeActivity.MeasurementPeriod, _gaugingSummaryItem.Flow.Value);
+            dischargeSection.Party = _gaugingSummaryItem.ObserversName;
+            dischargeSection.Comments = _gaugingSummaryItem.Comments;
+            dischargeSection.AreaValue = _gaugingSummaryItem.Area.Value;
+            dischargeSection.VelocityAverageValue = _gaugingSummaryItem.MeanVelocity.Value;
+            dischargeSection.TaglinePointUnitId = ParametersAndMethodsHelper.DistanceUnitId;
+
+            return dischargeSection;
         }
 
         [Test]
