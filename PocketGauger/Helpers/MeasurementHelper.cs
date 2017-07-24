@@ -5,11 +5,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {
     public static class MeasurementHelper
     {
-        public static Measurement AsDistanceMeasurement(this double value)
-        {
-            return new Measurement(value, ParametersAndMethodsConstants.DistanceUnitId);
-        }
-
         public static Measurement AsDischargeMeasurement(this double? value)
         {
             return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsConstants.DischargeUnitId);
