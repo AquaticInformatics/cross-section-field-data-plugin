@@ -83,10 +83,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
                 dischargeSection.Verticals.Add(vertical);
             }
 
-            dischargeSection.TaglinePointUnitId = ParametersAndMethodsHelper.DistanceUnitId;
             dischargeSection.WidthValue = CalculateTotalWidth(verticals);
-            dischargeSection.MaximumSegmentDischarge = CalculateMaximumSegmentDischarge(verticals);
-            dischargeSection.MeanObservationDuration = CalculateMeanObservationDuration(verticals);
         }
 
         private static MeterSuspensionAndDeploymentPair MapMeterSuspensionAndDeploymentMethod(GaugingSummaryItem summaryItem)
@@ -211,36 +208,12 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             }
         }
 
-        private static double? CalculateMeanObservationDuration(IReadOnlyCollection<Vertical> verticals)
-        {
-            if (!verticals.Any())
-                return null;
-
-            var observationsWithInterval = verticals
-                .SelectMany(vertical => vertical.VelocityObservation.Observations)
-                .Where(observation => observation.ObservationInterval.HasValue)
-                .ToList();
-
-            if (!observationsWithInterval.Any())
-                return null;
-
-            return observationsWithInterval.Average(observation => observation.ObservationInterval);
-        }
-
         private static double? CalculateTotalWidth(IReadOnlyCollection<Vertical> verticals)
         {
             if (!verticals.Any())
                 return null;
 
             return verticals.Sum(vertical => vertical.Segment.Width);
-        }
-
-        private static double? CalculateMaximumSegmentDischarge(IReadOnlyCollection<Vertical> verticals)
-        {
-            if (!verticals.Any())
-                return null;
-
-            return verticals.Max(vertical => vertical.Segment.TotalDischargePortion);
         }
     }
 }

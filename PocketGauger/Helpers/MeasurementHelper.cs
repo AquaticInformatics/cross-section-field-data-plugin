@@ -15,11 +15,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
             return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.DistanceUnitId);
         }
 
-        public static Measurement AsAreaMeasurement(this double? value)
-        {
-            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.AreaUnitId);
-        }
-
         public static Measurement AsVelocityMeasurement(this double? value)
         {
             return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.VelocityUnitId);
