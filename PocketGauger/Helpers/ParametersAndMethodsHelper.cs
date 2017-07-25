@@ -10,16 +10,16 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
         public const string DistanceToGageParameterId = "Distance";
 
         // TODO: Set from config file to allow customization
-        public const string AreaUnitId = "m^2";
-        public const string DistanceUnitId = "m";
-        public const string VelocityUnitId = "m/s";
-        public const string DischargeUnitId = "m^3/s";
+        private const string AreaUnitId = "m^2";
+        private const string DistanceUnitId = "m";
+        private const string VelocityUnitId = "m/s";
+        private const string DischargeUnitId = "m^3/s";
 
         public const string GageHeightMethodCode = "HGFLOAT";
 
         public const string DefaultChannelName = "Main";
 
-        public static UnitSystem DischargeSectionUnitSystem =
+        public static UnitSystem UnitSystem =
             new UnitSystem
             {
                 AreaUnitId = AreaUnitId,

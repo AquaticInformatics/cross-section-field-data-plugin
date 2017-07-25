@@ -49,7 +49,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
             if (!summaryItem.MeanVelocity.HasValue)
                 throw new ArgumentNullException(nameof(summaryItem.MeanVelocity));
 
-            var factory = new ManualGaugingDischargeSectionFactory(ParametersAndMethodsHelper.DischargeSectionUnitSystem)
+            var factory = new ManualGaugingDischargeSectionFactory(ParametersAndMethodsHelper.UnitSystem)
             {
                 DefaultChannelName = ParametersAndMethodsHelper.DefaultChannelName
             };

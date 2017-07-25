@@ -7,17 +7,17 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
     {
         public static Measurement AsDischargeMeasurement(this double? value)
         {
-            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.DischargeUnitId);
+            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.UnitSystem.DischargeUnitId);
         }
 
         public static Measurement AsDistanceMeasurement(this double? value)
         {
-            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.DistanceUnitId);
+            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.UnitSystem.DistanceUnitId);
         }
 
         public static Measurement AsVelocityMeasurement(this double? value)
         {
-            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.VelocityUnitId);
+            return CreateMeasurementOrThrowIfNull(value, ParametersAndMethodsHelper.UnitSystem.VelocityUnitId);
         }
 
         private static Measurement CreateMeasurementOrThrowIfNull(double? value, string unit)

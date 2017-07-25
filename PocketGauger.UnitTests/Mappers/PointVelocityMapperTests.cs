@@ -208,7 +208,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 
         private ManualGaugingDischargeSection CreateExpectedManualGaugingDischargeSection()
         {
-            var factory = new ManualGaugingDischargeSectionFactory(ParametersAndMethodsHelper.DischargeSectionUnitSystem)
+            var factory = new ManualGaugingDischargeSectionFactory(ParametersAndMethodsHelper.UnitSystem)
             {
                 DefaultChannelName = ParametersAndMethodsHelper.DefaultChannelName
             };
