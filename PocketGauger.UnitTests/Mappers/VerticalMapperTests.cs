@@ -48,7 +48,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         private void SetUpMeterCalibrationMapper()
         {
             _meterCalibrationMapper = Substitute.For<IMeterCalibrationMapper>();
-            var meterCalibration = _fixture.Build<MeterCalibration>().Without(m => m.Equations).Create();
+            var meterCalibration = _fixture.Build<MeterCalibration>().Create();
             _meterCalibrationMapper.Map(Arg.Any<MeterDetailsItem>()).Returns(meterCalibration);
         }
 

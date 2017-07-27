@@ -1,6 +1,4 @@
-﻿using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
-
-namespace Server.Plugins.FieldVisit.CrossSection.Helpers
+﻿namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 {
     public static class CrossSectionParserConstants
     {

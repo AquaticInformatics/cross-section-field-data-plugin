@@ -74,21 +74,20 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         private VelocityObservation CreateVelocityObservation(DeploymentMethodType deploymentMethod,
             PanelItem panelItem, MeterDetailsItem meterDetails)
         {
-            var observations = CreateObservations(panelItem.Verticals);
-
-            return new VelocityObservation
+            var velocityObservation = new VelocityObservation
             {
                 MeterCalibration = _meterCalibrationMapper.Map(meterDetails),
                 VelocityObservationMethod = DetermineVelocityObservationMethodFromVerticals(panelItem.Verticals),
                 DeploymentMethod = deploymentMethod,
                 MeanVelocity = panelItem.MeanVelocity.GetValueOrDefault(), //TODO: AQ-19384 - Throw if this is null
-                Observations = observations
             };
-        }
 
-        private static List<VelocityDepthObservation> CreateObservations(IEnumerable<VerticalItem> verticalItems)
-        {
-            return verticalItems.Select(CreateVelocityDepthObservation).ToList();
+            foreach (var observation in panelItem.Verticals.Select(CreateVelocityDepthObservation))
+            {
+                velocityObservation.Observations.Add(observation);
+            }
+
+            return velocityObservation;
         }
 
         private static VelocityDepthObservation CreateVelocityDepthObservation(VerticalItem verticalItem)

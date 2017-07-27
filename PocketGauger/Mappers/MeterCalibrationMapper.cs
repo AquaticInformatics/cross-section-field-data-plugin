@@ -16,7 +16,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
         public MeterCalibration Map(MeterDetailsItem meterDetailsItem)
         {
             var calibration = CreateCalibration(meterDetailsItem);
-            calibration.Equations = CreateCalibrationEquations(meterDetailsItem).ToList();
+
+            foreach (var equation in CreateCalibrationEquations(meterDetailsItem))
+            {
+                calibration.Equations.Add(equation);
+            }
 
             return calibration;
         }
