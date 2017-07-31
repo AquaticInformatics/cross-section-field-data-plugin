@@ -41,7 +41,7 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Exceptions\PocketGaugerDataPersistanceException.cs" />
+    <Compile Include="Exceptions\PocketGaugerDataPersistenceException.cs" />
     <Compile Include="Exceptions\PocketGaugerZipFileException.cs" />
     <Compile Include="Exceptions\PocketGaugerZipFileMissingRequiredContentException.cs" />
     <Compile Include="GaugingSummaryAssembler.cs" />

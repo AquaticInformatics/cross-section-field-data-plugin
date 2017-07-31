@@ -46,17 +46,16 @@ namespace Server.Plugins.FieldVisit.CrossSection
             }
             catch (Exception e)
             {
-                return ParseFileResult.ParsingFailed(e);
+                return ParseFileResult.CannotParse(e);
             }
 
-            // TODO: refactor...
             try
             {
                 return ProcessParsedFileContents(parsedFileContents, fieldDataResultsAppender, fieldVisitHandler);
             }
             catch (Exception e)
             {
-                return ParseFileResult.DataInvalid(e);
+                return ParseFileResult.SuccessfullyParsedButDataInvalid(e);
             }
         }
 
@@ -70,7 +69,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
 
             fieldDataResultsAppender.AddCrossSectionSurvey(fieldVisitInfo, crossSectionSurvey);
 
-            return ParseFileResult.ParsedSuccessfully();
+            return ParseFileResult.SuccessfullyParsedAndDataValid();
         }
 
         private static DataModel.CrossSection.CrossSectionSurvey MapToCrossSectionSurvey(CrossSectionSurvey parsedFileContents)

@@ -35,7 +35,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
                     ProcessGaugingSummary(gaugingSummary, fieldDataResultsAppender);
                 }
 
-                return ParseFileResult.ParsedSuccessfully();
+                return ParseFileResult.SuccessfullyParsedAndDataValid();
             }
             catch (Exception ex)
                 when (ex is PocketGaugerZipFileMissingRequiredContentException || ex is PocketGaugerZipFileException)
@@ -44,11 +44,11 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             }
             catch (PocketGaugerDataFormatException e)
             {
-                return ParseFileResult.DataInvalid(e);
+                return ParseFileResult.SuccessfullyParsedButDataInvalid(e);
             }
             catch (Exception e)
             {
-                return ParseFileResult.ParsingFailed(e);
+                return ParseFileResult.CannotParse(e);
             }
         }
 
@@ -107,7 +107,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             }
             catch (Exception e)
             {
-                throw new PocketGaugerDataPersistanceException("Failed to persist pocket gauger data", e);
+                throw new PocketGaugerDataPersistenceException("Failed to persist pocket gauger data", e);
             }
 
         }
