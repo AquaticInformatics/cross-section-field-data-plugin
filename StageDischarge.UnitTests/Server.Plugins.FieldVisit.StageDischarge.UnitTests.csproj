@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{84BE445E-9FB2-4D34-B7AD-6AB82903AF2B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Server.Plugins.FieldVisit.StageDischarge.UnitTests</RootNamespace>
+    <AssemblyName>Server.Plugins.FieldVisit.StageDischarge.UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\..\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\..\..\Release\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentAssertions">
+      <HintPath>$(SolutionDir)NuGetPackages\FluentAssertions.2.2.0.0\lib\net45\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SolutionDir)NuGetPackages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>$(SolutionDir)NuGetPackages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>$(SolutionDir)NuGetPackages\NSubstitute.1.10.0.0\lib\NET45\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SolutionDir)NuGetPackages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture">
+      <HintPath>$(SolutionDir)NuGetPackages\AutoFixture.3.16.5\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="StageDischargeParserTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\TestHelpers\NUnitExtensions\Common.TestHelpers.NUnitExtensions.csproj">
+      <Project>{F3F1B55A-B551-43BE-973D-E770D7164A88}</Project>
+      <Name>Common.TestHelpers.NUnitExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\Utils\Common.Utils\Common.Utils.csproj">
+      <Project>{EFF15FAE-C4F0-483E-8FD0-89AAFB461461}</Project>
+      <Name>Common.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore.UnitTests\Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests.csproj">
+      <Project>{3ac153f4-740d-4a11-b86a-3e8816417ccf}</Project>
+      <Name>Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
+      <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
+      <Name>Server.BusinessInterfaces.FieldDataPluginCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\BusinessInterfaces\Location\Server.BusinessInterfaces.Location.csproj">
+      <Project>{f8bbf570-72dc-4284-b94d-f3e7d536c62e}</Project>
+      <Name>Server.BusinessInterfaces.Location</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\TestHelpers\FieldVisitTestHelpers\Server.TestHelpers.FieldVisitTestHelpers.csproj">
+      <Project>{D49419AC-C2CC-495F-BD80-C205EB2541FA}</Project>
+      <Name>Server.TestHelpers.FieldVisitTestHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StageDischarge\Server.Plugins.FieldVisit.StageDischarge.csproj">
+      <Project>{6d325ff6-c0ad-4944-b5be-32d7eedf3cf1}</Project>
+      <Name>Server.Plugins.FieldVisit.StageDischarge</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+    <Folder Include="IntegrationTests\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="TestData\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
