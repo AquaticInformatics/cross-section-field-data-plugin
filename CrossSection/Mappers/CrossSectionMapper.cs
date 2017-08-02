@@ -1,7 +1,7 @@
+using System;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
 using Server.BusinessInterfaces.FieldDataPluginCore.Units;
 ﻿using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPluginCore.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using CrossSectionSurvey = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection.CrossSectionSurvey;
@@ -56,7 +56,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         {
             var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToNullableDouble();
             if (stageValue == null)
-                throw new ValidationException("Stage value is required");
+                throw new ArgumentException("Stage value is required");
 
             return new Measurement(stageValue.Value, unitSystem.DistanceUnitId);
         }
