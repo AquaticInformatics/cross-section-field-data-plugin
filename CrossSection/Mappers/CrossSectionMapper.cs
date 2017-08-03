@@ -56,7 +56,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
         {
             var stageValue = crossSectionSurvey.GetFieldValue(Stage).ToNullableDouble();
             if (stageValue == null)
-                throw new ArgumentException("Stage value is required");
+                throw new ArgumentNullException("Stage value is required");
 
             return new Measurement(stageValue.Value, unitSystem.DistanceUnitId);
         }
