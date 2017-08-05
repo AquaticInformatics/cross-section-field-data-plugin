@@ -32,15 +32,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FileHelpers, Version=2.9.9.0, Culture=neutral, PublicKeyToken=3e0c08d59cc3d657, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\NuGetPackages\FileHelpers-Stable.2.9.9\lib\4.0\FileHelpers.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>$(SolutionDir)NuGetPackages\FluentAssertions.2.2.0.0\lib\net45\FluentAssertions.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SolutionDir)NuGetPackages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>$(SolutionDir)NuGetPackages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="NSubstitute">
       <HintPath>$(SolutionDir)NuGetPackages\NSubstitute.1.10.0.0\lib\NET45\NSubstitute.dll</HintPath>
@@ -60,8 +57,16 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CsvDataParserTests.cs" />
+    <Compile Include="Helpers\DummyImportRecord.cs" />
+    <Compile Include="Helpers\InMemoryCsvFile.cs" />
+    <Compile Include="Helpers\DummyImportRecordBuilder.cs" />
+    <Compile Include="Helpers\ITestRecord.cs" />
+    <Compile Include="Helpers\StageDischargeRecordBuilder.cs" />
     <Compile Include="StageDischargeParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestData\HappyPathStageDischargeCsvFile.cs" />
+    <Compile Include="StageDischargeRecordTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Common\TestHelpers\NUnitExtensions\Common.TestHelpers.NUnitExtensions.csproj">
@@ -72,32 +77,27 @@
       <Project>{EFF15FAE-C4F0-483E-8FD0-89AAFB461461}</Project>
       <Name>Common.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore.UnitTests\Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests.csproj">
-      <Project>{3ac153f4-740d-4a11-b86a-3e8816417ccf}</Project>
-      <Name>Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
       <Name>Server.BusinessInterfaces.FieldDataPluginCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\Location\Server.BusinessInterfaces.Location.csproj">
-      <Project>{f8bbf570-72dc-4284-b94d-f3e7d536c62e}</Project>
-      <Name>Server.BusinessInterfaces.Location</Name>
+    <ProjectReference Include="..\..\..\BusinessObjects\FieldDataPlugIn\Server.BusinessObjects.FieldDataPlugin.csproj">
+      <Project>{80158CC8-7D3C-4C8D-94DE-1A53F7FD9D53}</Project>
+      <Name>Server.BusinessObjects.FieldDataPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\TestHelpers\FieldVisitTestHelpers\Server.TestHelpers.FieldVisitTestHelpers.csproj">
       <Project>{D49419AC-C2CC-495F-BD80-C205EB2541FA}</Project>
       <Name>Server.TestHelpers.FieldVisitTestHelpers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\TestHelpers\IntegrationTests.Common\Server.TestHelpers.IntegrationTests.Common.csproj">
+      <Project>{ED393086-479D-4346-AAE8-97EACED02B6A}</Project>
+      <Name>Server.TestHelpers.IntegrationTests.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StageDischarge\Server.Plugins.FieldVisit.StageDischarge.csproj">
-      <Project>{6d325ff6-c0ad-4944-b5be-32d7eedf3cf1}</Project>
+      <Project>{7b7a1374-3c35-4691-b29e-b22fdaba30b2}</Project>
       <Name>Server.Plugins.FieldVisit.StageDischarge</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="IntegrationTests\" />
-    <Folder Include="Mappers\" />
-    <Folder Include="TestData\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
