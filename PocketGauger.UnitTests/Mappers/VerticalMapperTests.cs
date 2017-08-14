@@ -160,8 +160,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
                     Assert.That(resultObservation.RevolutionCount, Is.EqualTo((int?)verticalItems[j].Revs));
                     Assert.That(resultObservation.ObservationInterval, Is.EqualTo(verticalItems[j].ExposureTime));
                     Assert.That(resultObservation.Velocity, Is.EqualTo(verticalItems[j].Velocity));
-                    Assert.That(resultObservation.DepthMultiplier, Is.EqualTo(1));
-                    Assert.That(resultObservation.Weighting, Is.EqualTo(1));
                 }
             }
         }
