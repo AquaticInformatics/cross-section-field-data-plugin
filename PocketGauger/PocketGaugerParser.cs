@@ -32,7 +32,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
                     var gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
 
-                    ProcessGaugingSummary(gaugingSummary, fieldDataResultsAppender);
+                    ProcessGaugingSummary(gaugingSummary, fieldDataResultsAppender, logger);
                 }
 
                 return ParseFileResult.SuccessfullyParsedAndDataValid();
@@ -86,7 +86,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             return new GaugingSummaryAssembler(new GaugingSummaryParser(), new MeterDetailsParser(), new PanelParser());
         }
 
-        public void ProcessGaugingSummary(GaugingSummary gaugingSummary, IFieldDataResultsAppender fieldDataResultsAppender)
+        public void ProcessGaugingSummary(GaugingSummary gaugingSummary, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
         {
             try
             {
@@ -104,12 +104,13 @@ namespace Server.Plugins.FieldVisit.PocketGauger
 
                     fieldDataResultsAppender.AddDischargeActivity(fieldVisitInfo, dischargeActivity);
                 }
+
+                logger.Info(Invariant($"Processed gauging summary with {gaugingSummary.GaugingSummaryItems.Count} item(s)"));
             }
             catch (Exception e)
             {
                 throw new PocketGaugerDataPersistenceException("Failed to persist pocket gauger data", e);
             }
-
         }
 
         private static DischargeActivityMapper CreateDischargeActivityMapper()

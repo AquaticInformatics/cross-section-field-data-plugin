@@ -13,6 +13,7 @@ using Server.BusinessInterfaces.FieldDataPluginCore;
 using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
+using Server.BusinessObjects.FieldDataPlugin.UnitTests;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.TestHelpers.FieldVisitTestHelpers.TestHelpers;
 using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
@@ -38,7 +39,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
             _fixture = new Fixture();
 
             _pocketGaugerParser = new PocketGaugerParser();
-            _logger = null;
+            _logger = new NullLog();
             _fieldDataResultsAppender = Substitute.For<IFieldDataResultsAppender>();
 
             _locationInfo = LocationInfoHelper.GetTestLocationInfo(_fixture);
@@ -145,7 +146,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             var gaugingSummary = new GaugingSummary { GaugingSummaryItems = gaugingSummaryItems };
 
-            _pocketGaugerParser.ProcessGaugingSummary(gaugingSummary, _fieldDataResultsAppender);
+            _pocketGaugerParser.ProcessGaugingSummary(gaugingSummary, _fieldDataResultsAppender, _logger);
 
             _fieldDataResultsAppender
                 .Received(expectedNumberOfItems)

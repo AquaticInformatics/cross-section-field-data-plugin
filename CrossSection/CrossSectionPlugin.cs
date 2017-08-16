@@ -11,6 +11,7 @@ using Server.Plugins.FieldVisit.CrossSection.Mappers;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using Server.Plugins.FieldVisit.CrossSection.Parsers;
 using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
+using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection
 {
@@ -21,7 +22,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
         {
             var fieldVisitHandler = new UnknownLocationHandler(fieldDataResultsAppender);
 
-            return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
+            return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler, logger);
         }
 
         public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
@@ -29,16 +30,16 @@ namespace Server.Plugins.FieldVisit.CrossSection
         {
             var fieldVisitHandler = new KnownLocationHandler(selectedLocation, fieldDataResultsAppender);
 
-            return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler);
+            return ParseFile(fileStream, fieldDataResultsAppender, fieldVisitHandler, logger);
         }
 
         private static ParseFileResult ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
-            IFieldVisitHandler fieldVisitHandler)
+            IFieldVisitHandler fieldVisitHandler, ILog logger)
         {
             CrossSectionSurvey parsedFileContents;
             try
             {
-                parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream);
+                parsedFileContents = ProcessFileStream(CreateCrossSectionParser(), fileStream, logger);
             }
             catch (CrossSectionCsvFormatException)
             {
@@ -93,9 +94,13 @@ namespace Server.Plugins.FieldVisit.CrossSection
             return new CrossSectionMapper(new CrossSectionPointMapper());
         }
 
-        private static CrossSectionSurvey ProcessFileStream(ICrossSectionParser parser, Stream fileStream)
+        private static CrossSectionSurvey ProcessFileStream(ICrossSectionParser parser, Stream fileStream, ILog logger)
         {
-            return parser.ParseFile(fileStream);
+            var crossSectionSurvey = parser.ParseFile(fileStream);
+
+            logger.Info(Invariant($"Parsed cross-section survey with {crossSectionSurvey.Points.Count} points"));
+
+            return crossSectionSurvey;
         }
     }
 }
