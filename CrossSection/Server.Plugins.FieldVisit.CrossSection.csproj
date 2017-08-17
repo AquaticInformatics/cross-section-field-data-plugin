@@ -40,6 +40,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CrossSectionFileParser.cs" />
     <Compile Include="FieldVisitHandlers\KnownFieldVisitHandler.cs" />
     <Compile Include="FieldVisitHandlers\KnownLocationHandler.cs" />
     <Compile Include="FieldVisitHandlers\UnknownLocationHandler.cs" />

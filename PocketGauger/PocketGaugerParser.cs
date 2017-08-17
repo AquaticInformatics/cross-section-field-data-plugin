@@ -3,11 +3,8 @@ using System.IO;
 using System.IO.Compression;
 using Server.BusinessInterfaces.FieldDataPluginCore;
 using Server.BusinessInterfaces.FieldDataPluginCore.Context;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
-using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.Parsers;
 using static System.FormattableString;
 using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
@@ -21,19 +18,10 @@ namespace Server.Plugins.FieldVisit.PocketGauger
         {
             try
             {
-                using (var zipArchive = GetZipArchive(fileStream))
-                using (var zipContents = GetZipContents(zipArchive))
-                {
-                    if (!zipContents.ContainsKey(FileNames.GaugingSummary))
-                    {
-                        throw new PocketGaugerZipFileMissingRequiredContentException(
-                            Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
-                    }
+                var gaugingSummary = ParseGaugingSummaryFromFile(fileStream);
 
-                    var gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
-
-                    ProcessGaugingSummary(gaugingSummary, fieldDataResultsAppender, logger);
-                }
+                var gaugingSummaryProcessor = new GaugingSummaryProcessor(fieldDataResultsAppender, logger);
+                gaugingSummaryProcessor.ProcessGaugingSummary(gaugingSummary);
 
                 return ParseFileResult.SuccessfullyParsedAndDataValid();
             }
@@ -50,6 +38,23 @@ namespace Server.Plugins.FieldVisit.PocketGauger
             {
                 return ParseFileResult.CannotParse(e);
             }
+        }
+
+        private static GaugingSummary ParseGaugingSummaryFromFile(Stream fileStream)
+        {
+            GaugingSummary gaugingSummary;
+            using (var zipArchive = GetZipArchive(fileStream))
+            using (var zipContents = GetZipContents(zipArchive))
+            {
+                if (!zipContents.ContainsKey(FileNames.GaugingSummary))
+                {
+                    throw new PocketGaugerZipFileMissingRequiredContentException(
+                        Invariant($"Zip file does not contain file {FileNames.GaugingSummary}"));
+                }
+
+                gaugingSummary = CreateGaugingSummaryAssembler().Assemble(zipContents);
+            }
+            return gaugingSummary;
         }
 
         public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
@@ -84,49 +89,6 @@ namespace Server.Plugins.FieldVisit.PocketGauger
         private static GaugingSummaryAssembler CreateGaugingSummaryAssembler()
         {
             return new GaugingSummaryAssembler(new GaugingSummaryParser(), new MeterDetailsParser(), new PanelParser());
-        }
-
-        public void ProcessGaugingSummary(GaugingSummary gaugingSummary, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
-        {
-            try
-            {
-                var dischargeActivityMapper = CreateDischargeActivityMapper();
-
-                foreach (var gaugingSummaryItem in gaugingSummary.GaugingSummaryItems)
-                {
-                    var locationIdentifier = gaugingSummaryItem.SiteId;
-                    var location = fieldDataResultsAppender.GetLocationByIdentifier(locationIdentifier);
-
-                    var dischargeActivity = dischargeActivityMapper.Map(gaugingSummaryItem, location.UtcOffset);
-
-                    var fieldVisit = CreateFieldVisit(dischargeActivity);
-                    var fieldVisitInfo = fieldDataResultsAppender.AddFieldVisit(location, fieldVisit);
-
-                    fieldDataResultsAppender.AddDischargeActivity(fieldVisitInfo, dischargeActivity);
-                }
-
-                logger.Info(Invariant($"Processed gauging summary with {gaugingSummary.GaugingSummaryItems.Count} item(s)"));
-            }
-            catch (Exception e)
-            {
-                throw new PocketGaugerDataPersistenceException("Failed to persist pocket gauger data", e);
-            }
-        }
-
-        private static DischargeActivityMapper CreateDischargeActivityMapper()
-        {
-            var meterCalibrationMapper = new MeterCalibrationMapper();
-            var verticalMapper = new VerticalMapper(meterCalibrationMapper);
-            var pointVelocityMapper = new PointVelocityMapper(verticalMapper);
-            return new DischargeActivityMapper(pointVelocityMapper);
-        }
-
-        private static FieldVisitDetails CreateFieldVisit(DischargeActivity dischargeActivity)
-        {
-            return new FieldVisitDetails(dischargeActivity.MeasurementPeriod)
-            {
-                Party = dischargeActivity.Party
-            };
         }
     }
 }

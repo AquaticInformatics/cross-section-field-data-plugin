@@ -45,6 +45,7 @@
     <Compile Include="Exceptions\PocketGaugerZipFileException.cs" />
     <Compile Include="Exceptions\PocketGaugerZipFileMissingRequiredContentException.cs" />
     <Compile Include="GaugingSummaryAssembler.cs" />
+    <Compile Include="GaugingSummaryProcessor.cs" />
     <Compile Include="Helpers\DoubleHelper.cs" />
     <Compile Include="Helpers\IntHelper.cs" />
     <Compile Include="Helpers\MeasurementHelper.cs" />
