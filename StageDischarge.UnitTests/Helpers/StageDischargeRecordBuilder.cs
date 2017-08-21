@@ -5,14 +5,14 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
 {
     class StageDischargeRecordBuilder
     {
-        private StageDischargeRecord _stageDischargeRecord;
+        private readonly StageDischargeRecord _stageDischargeRecord;
 
         private StageDischargeRecordBuilder()
         {
             _stageDischargeRecord = new StageDischargeRecord();
         }
 
-        public static StageDischargeRecordBuilder CreateBuilder()
+        public static StageDischargeRecordBuilder Build()
         {
             return new StageDischargeRecordBuilder();
         }
@@ -30,6 +30,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
         }
         public StageDischargeRecordBuilder WithMeasurementStartDateTime(DateTime measurementStartDateTime)
         {
+            _stageDischargeRecord.MeasurementStartDateTime = measurementStartDateTime;
             return this;
         }
         public StageDischargeRecordBuilder WithMeasurementEndDateTime(DateTime measurementEndDateTime)
@@ -108,10 +109,12 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
             return this;
         }
 
-        public StageDischargeRecord BuildRecord()
+        public StageDischargeRecord ARecord()
         {
+            // todo: replace with a copy/clone of the internal record to
+            // avoid situations where the builder is reused rather than 
+            // reinitialized
             return _stageDischargeRecord;
-
         }
     }
 }

@@ -1,31 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
-using static Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers.StageDischargeRecordBuilder;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData
 {
-    class HappyPathStageDischargeCsvFileBuilder
+    public class HappyPathStageDischargeCsvFileBuilder
     {
-        public static MemoryStream CreateCsvFile
+        public static MemoryStream CreateCsvFile()
         {
-            get
-            {
-                InMemoryCsvFile<StageDischargeRecord> csvFile =
-                    new InMemoryCsvFile<StageDischargeRecord>();
-                csvFile.AddRecord(CreateRecord());
-                return csvFile.GetInMemoryCsvFile();
-            }
+            InMemoryCsvFile<StageDischargeRecord> csvFile =
+                new InMemoryCsvFile<StageDischargeRecord>();
+            csvFile.AddRecord(CreateFullRecord());
+            return csvFile.GetInMemoryCsvFileStream();
         }
 
-        private static StageDischargeRecord CreateRecord()
+        public static StageDischargeRecord CreateFullRecord()
         {
-            return CreateBuilder()
+            return StageDischargeRecordBuilder.Build()
                     .WithLocationIdentifier("1234")
                     .WithMeasurementId("5678")
                     .WithMeasurementStartDateTime(new DateTime())
@@ -44,7 +36,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData
                     .WithVelocityUnits("m/s")
                     .WithParty("of one")
                     .WithComments("water is wet")
-                    .BuildRecord();
+                    .ARecord();
         }
     }
 }

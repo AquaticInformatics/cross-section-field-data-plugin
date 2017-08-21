@@ -5,10 +5,6 @@ using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
 {
-    /// <summary>
-    /// Create sample data 'files' for testing stage discharge plugin
-    /// </summary>
-    /// <typeparam name="TRecordType"></typeparam>
     class InMemoryCsvFile<TRecordType> where TRecordType : class, ISelfValidator
     {
         private readonly List<TRecordType> _records;
@@ -23,7 +19,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
             _records.Add(record);
         }
 
-        public MemoryStream GetInMemoryCsvFile()
+        public MemoryStream GetInMemoryCsvFileStream()
         {
             MemoryStream theMemStream = new MemoryStream();
             TextWriter writer = new StreamWriter(theMemStream);
@@ -34,6 +30,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
             {
                 engine.WriteNext(record);
             }
+            engine.Flush();
             theMemStream.Seek(0, SeekOrigin.Begin);
             return theMemStream;
         }

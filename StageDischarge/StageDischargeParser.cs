@@ -36,7 +36,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge
             }
         }
 
-        private IEnumerable<StageDischargeRecord> ParseStreamForRecords(Stream fileStream)
+        protected IEnumerable<StageDischargeRecord> ParseStreamForRecords(Stream fileStream)
         {
             return parser.ParseCsvData(fileStream);
         }
