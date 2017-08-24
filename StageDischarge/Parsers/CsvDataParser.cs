@@ -8,7 +8,7 @@ using Server.Plugins.FieldVisit.StageDischarge.Helpers;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
 {
-    class CsvDataParser<T> where T : class, ISelfValidator
+    public class CsvDataParser<T> where T : class, ISelfValidator
     {
         private Regex HeaderRegex { get; set; }
 

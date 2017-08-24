@@ -18,7 +18,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         private Fixture _fixture;
         private IFieldDataResultsAppender _mockAppender;
         private ILog _mockLogger;
-        private StageDischargeParser _csvDataParser;
+        private StageDischargePlugin _csvDataPlugin;
 
         [SetUp]
         public void BeforeTest()
@@ -26,7 +26,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             _fixture = new Fixture();
             _mockAppender = Substitute.For<IFieldDataResultsAppender>();
             _mockLogger = Substitute.For<ILog>();
-            _csvDataParser = new StageDischargeParser();
+            _csvDataPlugin = new StageDischargePlugin(new CsvDataParser<StageDischargeRecord>());
         }
 
         [Test]
@@ -35,9 +35,9 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             var csvFile = new InMemoryCsvFile<StageDischargeRecord>();
             StageDischargeRecord originalRecord = HappyPathStageDischargeCsvFileBuilder.CreateFullRecord();
             csvFile.AddRecord(originalRecord);
-            var stageDischargeParser = Substitute.For<StageDischargeParser>();
+            var stageDischargeParser = Substitute.For<StageDischargePlugin>();
             var stream = csvFile.GetInMemoryCsvFileStream();
-            var results = _csvDataParser.ParseFile(stream, _mockAppender, _mockLogger);
+            var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
             results.Status.Should().NotBe(ParseFileStatus.CannotParse, results.ErrorMessage);
 
         }

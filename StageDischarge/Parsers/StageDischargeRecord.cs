@@ -64,28 +64,21 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
 
         public void Validate()
         {
-            // be very careful that these rules match those specified in the AC of the work item
-
-            // cannot be null
             ValidationChecks.CannotBeNullOrEmpty(nameof(LocationIdentifier), LocationIdentifier);
             ValidationChecks.CannotBeNull(nameof(StageAtStart), StageAtStart);
             ValidationChecks.CannotBeNull(nameof(StageAtEnd), StageAtEnd);
             ValidationChecks.CannotBeNullOrEmpty(nameof(StageUnits), StageUnits);
             ValidationChecks.CannotBeNull(nameof(Discharge), Discharge);
             ValidationChecks.CannotBeNullOrEmpty(nameof(DischargeUnits), DischargeUnits);
-            ValidationChecks.CannotBeNullOrEmpty(nameof(VelocityUnits), VelocityUnits);
-            ValidationChecks.CannotBeNullOrEmpty(nameof(WidthUnits), WidthUnits);
-            ValidationChecks.CannotBeNullOrEmpty(nameof(AreaUnits), AreaUnits);
             ValidationChecks.CannotBeNullOrEmpty(nameof(ChannelName), ChannelName);
             ValidationChecks.CannotBeNull(nameof(ChannelWidth), ChannelWidth);
+            ValidationChecks.CannotBeNullOrEmpty(nameof(WidthUnits), WidthUnits);
+            ValidationChecks.CannotBeNullOrEmpty(nameof(AreaUnits), AreaUnits);
             ValidationChecks.CannotBeNullOrEmpty(nameof(VelocityUnits), VelocityUnits);
 
-            // conditional relationships
             ValidationChecks
                 .MustBeAValidInterval(nameof(MeasurementStartDateTime), MeasurementStartDateTime, 
                                       nameof(MeasurementEndDateTime), MeasurementEndDateTime);
-
-            throw new NotImplementedException();
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Server.Plugins.FieldVisit.StageDischarge.Helpers
+﻿namespace Server.Plugins.FieldVisit.StageDischarge.Helpers
 {
     public class CsvParserConstants
     {

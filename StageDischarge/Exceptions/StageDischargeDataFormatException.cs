@@ -10,6 +10,10 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Exceptions
         {
         }
 
+        public StageDischargeDataFormatException(Exception e) : base(e.Message, e)
+        {
+        }
+
         public StageDischargeDataFormatException(string message) : base(message)
         {
         }
