@@ -41,9 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrossSectionFileParser.cs" />
-    <Compile Include="FieldVisitHandlers\KnownFieldVisitHandler.cs" />
-    <Compile Include="FieldVisitHandlers\KnownLocationHandler.cs" />
-    <Compile Include="FieldVisitHandlers\UnknownLocationHandler.cs" />
     <Compile Include="Helpers\CrossSectionParserConstants.cs" />
     <Compile Include="Helpers\DateTimeOffsetHelper.cs" />
     <Compile Include="Helpers\DoubleHelper.cs" />
@@ -63,7 +60,7 @@
     <Compile Include="Model\CrossSectionSurvey.cs" />
     <Compile Include="Model\CrossSectionPoint.cs" />
     <Compile Include="Helpers\CrossSectionDataFields.cs" />
-    <Compile Include="FieldVisitHandlers\FieldVisitHandlerBase.cs" />
+    <Compile Include="FieldVisitHandlers\FieldVisitHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>

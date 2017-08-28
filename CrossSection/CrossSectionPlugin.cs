@@ -11,7 +11,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
         public ParseFileResult ParseFile(Stream fileStream, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
-            var fieldVisitHandler = new UnknownLocationHandler(fieldDataResultsAppender);
+            var fieldVisitHandler = new FieldVisitHandler(fieldDataResultsAppender);
 
             var fileParser = new CrossSectionFileParser(fieldDataResultsAppender, fieldVisitHandler, logger);
 
@@ -20,11 +20,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
 
         public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender, ILog logger)
         {
-            var fieldVisitHandler = new KnownLocationHandler(selectedLocation, fieldDataResultsAppender);
-
-            var fileParser = new CrossSectionFileParser(fieldDataResultsAppender, fieldVisitHandler, logger);
-
-            return fileParser.ParseFile(fileStream);
+            return ParseFile(fileStream, fieldDataResultsAppender, logger);
         }
     }
 }
