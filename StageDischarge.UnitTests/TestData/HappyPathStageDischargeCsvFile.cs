@@ -1,41 +1,41 @@
 ﻿using System;
 using System.IO;
+using Ploeh.AutoFixture;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData
 {
-    public class HappyPathStageDischargeCsvFileBuilder
+    public class StageDischargeCsvFileBuilder
     {
-        public static MemoryStream CreateCsvFile()
+        public static MemoryStream CreateCsvFile(IFixture fixture)
         {
-            InMemoryCsvFile<StageDischargeRecord> csvFile =
-                new InMemoryCsvFile<StageDischargeRecord>();
-            csvFile.AddRecord(CreateFullRecord());
+            InMemoryCsvFile<StageDischargeRecord> csvFile = new InMemoryCsvFile<StageDischargeRecord>();
+            csvFile.AddRecord(CreateFullRecord(fixture));
             return csvFile.GetInMemoryCsvFileStream();
         }
 
-        public static StageDischargeRecord CreateFullRecord()
+        public static StageDischargeRecord CreateFullRecord(IFixture fixture)
         {
             return StageDischargeRecordBuilder.Build()
-                    .WithLocationIdentifier("1234")
-                    .WithMeasurementId("5678")
-                    .WithMeasurementStartDateTime(new DateTime())
-                    .WithMeasurementEndDateTime(new DateTime())
-                    .WithStageAtStart(11)
-                    .WithStageAtEnd(12)
+                    .WithLocationIdentifier(fixture.Create<string>())
+                    .WithMeasurementId(fixture.Create<string>())
+                    .WithMeasurementStartDateTime(DateTime.Now)
+                    .WithMeasurementEndDateTime(DateTime.Today.AddHours(12))
+                    .WithStageAtStart(fixture.Create<double>())
+                    .WithStageAtEnd(fixture.Create<double>())
                     .WithStageUnits("m")
-                    .WithDischarge(132)
+                    .WithDischarge(fixture.Create<double>())
                     .WithDischargeUnits("m^3/s")
-                    .WithChannelName("channel1")
-                    .WithChannelWidth(10)
+                    .WithChannelName(fixture.Create<string>())
+                    .WithChannelWidth(fixture.Create<double>())
                     .WithWidthUnits("m")
-                    .WithChannelArea(100)
+                    .WithChannelArea(fixture.Create<double>())
                     .WithAreaUnits("m^2")
-                    .WithChannelVelocity(5)
+                    .WithChannelVelocity(fixture.Create<double>())
                     .WithVelocityUnits("m/s")
-                    .WithParty("of one")
-                    .WithComments("water is wet")
+                    .WithParty(fixture.Create<string>())
+                    .WithComments(fixture.Create<string>())
                     .ARecord();
         }
     }

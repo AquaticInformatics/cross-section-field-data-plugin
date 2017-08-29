@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using NUnit.Framework;
+using Ploeh.AutoFixture;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData;
@@ -10,10 +11,12 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
     [TestFixture]
     class StageDischargeRecordTests
     {
+        private IFixture _fixture;
+
         [SetUp]
         public void BeforeTests()
         {
-            // no-op
+            _fixture = new Fixture();
         }
 
         [Test]
@@ -21,31 +24,32 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         {
             StageDischargeRecord stageDischargeRecord = StageDischargeRecordBuilder.Build().ARecord();
             Action validationAction = () => stageDischargeRecord.Validate();
+
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "LocationIdentifier");
             stageDischargeRecord.LocationIdentifier = "";
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "LocationIdentifier");
-            stageDischargeRecord.LocationIdentifier = "location";
+            stageDischargeRecord.LocationIdentifier = _fixture.Create<string>();
 
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "StageAtStart");
-            stageDischargeRecord.StageAtStart = 123.4;
+            stageDischargeRecord.StageAtStart = _fixture.Create<double>();
 
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "StageAtEnd");
-            stageDischargeRecord.StageAtEnd = 123.4;
+            stageDischargeRecord.StageAtEnd = _fixture.Create<double>(); ;
 
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "StageUnits");
             stageDischargeRecord.StageUnits = "m/s";
 
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "Discharge");
-            stageDischargeRecord.Discharge = 22;
+            stageDischargeRecord.Discharge = _fixture.Create<double>(); ;
 
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "DischargeUnits");
             stageDischargeRecord.DischargeUnits = "m^3/s";
 
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "ChannelName");
-            stageDischargeRecord.ChannelName = "CBC";
+            stageDischargeRecord.ChannelName = _fixture.Create<string>();
 
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "ChannelWidth");
-            stageDischargeRecord.ChannelWidth = 100;
+            stageDischargeRecord.ChannelWidth = _fixture.Create<double>(); ;
 
             CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "WidthUnits");
             stageDischargeRecord.WidthUnits = "m";
@@ -69,7 +73,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         [Test]
         public void StageDischargeRecord_SelfValidate_Timestamps()
         {
-            StageDischargeRecord stageDischargeRecord = HappyPathStageDischargeCsvFileBuilder.CreateFullRecord();
+            StageDischargeRecord stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
             Action validationAction = () => stageDischargeRecord.Validate();
             stageDischargeRecord.MeasurementStartDateTime = DateTime.Now;
             stageDischargeRecord.MeasurementEndDateTime = stageDischargeRecord.MeasurementStartDateTime;

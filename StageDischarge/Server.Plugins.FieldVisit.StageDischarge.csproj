@@ -45,20 +45,15 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Helpers\CsvParseConstants.cs" />
+    <Compile Include="Interfaces\IDataParser.cs" />
     <Compile Include="Mappers\DischargeActivityMapper.cs" />
     <Compile Include="Parsers\CsvDataParser.cs" />
-    <Compile Include="Parsers\ISelfValidator.cs" />
-    <Compile Include="Parsers\ITestRecord.cs" />
+    <Compile Include="Interfaces\ISelfValidator.cs" />
     <Compile Include="Parsers\StageDischargeRecord.cs" />
-    <Compile Include="Exceptions\StageDischargeDataFormatException.cs" />
-    <Compile Include="Exceptions\StageDischargeDataPersistenceException.cs" />
     <Compile Include="StageDischargePlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Dtos\" />
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>

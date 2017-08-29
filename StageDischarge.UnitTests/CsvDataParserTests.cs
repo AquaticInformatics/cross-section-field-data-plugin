@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using FileHelpers;
 using FluentAssertions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
@@ -38,7 +39,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         [Test]
         public void ParseCsvData_nullStream()
         {
-            Action act = () => _csvDataParser.ParseCsvData(null);
+            Action act = () => _csvDataParser.ParseInputData(null);
             act.ShouldThrow<ArgumentNullException>();
         }
 
@@ -46,7 +47,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         public void ParseCsvData_emptyStream_returnsEmptyResults()
         { 
             Stream stream = new MemoryStream();
-            var results = _csvDataParser.ParseCsvData(stream);
+            var results = _csvDataParser.ParseInputData(stream);
             results.Should().BeEmpty();
         }
 
@@ -54,16 +55,16 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         public void ParseCSVData_invalidDataInStream_returnsEmptyResults()
         {
             var stream = new MemoryStream(Encoding.ASCII.GetBytes("This is not valid data for csv processing so don't get your hopes up"));
-            IEnumerable<DummyImportRecord> results = _csvDataParser.ParseCsvData(stream);
-            results.Should().BeEmpty();
+            Action act = () => _csvDataParser.ParseInputData(stream);
+            act.ShouldThrow<FileHelpersException>();
         }
 
         [Test]
         public void ParseCSVData_invalidCsvDataInStream_returnsEmptyResults()
         {
             var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nope,Not,Today\nthis,won't,work"));
-            IEnumerable<DummyImportRecord> results = _csvDataParser.ParseCsvData(stream);
-            results.Should().BeEmpty();
+            Action act = () => _csvDataParser.ParseInputData(stream);
+            act.ShouldThrow<FileHelpersException>();
         }
 
         [Test]
@@ -72,7 +73,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             int rows = 5;
             var memFile = CreateDummyImportFile(DummyImportRecordBuilder.StartBuilding(), rows);
             var stream = memFile.GetInMemoryCsvFileStream();
-            var results = _csvDataParser.ParseCsvData(stream);
+            var results = _csvDataParser.ParseInputData(stream);
             foreach (var dummyImportRecord in results)
             {
                 rows--;

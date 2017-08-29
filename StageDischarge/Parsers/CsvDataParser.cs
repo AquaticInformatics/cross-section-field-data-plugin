@@ -5,10 +5,11 @@ using System.Text.RegularExpressions;
 using FileHelpers;
 using FileHelpers.Events;
 using Server.Plugins.FieldVisit.StageDischarge.Helpers;
+using Server.Plugins.FieldVisit.StageDischarge.Interfaces;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
 {
-    public class CsvDataParser<T> where T : class, ISelfValidator
+    public class CsvDataParser<T> : IDataParser<T> where T : class, ISelfValidator
     {
         private Regex HeaderRegex { get; set; }
 
@@ -17,30 +18,19 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
         public double SkippedRecords { get; private set; }
 
         
-        public IEnumerable<T> ParseCsvData(Stream inputStream)
+        public IEnumerable<T> ParseInputData(Stream inputStream)
         {
             using (var reader = new StreamReader(inputStream))
             {
                 var parseEngine = CreateParserEngine();
                 CreateHeaderRegex(parseEngine);
-
-                // might be better to handle each record on a line-by-line basis
-                // rather than to buffer all of them and then process them.
-                var inputRecords = parseEngine.ReadStream(reader);
-                foreach (var record in inputRecords)
-                {
-                    // something something...
-                    Console.WriteLine(record);
-
-                }
-
-                return inputRecords;
+                return parseEngine.ReadStream(reader);
             }
         }
 
         private DelimitedFileEngine<T> CreateParserEngine()
         {
-            var parseEngine = new DelimitedFileEngine<T> {ErrorMode = ErrorMode.SaveAndContinue};
+            var parseEngine = new DelimitedFileEngine<T> {ErrorMode = ErrorMode.ThrowException};
             parseEngine.BeforeReadRecord += BeforeReadRecord;
             parseEngine.AfterReadRecord += AfterReadRecord;
             return parseEngine;

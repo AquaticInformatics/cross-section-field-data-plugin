@@ -7,8 +7,7 @@ using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
-using Server.BusinessInterfaces.FieldDataPluginCore.Units;
-using Server.Plugins.FieldVisit.StageDischarge.Exceptions;
+using Server.Plugins.FieldVisit.StageDischarge.Interfaces;
 using Server.Plugins.FieldVisit.StageDischarge.Mappers;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 
@@ -16,12 +15,16 @@ namespace Server.Plugins.FieldVisit.StageDischarge
 {
     public class StageDischargePlugin : IFieldDataPlugin
     {
-        private readonly CsvDataParser<StageDischargeRecord> _parser;
+        public const string NoRecordsInInputFile = "No records found in input file.";
+        public const string InputFileContainsInvalidRecords = "Input file contains invalid records.";
+        private readonly IDataParser<StageDischargeRecord> _parser;
         private IFieldDataResultsAppender _fieldDataResultsAppender;
         private readonly DischargeActivityMapper _dischargeActivityMapper;
 
-        // TODO: look into setting up dependancy injection
-        public StageDischargePlugin(CsvDataParser<StageDischargeRecord> parser)
+        public StageDischargePlugin() : this(new CsvDataParser<StageDischargeRecord>())
+        {}
+
+        public StageDischargePlugin(IDataParser<StageDischargeRecord> parser)
         {
             _parser = parser;
             _dischargeActivityMapper = new DischargeActivityMapper();
@@ -32,16 +35,23 @@ namespace Server.Plugins.FieldVisit.StageDischarge
             _fieldDataResultsAppender = fieldDataResultsAppender;
             try
             {
-                var parsedRecords = _parser.ParseCsvData(fileStream);
+                var parsedRecords = _parser.ParseInputData(fileStream);
+                if (parsedRecords == null)
+                {
+                    return ParseFileResult.CannotParse(NoRecordsInInputFile);
+                }
+                if (_parser.InvalidRecords > 0)
+                {
+                    return ParseFileResult.SuccessfullyParsedButDataInvalid(InputFileContainsInvalidRecords);
+                }
+
+                logger.Info($"Parsed {_parser.ValidRecords} from input file.");
                 SaveRecords(parsedRecords);
                 return ParseFileResult.SuccessfullyParsedAndDataValid();
             }
-            catch (StageDischargeDataFormatException sddfe)
-            {
-                return ParseFileResult.SuccessfullyParsedButDataInvalid(sddfe.Message);
-            }
             catch (Exception e)
             {
+                logger.Error($"Failed to parse file; {e.Message}");
                 return ParseFileResult.CannotParse(e);
             }
         }
@@ -71,14 +81,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge
             }
         }
 
-        /// <summary>
-        /// Any records that occur on the same day are assigned to the same visit. So, group them thusly 
-        /// (ie. by date). Each list of records per date are part of a visit.
-        /// </summary>
-        /// <param name="locationRecords"></param>
-        /// <param name="utcOffset"></param>
-        /// <returns></returns>
-        private Dictionary<DateTime, List<StageDischargeRecord>> 
+        private static Dictionary<DateTime, List<StageDischargeRecord>> 
             GetRecordsByDate(IEnumerable<StageDischargeRecord> locationRecords, TimeSpan utcOffset)
         {
             var recordsByDate = new Dictionary<DateTime, List<StageDischargeRecord>>();
@@ -129,18 +132,17 @@ namespace Server.Plugins.FieldVisit.StageDischarge
         }
 
         // TODO: examine
-        private string GetUniqueStrings(List<StageDischargeRecord> records, Func<StageDischargeRecord, string> selector)
+        private static string GetUniqueStrings(List<StageDischargeRecord> records, Func<StageDischargeRecord, string> selector)
         {
             return string.Join(", ", records.Select(selector)
                          .Where(s => !string.IsNullOrEmpty(s))
                          .Distinct());
         }
 
-        // TODO: implement
         public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,
             ILog logger)
         {
-            throw new NotImplementedException();
+            return ParseFile(fileStream, fieldDataResultsAppender, logger);
         }
     }
 }

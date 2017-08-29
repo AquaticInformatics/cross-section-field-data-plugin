@@ -35,13 +35,9 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Mappers
 
         private static ChannelMeasurementBase CreateChannelMeasurementFromRecord(StageDischargeRecord record, DateTimeInterval dischargeInterval, Measurement discharge)
         {
-            // use this instead?
-            ManualGaugingDischargeSection section 
-                = new ManualGaugingDischargeSectionFactory(CreateUnitSystem(record))
-                    {
-                        DefaultChannelName = record.ChannelName
-                    }
-                    .CreateManualGaugingDischargeSection(dischargeInterval, discharge.Value);
+            var section = new ManualGaugingDischargeSectionFactory(CreateUnitSystem(record))
+                { DefaultChannelName = record.ChannelName }
+                .CreateManualGaugingDischargeSection(dischargeInterval, discharge.Value);
 
             section.AreaValue = record.ChannelArea;
             section.AreaUnitId = record.AreaUnits;
