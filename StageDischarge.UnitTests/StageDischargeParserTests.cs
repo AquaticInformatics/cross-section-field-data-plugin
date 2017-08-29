@@ -6,7 +6,6 @@ using Common.TestHelpers.NUnitExtensions;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using NSubstitute.Routing.Handlers;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.BusinessInterfaces.FieldDataPluginCore;
@@ -14,7 +13,6 @@ using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.BusinessInterfaces.FieldDataPluginCore.Results;
-using Server.BusinessObjects.FieldDataPlugin.Exceptions;
 using Server.Plugins.FieldVisit.StageDischarge.Interfaces;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
@@ -120,10 +118,10 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         public void ParseFile_WithOneValidRowInCsvInputFileButUnknownLocation_SavesNothingAndReturnsCannotParse()
         {
             var stream = CreateValidCsvFileStream();
-            _mockAppender.GetLocationByIdentifier(Arg.Any<string>()).Throws(new UnknownLocationException("nope nope nope"));
+            _mockAppender.GetLocationByIdentifier(Arg.Any<string>()).Throws(new ArgumentException("nope nope nope"));
             var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
             results.Status.Should().Be(ParseFileStatus.CannotParse);
-            results.ErrorMessage.Should().Contain("UnknownLocationException");
+            results.ErrorMessage.Should().Contain("nope nope nope");
             _mockAppender.DidNotReceive().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
             _mockAppender.DidNotReceive().AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
         }

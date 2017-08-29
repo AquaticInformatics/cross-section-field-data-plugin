@@ -2,7 +2,7 @@
 using FileHelpers;
 using Server.BusinessInterfaces.FieldDataPluginCore.Validation;
 using Server.Plugins.FieldVisit.StageDischarge.Helpers;
-using Server.Plugins.FieldVisit.StageDischarge.Parsers;
+using Server.Plugins.FieldVisit.StageDischarge.Interfaces;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
 {

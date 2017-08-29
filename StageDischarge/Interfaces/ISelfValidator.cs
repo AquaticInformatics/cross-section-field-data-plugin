@@ -1,4 +1,4 @@
-﻿namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
+﻿namespace Server.Plugins.FieldVisit.StageDischarge.Interfaces
 {
     public interface ISelfValidator
     {

@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\Debug\FieldDataPlugins\Server.Plugins.FieldVisit.StageDischarge\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -23,7 +23,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\..\Release\FieldDataPlugins\Server.Plugins.FieldVisit.StageDischarge\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -44,6 +44,7 @@
     <Compile Include="..\..\..\..\AQCommonVersion\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Helpers\CsvDateTimeOffsetConverter.cs" />
     <Compile Include="Helpers\CsvParseConstants.cs" />
     <Compile Include="Interfaces\IDataParser.cs" />
     <Compile Include="Mappers\DischargeActivityMapper.cs" />
