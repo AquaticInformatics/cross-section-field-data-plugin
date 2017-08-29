@@ -21,7 +21,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers
             return CreateFieldVisit(location, crossSectionSurvey);
         }
 
-        protected FieldVisitInfo CreateFieldVisit(LocationInfo location, CrossSectionSurvey crossSectionSurvey)
+        private FieldVisitInfo CreateFieldVisit(LocationInfo location, CrossSectionSurvey crossSectionSurvey)
         {
             var fieldVisit = new FieldVisitDetails(crossSectionSurvey.SurveyPeriod) {Party = crossSectionSurvey.Party};
             return _fieldDataResultsAppender.AddFieldVisit(location, fieldVisit);
