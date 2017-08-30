@@ -42,41 +42,77 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         [Test]
         public void ParseFile_WithOneValidRowInCsvInputFile_ReadsAndSavesStageDischargeRecordsAndReturnsSuccess()
         {
-            var stream = CreateValidCsvFileStream();
-            _mockAppender.GetLocationByIdentifier(Arg.Any<string>()).Returns(LocationInfoHelper.GetTestLocationInfo(_fixture));
+            using (var stream = CreateValidCsvFileStream())
+            {
+                _mockAppender.GetLocationByIdentifier(Arg.Any<string>())
+                    .Returns(LocationInfoHelper.GetTestLocationInfo(_fixture));
 
-            var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
+                var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
 
-            results.Status.Should().NotBe(ParseFileStatus.CannotParse);
-            results.Status.Should().Be(ParseFileStatus.SuccessfullyParsedAndDataValid);
+                results.Status.Should().NotBe(ParseFileStatus.CannotParse);
 
-            _mockAppender.Received().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
-            _mockAppender.Received(1).AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+                _mockAppender.Received().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
+                _mockAppender.Received(1).AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+            }
         }
-        
+
         [Test]
-        public void ParseFile_WithSpecifiedLocation_callsLocationlessParseFile()
+        public void ParseFile_WithOneValidMinimalRowInCsvInputFile_ReadsAndSavesStageDischargeRecordsAndReturnsSuccess()
         {
-            var stream = CreateValidCsvFileStream();
-            var location = LocationInfoHelper.GetTestLocationInfo(_fixture);
-            _mockAppender.GetLocationByIdentifier(Arg.Any<string>()).Returns(LocationInfoHelper.GetTestLocationInfo(_fixture));
+            using (var stream = CreateMinimalValidFileStream())
+            {
+                _mockAppender.GetLocationByIdentifier(Arg.Any<string>())
+                    .Returns(LocationInfoHelper.GetTestLocationInfo(_fixture));
 
-            var results = _csvDataPlugin.ParseFile(stream, location, _mockAppender, _mockLogger);
+                var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
 
-            results.Status.Should().NotBe(ParseFileStatus.CannotParse);
-            results.Status.Should().Be(ParseFileStatus.SuccessfullyParsedAndDataValid);
+                results.Status.Should().NotBe(ParseFileStatus.CannotParse);
 
-            _mockAppender.Received().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
-            _mockAppender.Received(1).AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+                _mockAppender.Received().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
+                _mockAppender.Received(1).AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+            }
+        }
 
+        [Test]
+        public void ParseFile_WithLocationContextParseFile_CallsGlobalContextParseFile()
+        {
+            using (var stream = CreateValidCsvFileStream())
+            { 
+                var location = LocationInfoHelper.GetTestLocationInfo(_fixture);
+                _mockAppender.GetLocationByIdentifier(Arg.Any<string>())
+                    .Returns(LocationInfoHelper.GetTestLocationInfo(_fixture));
+
+                var results = _csvDataPlugin.ParseFile(stream, location, _mockAppender, _mockLogger);
+
+                results.Status.Should().NotBe(ParseFileStatus.CannotParse);
+                results.Status.Should().Be(ParseFileStatus.SuccessfullyParsedAndDataValid);
+
+                _mockAppender.Received().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
+                _mockAppender.Received(1).AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+            }
         }
 
         private Stream CreateValidCsvFileStream()
         {
-            var csvFile = new InMemoryCsvFile<StageDischargeRecord>();
             StageDischargeRecord originalRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            return CreateMemoryStream(originalRecord);
+        }
+
+        private Stream CreateMemoryStream(StageDischargeRecord originalRecord)
+        {
+            var csvFile = new InMemoryCsvFile<StageDischargeRecord>();
             csvFile.AddRecord(originalRecord);
             return csvFile.GetInMemoryCsvFileStream();
+        }
+
+        private Stream CreateMinimalValidFileStream()
+        {
+            StageDischargeRecord stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            stageDischargeRecord.ChannelWidth = null;
+            stageDischargeRecord.ChannelArea = null;
+            stageDischargeRecord.Party = null;
+            stageDischargeRecord.Comments = null;
+            return CreateMemoryStream(stageDischargeRecord);
         }
 
         [Test]
@@ -84,22 +120,25 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         {
             var csvFile = new InMemoryCsvFile<StageDischargeRecord>();
             PutNRecordsInCsvFile(5, ref csvFile);
-            var stream = csvFile.GetInMemoryCsvFileStream();
-            _mockAppender.GetLocationByIdentifier(Arg.Any<string>())
-                .Returns(LocationInfoHelper.GetTestLocationInfo(_fixture),
-                    LocationInfoHelper.GetTestLocationInfo(_fixture),
-                    LocationInfoHelper.GetTestLocationInfo(_fixture),
-                    LocationInfoHelper.GetTestLocationInfo(_fixture),
-                    LocationInfoHelper.GetTestLocationInfo(_fixture));
 
-            var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
+            using (var stream = csvFile.GetInMemoryCsvFileStream())
+            { 
+                _mockAppender.GetLocationByIdentifier(Arg.Any<string>())
+                    .Returns(LocationInfoHelper.GetTestLocationInfo(_fixture),
+                        LocationInfoHelper.GetTestLocationInfo(_fixture),
+                        LocationInfoHelper.GetTestLocationInfo(_fixture),
+                        LocationInfoHelper.GetTestLocationInfo(_fixture),
+                        LocationInfoHelper.GetTestLocationInfo(_fixture));
 
-            results.Status.Should().NotBe(ParseFileStatus.CannotParse, results.ErrorMessage);
-            results.Status.Should().Be(ParseFileStatus.SuccessfullyParsedAndDataValid);
+                var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
 
-            _mockAppender.Received().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
-            _mockAppender.Received(5).AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
-        }
+                results.Status.Should().NotBe(ParseFileStatus.CannotParse, results.ErrorMessage);
+                results.Status.Should().Be(ParseFileStatus.SuccessfullyParsedAndDataValid);
+
+                _mockAppender.Received().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
+                _mockAppender.Received(5).AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+            }
+    }
 
         private void PutNRecordsInCsvFile(int recordCount, ref InMemoryCsvFile<StageDischargeRecord> csvFile)
         {
@@ -117,25 +156,33 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         [Test]
         public void ParseFile_WithOneValidRowInCsvInputFileButUnknownLocation_SavesNothingAndReturnsCannotParse()
         {
-            var stream = CreateValidCsvFileStream();
-            _mockAppender.GetLocationByIdentifier(Arg.Any<string>()).Throws(new ArgumentException("nope nope nope"));
-            var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
-            results.Status.Should().Be(ParseFileStatus.CannotParse);
-            results.ErrorMessage.Should().Contain("nope nope nope");
-            _mockAppender.DidNotReceive().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
-            _mockAppender.DidNotReceive().AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
-        }
+            using (var stream = CreateValidCsvFileStream())
+            {
+                _mockAppender.GetLocationByIdentifier(Arg.Any<string>())
+                    .Throws(new ArgumentException("nope nope nope"));
 
+                var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
+
+                results.Status.Should().Be(ParseFileStatus.CannotParse);
+                results.ErrorMessage.Should().Contain("nope nope nope");
+                _mockAppender.DidNotReceive().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
+                _mockAppender.DidNotReceive()
+                    .AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+            }
+        }
 
         [Test]
         public void ParseFile_WithInvalidRowInputFile_SavesNothingAndReturnsCannotParse()
         {
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nope,Not,Today\nthis,won't,work"));
-            var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
+            using (var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nope,Not,Today\nthis,won't,work")))
+            {
+                var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
 
-            results.Status.Should().Be(ParseFileStatus.CannotParse, results.ErrorMessage);
-            _mockAppender.DidNotReceive().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
-            _mockAppender.DidNotReceive().AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+                results.Status.Should().Be(ParseFileStatus.CannotParse, results.ErrorMessage);
+                _mockAppender.DidNotReceive().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
+                _mockAppender.DidNotReceive()
+                    .AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+            }
         }
 
         [Test]
@@ -145,10 +192,13 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             mockCsvDataParser.ParseInputData(Arg.Any<Stream>()).Returns((IEnumerable<StageDischargeRecord>)null);
             var plugin = new StageDischargePlugin(mockCsvDataParser);
 
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nothing to see here folks..."));
-            var results = plugin.ParseFile(stream, _mockAppender, _mockLogger);
-            results.Status.Should().Be(ParseFileStatus.CannotParse);
-            results.ErrorMessage.Should().Contain(StageDischargePlugin.NoRecordsInInputFile);
+            using (var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nothing to see here folks...")))
+            {
+                var results = plugin.ParseFile(stream, _mockAppender, _mockLogger);
+
+                results.Status.Should().Be(ParseFileStatus.CannotParse);
+                results.ErrorMessage.Should().Contain(StageDischargePlugin.NoRecordsInInputFile);
+            }
         }
 
         [Test]
@@ -158,10 +208,12 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             mockCsvDataParser.ParseInputData(Arg.Any<Stream>()).Returns(_fixture.Create<IEnumerable<StageDischargeRecord>>());
             mockCsvDataParser.InvalidRecords.Returns(5);
             var plugin = new StageDischargePlugin(mockCsvDataParser);
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes("Good and bad data"));
-            var results = plugin.ParseFile(stream, _mockAppender, _mockLogger);
-            results.Status.Should().Be(ParseFileStatus.SuccessfullyParsedButDataInvalid);
-            results.ErrorMessage.Should().Contain(StageDischargePlugin.InputFileContainsInvalidRecords);
+            using (var stream = new MemoryStream(Encoding.ASCII.GetBytes("Good and bad data")))
+            {
+                var results = plugin.ParseFile(stream, _mockAppender, _mockLogger);
+                results.Status.Should().Be(ParseFileStatus.SuccessfullyParsedButDataInvalid);
+                results.ErrorMessage.Should().Contain(StageDischargePlugin.InputFileContainsInvalidRecords);
+            }
         }
     }
 }

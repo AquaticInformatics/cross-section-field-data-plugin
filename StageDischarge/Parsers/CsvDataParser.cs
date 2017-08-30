@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using FileHelpers;
@@ -52,7 +51,6 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
 
         private void BeforeReadRecord(EngineBase engine, BeforeReadEventArgs<T> e)
         {
-            // stolen from Doug - thanks Doug!
             if (!string.IsNullOrWhiteSpace(e.RecordLine) 
                 && !HeaderRegex.IsMatch(e.RecordLine) 
                 && !e.RecordLine.StartsWith(CsvParserConstants.CommentMarker))

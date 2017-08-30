@@ -3,7 +3,7 @@ using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
 {
-    class DummyImportRecordBuilder : ITestRecord<DummyImportRecord>
+    internal class DummyImportRecordBuilder : ITestRecord<DummyImportRecord>
     {
         private readonly DummyImportRecord _dummyImportRecord;
 
@@ -41,6 +41,12 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
             return this;
         }
 
+        public DummyImportRecordBuilder WithBool(bool boolean)
+        {
+            _dummyImportRecord.RecordBoolean = boolean;
+            return this;
+        }
+
         public DummyImportRecord ARecord()
         {
             return _dummyImportRecord;
@@ -52,6 +58,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
                     .WithString(Invariant($"loc{ordinal}"))
                     .WithOrdinal(ordinal)
                     .WithDateTime(new DateTime())
+                    .WithBool(true)
                     .ARecord();
         }
     }

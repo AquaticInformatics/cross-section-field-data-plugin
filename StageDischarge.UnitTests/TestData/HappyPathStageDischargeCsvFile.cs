@@ -21,7 +21,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData
                     .WithLocationIdentifier(fixture.Create<string>())
                     .WithMeasurementId(fixture.Create<string>())
                     .WithMeasurementStartDateTime(DateTime.Now)
-                    .WithMeasurementEndDateTime(DateTime.Today.AddHours(12))
+                    .WithMeasurementEndDateTime(DateTime.Now.AddHours(2))
                     .WithStageAtStart(fixture.Create<double>())
                     .WithStageAtEnd(fixture.Create<double>())
                     .WithStageUnits("m")

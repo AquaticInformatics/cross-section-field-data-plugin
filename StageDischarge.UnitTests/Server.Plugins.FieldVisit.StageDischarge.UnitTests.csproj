@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\..\..\Debug\</OutputPath>
+    <OutputPath>..\..\..\..\Debug\FieldDataPlugins\Server.Plugins.FieldVisit.StageDischarge.Tests\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -23,7 +23,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\..\..\..\Release\</OutputPath>
+    <OutputPath>..\..\..\..\Release\FieldDataPlugins\Server.Plugins.FieldVisit.StageDischarge.Tests\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -58,6 +58,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CsvDataParserTests.cs" />
+    <Compile Include="CsvDateTimeOffsetConverterTests.cs" />
     <Compile Include="Helpers\DummyImportRecord.cs" />
     <Compile Include="Helpers\InMemoryCsvFile.cs" />
     <Compile Include="Helpers\DummyImportRecordBuilder.cs" />
@@ -73,17 +74,9 @@
       <Project>{F3F1B55A-B551-43BE-973D-E770D7164A88}</Project>
       <Name>Common.TestHelpers.NUnitExtensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\Utils\Common.Utils\Common.Utils.csproj">
-      <Project>{EFF15FAE-C4F0-483E-8FD0-89AAFB461461}</Project>
-      <Name>Common.Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
       <Name>Server.BusinessInterfaces.FieldDataPluginCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\BusinessObjects\FieldDataPlugIn\Server.BusinessObjects.FieldDataPlugin.csproj">
-      <Project>{80158CC8-7D3C-4C8D-94DE-1A53F7FD9D53}</Project>
-      <Name>Server.BusinessObjects.FieldDataPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\TestHelpers\FieldVisitTestHelpers\Server.TestHelpers.FieldVisitTestHelpers.csproj">
       <Project>{D49419AC-C2CC-495F-BD80-C205EB2541FA}</Project>
