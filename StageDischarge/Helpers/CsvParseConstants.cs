@@ -4,8 +4,5 @@
     {
         public const string FieldDelimiter = ",";
         public const string CommentMarker = "#";
-        public const int MaximumErrorCount = 5;
-        public const string DefaultChannelName = "Main";
-        public const string DefaultPartyName = "Unknown";
     }
 }
