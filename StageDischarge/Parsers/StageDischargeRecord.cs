@@ -16,10 +16,10 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
         public string MeasurementId;
 
         [FieldOrder(3), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldConverter(typeof(CsvDateTimeOffsetConverter))]
-        public DateTime MeasurementStartDateTime;
+        public DateTimeOffset MeasurementStartDateTime;
 
         [FieldOrder(4), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldConverter(typeof(CsvDateTimeOffsetConverter))]
-        public DateTime MeasurementEndDateTime;
+        public DateTimeOffset MeasurementEndDateTime;
 
         [FieldOrder(5), FieldTrim(TrimMode.Both)]
         public double? StageAtStart;

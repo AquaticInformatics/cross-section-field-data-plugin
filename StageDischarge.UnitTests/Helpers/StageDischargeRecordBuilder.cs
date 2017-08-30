@@ -28,12 +28,12 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
             _stageDischargeRecord.MeasurementId = measurementId;
             return this;
         }
-        public StageDischargeRecordBuilder WithMeasurementStartDateTime(DateTime measurementStartDateTime)
+        public StageDischargeRecordBuilder WithMeasurementStartDateTime(DateTimeOffset measurementStartDateTime)
         {
             _stageDischargeRecord.MeasurementStartDateTime = measurementStartDateTime;
             return this;
         }
-        public StageDischargeRecordBuilder WithMeasurementEndDateTime(DateTime measurementEndDateTime)
+        public StageDischargeRecordBuilder WithMeasurementEndDateTime(DateTimeOffset measurementEndDateTime)
         {
             _stageDischargeRecord.MeasurementEndDateTime = measurementEndDateTime;
             return this;
