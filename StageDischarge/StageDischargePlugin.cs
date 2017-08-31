@@ -60,8 +60,8 @@ namespace Server.Plugins.FieldVisit.StageDischarge
         {
             var sortedRecordsByLocation = parsedRecords
                 .GroupBy(r => r.LocationIdentifier)
-                .ToDictionary(r => _fieldDataResultsAppender.GetLocationByIdentifier(r.Key),    // convert locationId to LocationInfo
-                              v => v.OrderBy(x => x.MeasurementStartDateTime).ToList());        // list of records for each LocationInfo
+                .ToDictionary(r => _fieldDataResultsAppender.GetLocationByIdentifier(r.Key),
+                              v => v.OrderBy(x => x.MeasurementStartDateTime).ToList());
 
             foreach (var locationInfo in sortedRecordsByLocation.Keys.OrderBy(l => l.LocationIdentifier))
             {
@@ -71,72 +71,35 @@ namespace Server.Plugins.FieldVisit.StageDischarge
 
         private void CreateVisitsAndDischargeActivities(LocationInfo location, IEnumerable<StageDischargeRecord> locationRecords)
         {
-            var recordsByDate = GetRecordsByDate(locationRecords, location.UtcOffset);
-
-            // create a visit per date. 
-            foreach (var startofDay in recordsByDate.Keys.OrderBy(d => d.Ticks))
+            foreach (var stageDischargeRecord in locationRecords)
             {
-                var fieldVisit = CreateVisit(location, recordsByDate[startofDay]);
-                CreateDischargeActivitiesForVisit(fieldVisit, recordsByDate[startofDay]);
+                var fieldVisit = CreateVisit(location, stageDischargeRecord);
+                CreateDischargeActivityForVisit(fieldVisit, stageDischargeRecord);
             }
         }
 
-        private static Dictionary<DateTime, List<StageDischargeRecord>> 
-            GetRecordsByDate(IEnumerable<StageDischargeRecord> locationRecords, TimeSpan utcOffset)
+        private FieldVisitInfo CreateVisit(LocationInfo location, StageDischargeRecord visitRecord)
         {
-            var recordsByDate = new Dictionary<DateTime, List<StageDischargeRecord>>();
-            foreach (var record in locationRecords)
-            {
-                var startOfDay = record.MeasurementStartDateTime.Date.Subtract(utcOffset);
-
-                List<StageDischargeRecord> dateRecords;
-                if (!recordsByDate.TryGetValue(startOfDay, out dateRecords))
-                {
-                    dateRecords = new List<StageDischargeRecord>();
-                    recordsByDate.Add(startOfDay, dateRecords);
-                }
-
-                dateRecords.Add(record);
-            }
-
-            return recordsByDate;
-        }
-
-
-        private FieldVisitInfo CreateVisit(LocationInfo location, List<StageDischargeRecord> visitRecordsForLocation)
-        {
-            var visitStart = visitRecordsForLocation.Min(r => r.MeasurementStartDateTime);
-            var visitEnd = visitRecordsForLocation.Max(r => r.MeasurementEndDateTime);
+            var visitStart = visitRecord.MeasurementStartDateTime;
+            var visitEnd = visitRecord.MeasurementEndDateTime;
 
             var fieldVisitDetails = new FieldVisitDetails(new DateTimeInterval(visitStart, visitEnd))
             {
-                Comments = GetUniqueStrings(visitRecordsForLocation, r => r.Comments),
-                Party = GetUniqueStrings(visitRecordsForLocation, r => r.Party)
+                Comments = visitRecord.Comments,
+                Party = visitRecord.Party
             };
 
             return _fieldDataResultsAppender.AddFieldVisit(location, fieldVisitDetails);
         }
 
-        private void CreateDischargeActivitiesForVisit(FieldVisitInfo fieldVisit, List<StageDischargeRecord> visitRecords)
+        private void CreateDischargeActivityForVisit(FieldVisitInfo fieldVisit, StageDischargeRecord visitRecord)
         {
-            var dischargeActivities = visitRecords.Select(CreateDischargeActivityFromRecord).ToList();
-            foreach (var dischargeActivity in dischargeActivities)
-            {
-                _fieldDataResultsAppender.AddDischargeActivity(fieldVisit, dischargeActivity);
-            }
+            _fieldDataResultsAppender.AddDischargeActivity(fieldVisit, CreateDischargeActivityFromRecord(visitRecord));
         }
 
         private DischargeActivity CreateDischargeActivityFromRecord(StageDischargeRecord record)
         {
             return _dischargeActivityMapper.FromStageDischargeRecord(record);
-        }
-
-        // TODO: examine
-        private static string GetUniqueStrings(List<StageDischargeRecord> records, Func<StageDischargeRecord, string> selector)
-        {
-            return string.Join(", ", records.Select(selector)
-                         .Where(s => !string.IsNullOrEmpty(s))
-                         .Distinct());
         }
 
         public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,

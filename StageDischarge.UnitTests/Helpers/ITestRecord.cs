@@ -1,5 +1,4 @@
-﻿
-using Server.Plugins.FieldVisit.StageDischarge.Interfaces;
+﻿using Server.Plugins.FieldVisit.StageDischarge.Interfaces;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
 {
