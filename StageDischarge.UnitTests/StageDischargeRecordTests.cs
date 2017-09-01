@@ -3,13 +3,12 @@ using FluentAssertions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
-using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 {
     [TestFixture]
-    class StageDischargeRecordTests
+    internal class StageDischargeRecordTests
     {
         private IFixture _fixture;
 
@@ -19,55 +18,43 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
             _fixture = new Fixture();
         }
 
-        [Test]
-        public void StageDischargeRecord_SelfValidate_detectsNullsInRequiredFields()
+        [TestCase("LocationIdentifier")]
+        [TestCase("StageAtStart")]
+        [TestCase("StageAtEnd")]
+        [TestCase("StageUnits")]
+        [TestCase("Discharge")]
+        [TestCase("DischargeUnits")]
+        [TestCase("ChannelName")]
+        [TestCase("ChannelWidth")]
+        [TestCase("WidthUnits")]
+        [TestCase("AreaUnits")]
+        [TestCase("VelocityUnits")]
+        public void StageDischargeRecord_SelfValidateWithNullPropertyValue_DetectsNull(string propertyName)
         {
-            StageDischargeRecord stageDischargeRecord = StageDischargeRecordBuilder.Build().ARecord();
-            Action validationAction = () => stageDischargeRecord.Validate();
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "LocationIdentifier");
-            stageDischargeRecord.LocationIdentifier = "";
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "LocationIdentifier");
-            stageDischargeRecord.LocationIdentifier = _fixture.Create<string>();
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "StageAtStart");
-            stageDischargeRecord.StageAtStart = _fixture.Create<double>();
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "StageAtEnd");
-            stageDischargeRecord.StageAtEnd = _fixture.Create<double>(); ;
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "StageUnits");
-            stageDischargeRecord.StageUnits = "m/s";
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "Discharge");
-            stageDischargeRecord.Discharge = _fixture.Create<double>(); ;
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "DischargeUnits");
-            stageDischargeRecord.DischargeUnits = "m^3/s";
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "ChannelName");
-            stageDischargeRecord.ChannelName = _fixture.Create<string>();
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "ChannelWidth");
-            stageDischargeRecord.ChannelWidth = _fixture.Create<double>(); ;
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "WidthUnits");
-            stageDischargeRecord.WidthUnits = "m";
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "AreaUnits");
-            stageDischargeRecord.AreaUnits = "m^2";
-
-            CheckExpectedExceptionAndMessage<ArgumentNullException>(validationAction, "VelocityUnits");
-            stageDischargeRecord.VelocityUnits = "m/s";
-
-            validationAction.ShouldNotThrow();
+            var stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            CheckExpectedExceptionAndMessageWhenSpecifiedFieldIsNull<ArgumentNullException>(stageDischargeRecord, propertyName);
         }
 
-        private void CheckExpectedExceptionAndMessage<E>(Action validate, string messagePart) where E : Exception
+        private void CheckExpectedExceptionAndMessageWhenSpecifiedFieldIsNull<E>(StageDischargeRecord stageDischargeRecord, string propertyName) where E : Exception
         {
-            validate
+            var field = stageDischargeRecord.GetType().GetField(propertyName);
+            if (field != null)
+            {
+                field.SetValue(stageDischargeRecord, null);
+            }
+
+            Action validationAction = () => stageDischargeRecord.Validate();
+            validationAction
                 .ShouldThrow<E>()
-                .And.Message.Should().Contain(messagePart);
+                .And.Message.Should().Contain(propertyName);
+        }
+
+        [Test]
+        public void StageDischargeRecord_SelfValidateWithAllRequiredValues_DoesNotThrow()
+        {
+            var stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            Action noThrowAction = () => stageDischargeRecord.Validate();
+            noThrowAction.ShouldNotThrow();
         }
 
         [Test]
@@ -75,15 +62,15 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         {
             StageDischargeRecord stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
             Action validationAction = () => stageDischargeRecord.Validate();
-            stageDischargeRecord.MeasurementStartDateTime = DateTime.Now;
+            stageDischargeRecord.MeasurementStartDateTime = DateTimeOffset.Now;
             stageDischargeRecord.MeasurementEndDateTime = stageDischargeRecord.MeasurementStartDateTime;
             validationAction.ShouldNotThrow();
 
-            stageDischargeRecord.MeasurementEndDateTime = DateTime.Now.AddDays(1);
+            stageDischargeRecord.MeasurementEndDateTime = DateTimeOffset.Now.AddDays(1);
             validationAction.ShouldNotThrow();
 
-            stageDischargeRecord.MeasurementStartDateTime = DateTime.Now.AddDays(200);
-            CheckExpectedExceptionAndMessage<ArgumentException>(validationAction, "MeasurementStartDateTime");
+            stageDischargeRecord.MeasurementStartDateTime = DateTimeOffset.Now.AddDays(200);
+            validationAction.ShouldThrow<ArgumentException>().And.Message.Should().Contain("MeasurementStartDateTime");
         }
     }
 }

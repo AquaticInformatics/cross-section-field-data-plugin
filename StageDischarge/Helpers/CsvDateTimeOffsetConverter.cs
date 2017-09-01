@@ -19,6 +19,8 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Helpers
 
         public override string FieldToString(object from)
         {
+            if (from == null) return "";
+
             var dateTimeOffset = (DateTimeOffset)from;
             return dateTimeOffset.ToString(Format, CultureInfo.InvariantCulture);
         }

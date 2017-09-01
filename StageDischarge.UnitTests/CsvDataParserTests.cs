@@ -4,25 +4,20 @@ using System.Text;
 using FileHelpers;
 using FluentAssertions;
 using NUnit.Framework;
-using Ploeh.AutoFixture;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
-using Server.TestHelpers.IntegrationTests.Common.FixtureHelpers;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 {
     [TestFixture]
-    class CsvDataParserTests
+    internal class CsvDataParserTests
     {
         private CsvDataParser<DummyImportRecord> _csvDataParser;
-        private IFixture _fixture;
-
 
         [SetUp]
         public void BeforeTest()
         {
             _csvDataParser = new CsvDataParser<DummyImportRecord>();
-            _fixture = AutoFixtureHelper.GetCommonFixture();
         }
 
         private InMemoryCsvFile<DummyImportRecord> CreateDummyImportFile(DummyImportRecordBuilder recordBuilder, int rowCount = 5)
@@ -36,49 +31,58 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         }
 
         [Test]
-        public void ParseCsvData_nullStream()
+        public void ParseCsvData_WithNullStream_ThrowsException()
         {
-            Action act = () => _csvDataParser.ParseInputData(null);
-            act.ShouldThrow<ArgumentNullException>();
+            Action parseAction = () => _csvDataParser.ParseInputData(null);
+            parseAction.ShouldThrow<ArgumentNullException>();
         }
 
         [Test]
-        public void ParseCsvData_emptyStream_returnsEmptyResults()
-        { 
-            Stream stream = new MemoryStream();
-            var results = _csvDataParser.ParseInputData(stream);
-            results.Should().BeEmpty();
-        }
-
-        [Test]
-        public void ParseCSVData_invalidDataInStream_returnsEmptyResults()
+        public void ParseCsvData_WithEmptyStream_ReturnsEmptyResults()
         {
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes("This is not valid data for csv processing so don't get your hopes up"));
-            Action act = () => _csvDataParser.ParseInputData(stream);
-            act.ShouldThrow<FileHelpersException>();
-        }
-
-        [Test]
-        public void ParseCSVData_invalidCsvDataInStream_returnsEmptyResults()
-        {
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nope,Not,Today\nthis,won't,work"));
-            Action act = () => _csvDataParser.ParseInputData(stream);
-            act.ShouldThrow<FileHelpersException>();
-        }
-
-        [Test]
-        public void ParseFile_validStream()
-        {
-            int rows = 5;
-            var memFile = CreateDummyImportFile(DummyImportRecordBuilder.StartBuilding(), rows);
-            var stream = memFile.GetInMemoryCsvFileStream();
-            var results = _csvDataParser.ParseInputData(stream);
-            foreach (var dummyImportRecord in results)
-            {
-                rows--;
-                ValidateRowData(dummyImportRecord);
+            using (Stream stream = new MemoryStream())
+            { 
+                var results = _csvDataParser.ParseInputData(stream);
+                results.Should().BeEmpty();
             }
-            rows.Should().Be(0);
+        }
+
+        [Test]
+        public void ParseCsvData_InvalidDataInStream_ReturnsEmptyResults()
+        {
+            using (var stream =
+                new MemoryStream(
+                    Encoding.ASCII.GetBytes("This is not valid data for csv processing so don't get your hopes up")))
+            {
+                Action parseAction = () => _csvDataParser.ParseInputData(stream);
+                parseAction.ShouldThrow<FileHelpersException>();
+            }
+        }
+
+        [Test]
+        public void ParseCsvData_InvalidCsvDataInStream_ReturnsEmptyResults()
+        {
+            using (var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nope,Not,Today\nthis,won't,work")))
+            {
+                Action parseAction = () => _csvDataParser.ParseInputData(stream);
+                parseAction.ShouldThrow<FileHelpersException>();
+            }
+        }
+
+        [Test]
+        public void ParseFile_ValidStream_ReadsAllRows()
+        {
+            var memFile = CreateDummyImportFile(DummyImportRecordBuilder.StartBuilding());
+            {
+                using (var stream = memFile.GetInMemoryCsvFileStream())
+                {
+                    var results = _csvDataParser.ParseInputData(stream);
+                    foreach (var dummyImportRecord in results)
+                    {
+                        ValidateRowData(dummyImportRecord);
+                    }
+                }
+            }
         }
 
         private void ValidateRowData(DummyImportRecord record)

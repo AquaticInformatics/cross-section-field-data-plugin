@@ -13,6 +13,9 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
         [FieldOrder(2)] public string RecordString;
         [FieldOrder(3)] public DateTime? RecordDateTime;
         [FieldOrder(4)] public double? RecordOrdinal;
+        [FieldOrder(5), FieldConverter(typeof(CsvDateTimeOffsetConverter))] public DateTimeOffset? RecordDateTimeOffset;
+        [FieldOrder(6)] public bool? RecordBoolean;
+
 
         public void Validate()
         {

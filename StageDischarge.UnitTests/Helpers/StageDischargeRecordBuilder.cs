@@ -3,7 +3,7 @@ using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers
 {
-    class StageDischargeRecordBuilder
+    internal class StageDischargeRecordBuilder
     {
         private readonly StageDischargeRecord _stageDischargeRecord;
 
