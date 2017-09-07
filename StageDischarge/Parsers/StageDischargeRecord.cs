@@ -46,7 +46,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
         public string WidthUnits;
 
         [FieldOrder(13), FieldTrim(TrimMode.Both)]
-        public double ChannelArea;
+        public double? ChannelArea;
 
         [FieldOrder(14), FieldTrim(TrimMode.Both)]
         public string AreaUnits;
@@ -72,7 +72,6 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
             ValidationChecks.CannotBeNull(nameof(Discharge), Discharge);
             ValidationChecks.CannotBeNullOrEmpty(nameof(DischargeUnits), DischargeUnits);
             ValidationChecks.CannotBeNullOrEmpty(nameof(ChannelName), ChannelName);
-            ValidationChecks.CannotBeNull(nameof(ChannelWidth), ChannelWidth);
             ValidationChecks.CannotBeNullOrEmpty(nameof(WidthUnits), WidthUnits);
             ValidationChecks.CannotBeNullOrEmpty(nameof(AreaUnits), AreaUnits);
             ValidationChecks.CannotBeNullOrEmpty(nameof(VelocityUnits), VelocityUnits);

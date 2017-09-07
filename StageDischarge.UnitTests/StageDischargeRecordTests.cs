@@ -25,7 +25,6 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         [TestCase("Discharge")]
         [TestCase("DischargeUnits")]
         [TestCase("ChannelName")]
-        [TestCase("ChannelWidth")]
         [TestCase("WidthUnits")]
         [TestCase("AreaUnits")]
         [TestCase("VelocityUnits")]
@@ -37,17 +36,43 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 
         private void CheckExpectedExceptionAndMessageWhenSpecifiedFieldIsNull<E>(StageDischargeRecord stageDischargeRecord, string propertyName) where E : Exception
         {
-            var field = stageDischargeRecord.GetType().GetField(propertyName);
-            if (field != null)
-            {
-                field.SetValue(stageDischargeRecord, null);
-            }
+
+            SetValueToNull(ref stageDischargeRecord, propertyName);
 
             Action validationAction = () => stageDischargeRecord.Validate();
             validationAction
                 .ShouldThrow<E>()
                 .And.Message.Should().Contain(propertyName);
         }
+
+        private void SetValueToNull(ref StageDischargeRecord stageDischargeRecord, string propertyName)
+        {
+            var field = stageDischargeRecord.GetType().GetField(propertyName);
+            if (field != null)
+            {
+                field.SetValue(stageDischargeRecord, null);
+            }
+        }
+
+        [TestCase("MeasurementId")]
+        [TestCase("ChannelWidth")]
+        [TestCase("ChannelArea")]
+        [TestCase("ChannelVelocity")]
+        [TestCase("Party")]
+        [TestCase("Comments")]
+        public void StageDischargeRecord_SelfValidateWithNullableProperties_DoesNotThrow(string propertyName)
+        {
+            var stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            CheckNoExceptionWhenSpecifiedFieldIsNull(stageDischargeRecord, propertyName);
+        }
+
+        private void CheckNoExceptionWhenSpecifiedFieldIsNull(StageDischargeRecord stageDischargeRecord, string propertyName)
+        {
+            SetValueToNull(ref stageDischargeRecord, propertyName);
+            Action validationAction = () => stageDischargeRecord.Validate();
+            validationAction.ShouldNotThrow();
+        }
+
 
         [Test]
         public void StageDischargeRecord_SelfValidateWithAllRequiredValues_DoesNotThrow()

@@ -58,6 +58,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CsvDataParserTests.cs" />
+    <Compile Include="CsvDateTimeOffsetConverterTests.cs" />
     <Compile Include="Helpers\DummyImportRecord.cs" />
     <Compile Include="Helpers\InMemoryCsvFile.cs" />
     <Compile Include="Helpers\DummyImportRecordBuilder.cs" />

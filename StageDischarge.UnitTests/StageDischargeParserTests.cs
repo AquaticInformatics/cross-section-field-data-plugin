@@ -57,6 +57,23 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         }
 
         [Test]
+        public void ParseFile_WithOneValidMinimalRowInCsvInputFile_ReadsAndSavesStageDischargeRecordsAndReturnsSuccess()
+        {
+            using (var stream = CreateMinimalValidFileStream())
+            {
+                _mockAppender.GetLocationByIdentifier(Arg.Any<string>())
+                    .Returns(LocationInfoHelper.GetTestLocationInfo(_fixture));
+
+                var results = _csvDataPlugin.ParseFile(stream, _mockAppender, _mockLogger);
+
+                results.Status.Should().NotBe(ParseFileStatus.CannotParse);
+
+                _mockAppender.Received().AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
+                _mockAppender.Received(1).AddDischargeActivity(Arg.Any<FieldVisitInfo>(), Arg.Any<DischargeActivity>());
+            }
+        }
+
+        [Test]
         public void ParseFile_WithLocationContextParseFile_CallsGlobalContextParseFile()
         {
             using (var stream = CreateValidCsvFileStream())
@@ -77,10 +94,25 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 
         private Stream CreateValidCsvFileStream()
         {
-            var csvFile = new InMemoryCsvFile<StageDischargeRecord>();
             StageDischargeRecord originalRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            return CreateMemoryStream(originalRecord);
+        }
+
+        private Stream CreateMemoryStream(StageDischargeRecord originalRecord)
+        {
+            var csvFile = new InMemoryCsvFile<StageDischargeRecord>();
             csvFile.AddRecord(originalRecord);
             return csvFile.GetInMemoryCsvFileStream();
+        }
+
+        private Stream CreateMinimalValidFileStream()
+        {
+            StageDischargeRecord stageDischargeRecord = StageDischargeCsvFileBuilder.CreateFullRecord(_fixture);
+            stageDischargeRecord.ChannelWidth = null;
+            stageDischargeRecord.ChannelArea = null;
+            stageDischargeRecord.Party = null;
+            stageDischargeRecord.Comments = null;
+            return CreateMemoryStream(stageDischargeRecord);
         }
 
         [Test]
