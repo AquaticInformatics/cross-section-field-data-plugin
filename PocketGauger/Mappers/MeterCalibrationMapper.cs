@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Meters;
+using FieldDataPluginFramework.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
-using MeterCalibration = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Meters.MeterCalibration;
-using MeterType = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Meters.MeterType;
+using MeterCalibration = FieldDataPluginFramework.DataModel.Meters.MeterCalibration;
+using MeterType = FieldDataPluginFramework.DataModel.Meters.MeterType;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Mappers
 {

@@ -1,8 +1,8 @@
 using System;
-using Server.BusinessInterfaces.FieldDataPluginCore;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPluginCore.Results;
+using FieldDataPluginFramework;
+using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.DischargeActivities;
+using FieldDataPluginFramework.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Exceptions;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;

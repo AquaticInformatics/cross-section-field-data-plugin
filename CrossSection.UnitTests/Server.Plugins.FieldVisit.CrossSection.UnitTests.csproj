@@ -68,9 +68,9 @@
       <Project>{F3F1B55A-B551-43BE-973D-E770D7164A88}</Project>
       <Name>Common.TestHelpers.NUnitExtensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
-      <Project>{A37B4978-D615-4092-BEC8-27AABFD2681E}</Project>
-      <Name>Server.BusinessInterfaces.FieldDataPluginCore</Name>
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPluginFramework\Server.BusinessInterfaces.FieldDataPluginFramework.csproj">
+      <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
+      <Name>Server.BusinessInterfaces.FieldDataPluginFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\CrossSection\Server.Plugins.FieldVisit.CrossSection.csproj">
       <Project>{CC14EEA7-79D6-4D76-9EBB-0FD348BDD260}</Project>

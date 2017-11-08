@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
 using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers

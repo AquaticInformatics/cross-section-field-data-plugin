@@ -1,5 +1,5 @@
 ﻿using System;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Helpers
 {

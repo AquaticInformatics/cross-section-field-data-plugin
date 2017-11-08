@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
 using NUnit.Framework;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 

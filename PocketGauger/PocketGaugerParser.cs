@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
-using Server.BusinessInterfaces.FieldDataPluginCore;
-using Server.BusinessInterfaces.FieldDataPluginCore.Context;
-using Server.BusinessInterfaces.FieldDataPluginCore.Results;
+using FieldDataPluginFramework;
+using FieldDataPluginFramework.Context;
+using FieldDataPluginFramework.Results;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Parsers;
 using static System.FormattableString;

@@ -2,14 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
+using FieldDataPluginFramework.DataModel.DischargeActivities;
+using FieldDataPluginFramework.DataModel.Verticals;
+using FieldDataPluginFramework.UnitTests.TestHelpers;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
-using Server.BusinessInterfaces.FieldDataPluginCore.UnitTests.TestHelpers;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
@@ -49,7 +49,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
         {
             _fixture = new Fixture();
             _fixture.Customizations.Add(new ProxyTypeSpecimenBuilder());
-            _fixture.AddFieldDataPluginCoreTestingExtensions();
+            _fixture.AddFieldDataPluginFrameworkTestingExtensions();
             CollectionRegistrar.Register(_fixture);
         }
 

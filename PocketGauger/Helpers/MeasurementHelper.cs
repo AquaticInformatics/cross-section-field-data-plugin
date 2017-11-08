@@ -1,5 +1,5 @@
 ﻿using System;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
+using FieldDataPluginFramework.DataModel;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.Helpers
 {

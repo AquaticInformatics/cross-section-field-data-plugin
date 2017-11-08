@@ -1,10 +1,10 @@
-using System;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
-using Server.BusinessInterfaces.FieldDataPluginCore.Units;
-﻿using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
+﻿using System;
+using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.CrossSection;
+using FieldDataPluginFramework.Units;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
-using CrossSectionSurvey = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection.CrossSectionSurvey;
+using CrossSectionSurvey = FieldDataPluginFramework.DataModel.CrossSection.CrossSectionSurvey;
 using static Server.Plugins.FieldVisit.CrossSection.Helpers.CrossSectionDataFields;
 
 namespace Server.Plugins.FieldVisit.CrossSection.Mappers

@@ -1,8 +1,8 @@
 ﻿using System.IO;
-using Server.BusinessInterfaces.FieldDataPluginCore.Results;
+using FieldDataPluginFramework;
+using FieldDataPluginFramework.Context;
+using FieldDataPluginFramework.Results;
 using Server.Plugins.FieldVisit.CrossSection.FieldVisitHandlers;
-using Server.BusinessInterfaces.FieldDataPluginCore;
-using Server.BusinessInterfaces.FieldDataPluginCore.Context;
 
 namespace Server.Plugins.FieldVisit.CrossSection
 {

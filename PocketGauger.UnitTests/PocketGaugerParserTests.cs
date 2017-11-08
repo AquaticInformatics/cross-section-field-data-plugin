@@ -2,16 +2,16 @@
 using System.Linq;
 using System.Reflection;
 using Common.TestHelpers.NUnitExtensions;
+using FieldDataPluginFramework.Context;
+using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.DischargeActivities;
+using FieldDataPluginFramework.Results;
 using FluentAssertions;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.Context;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPluginCore.Results;
-using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 {
@@ -91,7 +91,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             FieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)
-                .AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<DataModel.FieldVisitDetails>());
+                .AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>());
 
             FieldDataResultsAppender
                 .Received(expectedNumberOfDischargeActivities)

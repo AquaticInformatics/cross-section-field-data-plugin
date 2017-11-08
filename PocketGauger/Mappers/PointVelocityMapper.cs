@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
+using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
+using FieldDataPluginFramework.DataModel.DischargeActivities;
+using FieldDataPluginFramework.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;

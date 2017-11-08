@@ -1,9 +1,9 @@
+using FieldDataPluginFramework;
+using FieldDataPluginFramework.Context;
+using FieldDataPluginFramework.Results;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore;
-using Server.BusinessInterfaces.FieldDataPluginCore.Context;
-using Server.BusinessInterfaces.FieldDataPluginCore.Results;
 using Server.BusinessObjects.FieldDataPlugin.UnitTests;
 using Server.TestHelpers.FieldVisitTestHelpers.TestHelpers;
 

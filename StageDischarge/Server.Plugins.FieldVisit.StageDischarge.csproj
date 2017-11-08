@@ -54,11 +54,10 @@
     <Compile Include="StageDischargePlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPluginFramework\Server.BusinessInterfaces.FieldDataPluginFramework.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
-      <Name>Server.BusinessInterfaces.FieldDataPluginCore</Name>
+      <Name>Server.BusinessInterfaces.FieldDataPluginFramework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

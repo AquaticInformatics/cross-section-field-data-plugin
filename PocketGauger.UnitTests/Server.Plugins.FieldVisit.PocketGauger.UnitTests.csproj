@@ -94,13 +94,13 @@
       <Project>{EFF15FAE-C4F0-483E-8FD0-89AAFB461461}</Project>
       <Name>Common.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore.UnitTests\Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests.csproj">
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPluginFramework.UnitTests\Server.BusinessInterfaces.FieldDataPluginFramework.UnitTests.csproj">
       <Project>{3ac153f4-740d-4a11-b86a-3e8816417ccf}</Project>
-      <Name>Server.BusinessInterfaces.FieldDataPlugInCore.UnitTests</Name>
+      <Name>Server.BusinessInterfaces.FieldDataPluginFramework.UnitTests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPlugInCore\Server.BusinessInterfaces.FieldDataPluginCore.csproj">
+    <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPluginFramework\Server.BusinessInterfaces.FieldDataPluginFramework.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
-      <Name>Server.BusinessInterfaces.FieldDataPluginCore</Name>
+      <Name>Server.BusinessInterfaces.FieldDataPluginFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\BusinessInterfaces\Location\Server.BusinessInterfaces.Location.csproj">
       <Project>{f8bbf570-72dc-4284-b94d-f3e7d536c62e}</Project>

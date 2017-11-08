@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FieldDataPluginFramework.DataModel.CrossSection;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
-using Server.Plugins.FieldVisit.CrossSection.Model;
-using PluginFramework = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
+using CrossSectionPoint = Server.Plugins.FieldVisit.CrossSection.Model.CrossSectionPoint;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 {
@@ -34,7 +34,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             AssertPointsMatchExpected(actual, points);
         }
 
-        private static void AssertPointsMatchExpected(IEnumerable<PluginFramework.ElevationMeasurement> actualPoints,
+        private static void AssertPointsMatchExpected(IEnumerable<ElevationMeasurement> actualPoints,
             IEnumerable<CrossSectionPoint> expectedPoints)
         {
             foreach (var point in actualPoints.Zip(expectedPoints, Tuple.Create))
@@ -46,7 +46,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             }
         }
 
-        private static void AssertPointIsEqual(PluginFramework.ElevationMeasurement actual, CrossSectionPoint expectation)
+        private static void AssertPointIsEqual(ElevationMeasurement actual, CrossSectionPoint expectation)
         {
             Assert.That(actual.Distance, Is.EqualTo(expectation.Distance));
             Assert.That(actual.Elevation, Is.EqualTo(expectation.Elevation));

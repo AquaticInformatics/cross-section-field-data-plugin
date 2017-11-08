@@ -1,14 +1,13 @@
 ﻿using System;
 using System.IO;
-using Server.BusinessInterfaces.FieldDataPluginCore.Results;
-using Server.BusinessInterfaces.FieldDataPluginCore;
+using FieldDataPluginFramework;
+using FieldDataPluginFramework.Results;
 using Server.Plugins.FieldVisit.CrossSection.Exceptions;
 using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using Server.Plugins.FieldVisit.CrossSection.Parsers;
-using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 using static System.FormattableString;
 
 namespace Server.Plugins.FieldVisit.CrossSection
@@ -65,7 +64,7 @@ namespace Server.Plugins.FieldVisit.CrossSection
             return ParseFileResult.SuccessfullyParsedAndDataValid();
         }
 
-        private static DataModel.CrossSection.CrossSectionSurvey MapToCrossSectionSurvey(CrossSectionSurvey parsedFileContents)
+        private static FieldDataPluginFramework.DataModel.CrossSection.CrossSectionSurvey MapToCrossSectionSurvey(CrossSectionSurvey parsedFileContents)
         {
             var crossSectionMapper = new CrossSectionMapper(new CrossSectionPointMapper());
             return crossSectionMapper.MapCrossSection(parsedFileContents);

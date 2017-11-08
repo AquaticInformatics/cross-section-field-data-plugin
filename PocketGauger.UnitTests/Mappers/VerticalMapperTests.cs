@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Common.Utils;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
+using FieldDataPluginFramework.DataModel.Verticals;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
-using MeterCalibration = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Meters.MeterCalibration;
+using MeterCalibration = FieldDataPluginFramework.DataModel.Meters.MeterCalibration;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers
 {

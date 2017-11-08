@@ -1,8 +1,8 @@
-﻿using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Verticals;
-using Server.BusinessInterfaces.FieldDataPluginCore.Units;
+﻿using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
+using FieldDataPluginFramework.DataModel.DischargeActivities;
+using FieldDataPluginFramework.DataModel.Verticals;
+using FieldDataPluginFramework.Units;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.Mappers

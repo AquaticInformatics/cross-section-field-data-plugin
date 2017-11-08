@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
+using FieldDataPluginFramework.DataModel.CrossSection;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
-using Server.Plugins.FieldVisit.CrossSection.Model;
 using Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData;
-using PluginFramework = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.CrossSection;
+using CrossSectionPoint = Server.Plugins.FieldVisit.CrossSection.Model.CrossSectionPoint;
+using CrossSectionSurvey = Server.Plugins.FieldVisit.CrossSection.Model.CrossSectionSurvey;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 {
@@ -26,7 +27,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         {
             _mockCrossSectionPointMapper = Substitute.For<ICrossSectionPointMapper>();
             _mockCrossSectionPointMapper.MapPoints(Arg.Any<List<CrossSectionPoint>>())
-                .Returns(new List<PluginFramework.ElevationMeasurement>());
+                .Returns(new List<ElevationMeasurement>());
 
             _crossSectionMapper = new CrossSectionMapper(_mockCrossSectionPointMapper);
 
@@ -46,14 +47,14 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             actual.ShouldBeEquivalentTo(expectedCrossSectionSurvey);
         }
 
-        private PluginFramework.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
+        private FieldDataPluginFramework.DataModel.CrossSection.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
         {
             var startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
             var endTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7));
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
 
             var newCrossSectionSurvey =
-                new PluginFramework.CrossSectionSurvey(surveyPeriod, "Right overflow",  "At the Gage", "ft", StartPointType.LeftEdgeOfWater)
+                new FieldDataPluginFramework.DataModel.CrossSection.CrossSectionSurvey(surveyPeriod, "Right overflow",  "At the Gage", "ft", StartPointType.LeftEdgeOfWater)
                 {
                     Party = "Cross-Section Party",
                     Comments = "Cross-section survey comments",
@@ -61,7 +62,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
                 };
 
-            newCrossSectionSurvey.Points(new List<PluginFramework.ElevationMeasurement>());
+            newCrossSectionSurvey.Points(new List<ElevationMeasurement>());
 
             return newCrossSectionSurvey;
         }

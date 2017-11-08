@@ -1,14 +1,14 @@
 ﻿using System.Linq;
+using FieldDataPluginFramework.DataModel.Meters;
 using FluentAssertions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Meters;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Mappers;
 using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
 using DoubleHelper = Common.Utils.DoubleHelper;
-using FieldDataMeterType = Server.BusinessInterfaces.FieldDataPluginCore.DataModel.Meters.MeterType;
+using FieldDataMeterType = FieldDataPluginFramework.DataModel.Meters.MeterType;
 using MeterType = Server.Plugins.FieldVisit.PocketGauger.Dtos.MeterType;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.Mappers

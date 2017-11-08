@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Globalization;
+using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.ChannelMeasurements;
+using FieldDataPluginFramework.DataModel.DischargeActivities;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.ChannelMeasurements;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
 using Server.Plugins.FieldVisit.PocketGauger.Helpers;
 using Server.Plugins.FieldVisit.PocketGauger.Interfaces;

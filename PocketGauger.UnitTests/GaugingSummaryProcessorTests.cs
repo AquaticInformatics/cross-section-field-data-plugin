@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
+using FieldDataPluginFramework.Context;
+using FieldDataPluginFramework.DataModel;
+using FieldDataPluginFramework.DataModel.DischargeActivities;
 using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
-using Server.BusinessInterfaces.FieldDataPluginCore.Context;
-using Server.BusinessInterfaces.FieldDataPluginCore.DataModel.DischargeActivities;
 using Server.Plugins.FieldVisit.PocketGauger.Dtos;
-using DataModel = Server.BusinessInterfaces.FieldDataPluginCore.DataModel;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 {
@@ -48,7 +48,7 @@ namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 
             FieldDataResultsAppender
                 .Received(expectedNumberOfItems)
-                .AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Is<DataModel.FieldVisitDetails>(x => x.Party == observer));
+                .AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Is<FieldVisitDetails>(x => x.Party == observer));
 
             FieldDataResultsAppender
                 .Received(expectedNumberOfItems)
