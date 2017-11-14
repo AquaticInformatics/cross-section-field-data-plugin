@@ -5,6 +5,6 @@ namespace Server.Plugins.FieldVisit.CrossSection.Interfaces
 {
     public interface ICrossSectionPointMapper
     {
-        ICollection<ElevationMeasurement> MapPoints(List<Model.CrossSectionPoint> points);
+        ICollection<CrossSectionPoint> MapPoints(List<Model.CrossSectionPoint> points);
     }
 }

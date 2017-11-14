@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.ChannelMeasurements;
-using FieldDataPluginFramework.DataModel.CrossSection;
+using Framework = FieldDataPluginFramework.DataModel.CrossSection;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -27,7 +27,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         {
             _mockCrossSectionPointMapper = Substitute.For<ICrossSectionPointMapper>();
             _mockCrossSectionPointMapper.MapPoints(Arg.Any<List<CrossSectionPoint>>())
-                .Returns(new List<ElevationMeasurement>());
+                .Returns(new List<Framework.CrossSectionPoint>());
 
             _crossSectionMapper = new CrossSectionMapper(_mockCrossSectionPointMapper);
 
@@ -47,14 +47,14 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             actual.ShouldBeEquivalentTo(expectedCrossSectionSurvey);
         }
 
-        private FieldDataPluginFramework.DataModel.CrossSection.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
+        private static Framework.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
         {
             var startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
             var endTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7));
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
 
             var newCrossSectionSurvey =
-                new FieldDataPluginFramework.DataModel.CrossSection.CrossSectionSurvey(surveyPeriod, "Right overflow",  "At the Gage", "ft", StartPointType.LeftEdgeOfWater)
+                new Framework.CrossSectionSurvey(surveyPeriod, "Right overflow",  "At the Gage", "ft", StartPointType.LeftEdgeOfWater)
                 {
                     Party = "Cross-Section Party",
                     Comments = "Cross-section survey comments",
@@ -62,7 +62,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
                 };
 
-            newCrossSectionSurvey.Points(new List<ElevationMeasurement>());
+            newCrossSectionSurvey.Points(new List<Framework.CrossSectionPoint>());
 
             return newCrossSectionSurvey;
         }
@@ -81,11 +81,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
         {
             _crossSectionSurvey.Fields.Remove(propertyName);
 
-            TestDelegate testDelegate =
-                () => _crossSectionMapper.MapCrossSection(_crossSectionSurvey);
+            void TestDelegate() => _crossSectionMapper.MapCrossSection(_crossSectionSurvey);
 
-            Assert.That(testDelegate,
-                Throws.Exception.With.Message.Contains(propertyName));
+            Assert.That(TestDelegate, Throws.Exception.With.Message.Contains(propertyName));
         }
     }
 }

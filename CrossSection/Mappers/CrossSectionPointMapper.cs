@@ -10,7 +10,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 {
     public class CrossSectionPointMapper : ICrossSectionPointMapper
     {
-        public ICollection<ElevationMeasurement> MapPoints(List<Model.CrossSectionPoint> points)
+        public ICollection<CrossSectionPoint> MapPoints(List<Model.CrossSectionPoint> points)
         {
             if (points == null)
                 throw new ArgumentNullException(nameof(points));
@@ -18,22 +18,16 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             return points.Where(point => point != null && !point.IsEmptyPoint()).Select(ToPoint).ToList();
         }
 
-        private static ElevationMeasurement ToPoint(Model.CrossSectionPoint point)
+        private static CrossSectionPoint ToPoint(Model.CrossSectionPoint point)
         {
-            if (!IsValidPoint(point))
-                throw new CrossSectionSurveyDataFormatException(Invariant($"The Cross-Section Point: '{point}' must have both a Distance and Elevation"));
-
-            return new ElevationMeasurement
+            if (point.Distance.HasValue & point.Elevation.HasValue)
             {
-                Distance = point.Distance.GetValueOrDefault(),
-                Elevation = point.Elevation.GetValueOrDefault(),
-                Comments = point.Comment
-            };
-        }
-
-        private static bool IsValidPoint(Model.CrossSectionPoint point)
-        {
-            return point.Distance.HasValue && point.Elevation.HasValue;
+                return new CrossSectionPoint(point.Distance.Value, point.Elevation.Value)
+                {
+                    Comments = point.Comment
+                };
+            }
+            throw new CrossSectionSurveyDataFormatException(Invariant($"The Cross-Section Point: '{point}' must have both a Distance and Elevation"));
         }
     }
 }

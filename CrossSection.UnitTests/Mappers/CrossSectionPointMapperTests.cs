@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FieldDataPluginFramework.DataModel.CrossSection;
+using Framework = FieldDataPluginFramework.DataModel.CrossSection;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Server.Plugins.FieldVisit.CrossSection.Exceptions;
@@ -34,7 +34,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             AssertPointsMatchExpected(actual, points);
         }
 
-        private static void AssertPointsMatchExpected(IEnumerable<ElevationMeasurement> actualPoints,
+        private static void AssertPointsMatchExpected(IEnumerable<Framework.CrossSectionPoint> actualPoints,
             IEnumerable<CrossSectionPoint> expectedPoints)
         {
             foreach (var point in actualPoints.Zip(expectedPoints, Tuple.Create))
@@ -46,7 +46,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             }
         }
 
-        private static void AssertPointIsEqual(ElevationMeasurement actual, CrossSectionPoint expectation)
+        private static void AssertPointIsEqual(Framework.CrossSectionPoint actual, CrossSectionPoint expectation)
         {
             Assert.That(actual.Distance, Is.EqualTo(expectation.Distance));
             Assert.That(actual.Elevation, Is.EqualTo(expectation.Elevation));
