@@ -20,7 +20,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
 
         private static CrossSectionPoint ToPoint(Model.CrossSectionPoint point)
         {
-            if (point.Distance.HasValue & point.Elevation.HasValue)
+            if (point.Distance.HasValue && point.Elevation.HasValue)
             {
                 return new CrossSectionPoint(point.Distance.Value, point.Elevation.Value)
                 {
