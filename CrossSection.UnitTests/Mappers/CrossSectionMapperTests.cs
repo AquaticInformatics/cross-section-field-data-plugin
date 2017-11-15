@@ -62,7 +62,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
 
                 };
 
-            newCrossSectionSurvey.Points(new List<Framework.CrossSectionPoint>());
+            newCrossSectionSurvey.CrossSectionPoints = new List<Framework.CrossSectionPoint>();
 
             return newCrossSectionSurvey;
         }

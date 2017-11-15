@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.CrossSection;
 using FieldDataPluginFramework.Units;
@@ -41,7 +42,8 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             newCrossSectionSurvey.Party = crossSectionSurvey.GetFieldValue(Party);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);
 
-            newCrossSectionSurvey.Points(_crossSectionPointMapper.MapPoints(crossSectionSurvey.Points));
+            newCrossSectionSurvey.CrossSectionPoints =
+                (List<CrossSectionPoint>) _crossSectionPointMapper.MapPoints(crossSectionSurvey.Points);
 
             return newCrossSectionSurvey;
         }
