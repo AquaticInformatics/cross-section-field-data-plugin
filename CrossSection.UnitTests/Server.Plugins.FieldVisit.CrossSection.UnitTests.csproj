@@ -64,6 +64,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\TestHelpers\NodaTime\Common.TestHelpers.NodaTime.csproj">
+      <Project>{2331BBA6-AB22-43B7-8447-6F5971D5C26F}</Project>
+      <Name>Common.TestHelpers.NodaTime</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\Common\TestHelpers\NUnitExtensions\Common.TestHelpers.NUnitExtensions.csproj">
       <Project>{F3F1B55A-B551-43BE-973D-E770D7164A88}</Project>
       <Name>Common.TestHelpers.NUnitExtensions</Name>
@@ -71,6 +75,10 @@
     <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPluginFramework\Server.BusinessInterfaces.FieldDataPluginFramework.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
       <Name>Server.BusinessInterfaces.FieldDataPluginFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\TestHelpers\IntegrationTests.Common\Server.TestHelpers.IntegrationTests.Common.csproj">
+      <Project>{ED393086-479D-4346-AAE8-97EACED02B6A}</Project>
+      <Name>Server.TestHelpers.IntegrationTests.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\CrossSection\Server.Plugins.FieldVisit.CrossSection.csproj">
       <Project>{CC14EEA7-79D6-4D76-9EBB-0FD348BDD260}</Project>

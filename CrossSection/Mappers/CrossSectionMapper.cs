@@ -42,8 +42,9 @@ namespace Server.Plugins.FieldVisit.CrossSection.Mappers
             newCrossSectionSurvey.Party = crossSectionSurvey.GetFieldValue(Party);
             newCrossSectionSurvey.Comments = crossSectionSurvey.GetFieldValue(Comment);
 
-            newCrossSectionSurvey.CrossSectionPoints =
-                (List<CrossSectionPoint>) _crossSectionPointMapper.MapPoints(crossSectionSurvey.Points);
+            var mappedPoints = (List<CrossSectionPoint>)_crossSectionPointMapper.MapPoints(crossSectionSurvey.Points);
+            newCrossSectionSurvey.CrossSectionPoints = mappedPoints;
+                
 
             return newCrossSectionSurvey;
         }

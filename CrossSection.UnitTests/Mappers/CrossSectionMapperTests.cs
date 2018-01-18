@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Common.TestHelpers.NodaTime;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.ChannelMeasurements;
 using Framework = FieldDataPluginFramework.DataModel.CrossSection;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
+using Ploeh.AutoFixture;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Mappers;
-using Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData;
+using Server.TestHelpers.IntegrationTests.Common.FixtureHelpers;
 using CrossSectionPoint = Server.Plugins.FieldVisit.CrossSection.Model.CrossSectionPoint;
 using CrossSectionSurvey = Server.Plugins.FieldVisit.CrossSection.Model.CrossSectionSurvey;
 
@@ -17,23 +20,30 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
     [TestFixture]
     public class CrossSectionMapperTests
     {
+        private IFixture _fixture;
         private ICrossSectionMapper _crossSectionMapper;
 
         private ICrossSectionPointMapper _mockCrossSectionPointMapper;
         private CrossSectionSurvey _crossSectionSurvey;
+        private List<Framework.CrossSectionPoint> _crossSectionPoints;
 
         [SetUp]
         public void TestSetup()
         {
+            _fixture = AutoFixtureHelper.GetCommonFixture();
+            NodaTimeFixtureRegistrar.RegisterUtcDateTime(_fixture);
+
+            _crossSectionPoints = _fixture.CreateMany<Framework.CrossSectionPoint>().ToList();
+
             _mockCrossSectionPointMapper = Substitute.For<ICrossSectionPointMapper>();
             _mockCrossSectionPointMapper.MapPoints(Arg.Any<List<CrossSectionPoint>>())
-                .Returns(new List<Framework.CrossSectionPoint>());
+                .Returns(_crossSectionPoints);
 
             _crossSectionMapper = new CrossSectionMapper(_mockCrossSectionPointMapper);
 
             _crossSectionSurvey = new CrossSectionSurvey
             {
-                Fields = TestHelpers.CreateExpectedCrossSectionFields()
+                Fields = TestData.TestHelpers.CreateExpectedCrossSectionFields()
             };
         }
 
@@ -47,22 +57,22 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Mappers
             actual.ShouldBeEquivalentTo(expectedCrossSectionSurvey);
         }
 
-        private static Framework.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
+        private Framework.CrossSectionSurvey CreateExpectedCrossSectionSurvey()
         {
             var startTime = new DateTimeOffset(2001, 05, 08, 14, 32, 15, TimeSpan.FromHours(7));
             var endTime = new DateTimeOffset(2001, 05, 08, 17, 12, 45, TimeSpan.FromHours(7));
             var surveyPeriod = new DateTimeInterval(startTime, endTime);
 
             var newCrossSectionSurvey =
-                new Framework.CrossSectionSurvey(surveyPeriod, "Right overflow",  "At the Gage", "ft", StartPointType.LeftEdgeOfWater)
+                new Framework.CrossSectionSurvey(surveyPeriod, "Right overflow", "At the Gage", "ft",
+                    StartPointType.LeftEdgeOfWater)
                 {
                     Party = "Cross-Section Party",
                     Comments = "Cross-section survey comments",
                     StageMeasurement = new Measurement(12.2, "ft"),
-
+                    CrossSectionPoints = _crossSectionPoints
                 };
 
-            newCrossSectionSurvey.CrossSectionPoints = new List<Framework.CrossSectionPoint>();
 
             return newCrossSectionSurvey;
         }

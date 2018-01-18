@@ -13,7 +13,6 @@ using Server.Plugins.FieldVisit.CrossSection.Helpers;
 using Server.Plugins.FieldVisit.CrossSection.Interfaces;
 using Server.Plugins.FieldVisit.CrossSection.Model;
 using Server.Plugins.FieldVisit.CrossSection.Parsers;
-using Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
 {
@@ -140,7 +139,7 @@ namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
         [Test]
         public void ParseFile_FileStreamIsAValidCrossSectionFile_CreatesExpectedMetadata()
         {
-            var expectedMetadata = TestHelpers.CreateExpectedCrossSectionFields();
+            var expectedMetadata = TestData.TestHelpers.CreateExpectedCrossSectionFields();
 
             _stream = GetTestFile(ValidCrossSectionFilePath);
 
