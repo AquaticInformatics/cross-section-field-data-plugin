@@ -23,7 +23,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\..\..\..\Release\FieldDataPlugins\Server.Plugins.FieldVisit.StageDischarge.Tests\</OutputPath>
+    <OutputPath>..\..\..\..\Release\FieldDataPlugins\Server.Plugins.FieldVisit.StageDischarge.UnitTests\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
