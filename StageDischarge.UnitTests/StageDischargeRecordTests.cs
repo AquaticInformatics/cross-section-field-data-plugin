@@ -8,7 +8,7 @@ using Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData;
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 {
     [TestFixture]
-    internal class StageDischargeRecordTests
+    public class StageDischargeRecordTests
     {
         private IFixture _fixture;
 

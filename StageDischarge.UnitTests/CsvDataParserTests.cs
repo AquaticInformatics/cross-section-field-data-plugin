@@ -10,7 +10,7 @@ using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 {
     [TestFixture]
-    internal class CsvDataParserTests
+    public class CsvDataParserTests
     {
         private CsvDataParser<DummyImportRecord> _csvDataParser;
 
