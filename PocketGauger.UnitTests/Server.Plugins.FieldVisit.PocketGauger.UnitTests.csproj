@@ -39,9 +39,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SolutionDir)NuGetPackages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>$(SolutionDir)NuGetPackages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="NSubstitute">
       <HintPath>$(SolutionDir)NuGetPackages\NSubstitute.1.10.0.0\lib\NET45\NSubstitute.dll</HintPath>
     </Reference>
@@ -101,10 +98,6 @@
     <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPluginFramework\Server.BusinessInterfaces.FieldDataPluginFramework.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
       <Name>Server.BusinessInterfaces.FieldDataPluginFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\BusinessInterfaces\Location\Server.BusinessInterfaces.Location.csproj">
-      <Project>{f8bbf570-72dc-4284-b94d-f3e7d536c62e}</Project>
-      <Name>Server.BusinessInterfaces.Location</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\BusinessObjects\FieldDataPlugIn.UnitTests\Server.BusinessObjects.FieldDataPlugin.UnitTests.csproj">
       <Project>{DA89B2B9-B285-40B4-A4A6-278527CE548F}</Project>

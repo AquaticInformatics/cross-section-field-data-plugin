@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Common.TestHelpers.NUnitExtensions;
 using FieldDataPluginFramework;
 using FieldDataPluginFramework.Context;
 using FieldDataPluginFramework.DataModel;
@@ -22,7 +21,6 @@ using Server.TestHelpers.FieldVisitTestHelpers.TestHelpers;
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 {
     [TestFixture]
-    [LongRunning]
     public class StageDischargeParserTests
     {
         private Fixture _fixture;
@@ -34,10 +32,13 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         public void BeforeTest()
         {
             _fixture = new Fixture();
+
             _mockAppender = Substitute.For<IFieldDataResultsAppender>();
+
             _mockLogger = Substitute.For<ILog>();
             _csvDataPlugin = new StageDischargePlugin(new CsvDataParser<StageDischargeRecord>());
         }
+
 
         [Test]
         public void ParseFile_WithOneValidRowInCsvInputFile_ReadsAndSavesStageDischargeRecordsAndReturnsSuccess()

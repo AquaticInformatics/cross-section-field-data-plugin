@@ -16,7 +16,6 @@ using Ploeh.AutoFixture;
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests
 {
     [TestFixture]
-    [LongRunning]
     public class PocketGaugerParserTests : PocketGaugerTestsBase
     {
         private PocketGaugerParser _pocketGaugerParser;

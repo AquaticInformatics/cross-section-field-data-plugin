@@ -7,7 +7,6 @@ using Server.Plugins.FieldVisit.PocketGauger.UnitTests.TestData;
 
 namespace Server.Plugins.FieldVisit.PocketGauger.UnitTests.IntegrationTests
 {
-    [LongRunning]
     public abstract class IntegrationTestBase
     {
         protected PocketGaugerFiles PocketGaugerFiles { get; private set; }

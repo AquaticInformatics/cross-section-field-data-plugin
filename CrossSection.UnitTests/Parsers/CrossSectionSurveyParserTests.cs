@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Common.TestHelpers.NUnitExtensions;
 using FluentAssertions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
@@ -16,7 +15,7 @@ using Server.Plugins.FieldVisit.CrossSection.Parsers;
 
 namespace Server.Plugins.FieldVisit.CrossSection.UnitTests.Parsers
 {
-    [TestFixture, LongRunning]
+    [TestFixture]
     public class CrossSectionSurveyParserTests
     {
         private const string NamespacePrefix = "Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData.";
