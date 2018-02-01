@@ -63,6 +63,8 @@
     <Compile Include="Helpers\InMemoryCsvFile.cs" />
     <Compile Include="Helpers\DummyImportRecordBuilder.cs" />
     <Compile Include="Helpers\ITestRecord.cs" />
+    <Compile Include="Helpers\LocationInfoHelper.cs" />
+    <Compile Include="Helpers\PrivateConstructorHelper.cs" />
     <Compile Include="Helpers\StageDischargeRecordBuilder.cs" />
     <Compile Include="StageDischargeParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,10 +75,6 @@
     <ProjectReference Include="..\..\..\BusinessInterfaces\FieldDataPluginFramework\Server.BusinessInterfaces.FieldDataPluginFramework.csproj">
       <Project>{a37b4978-d615-4092-bec8-27aabfd2681e}</Project>
       <Name>Server.BusinessInterfaces.FieldDataPluginFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\TestHelpers\FieldVisitTestHelpers\Server.TestHelpers.FieldVisitTestHelpers.csproj">
-      <Project>{D49419AC-C2CC-495F-BD80-C205EB2541FA}</Project>
-      <Name>Server.TestHelpers.FieldVisitTestHelpers</Name>
     </ProjectReference>
     <ProjectReference Include="..\StageDischarge\Server.Plugins.FieldVisit.StageDischarge.csproj">
       <Project>{7b7a1374-3c35-4691-b29e-b22fdaba30b2}</Project>
