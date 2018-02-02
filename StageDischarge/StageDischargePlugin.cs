@@ -6,6 +6,7 @@ using FieldDataPluginFramework;
 using FieldDataPluginFramework.Context;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.DischargeActivities;
+using FieldDataPluginFramework.DataModel.Readings;
 using FieldDataPluginFramework.Results;
 using Server.Plugins.FieldVisit.StageDischarge.Interfaces;
 using Server.Plugins.FieldVisit.StageDischarge.Mappers;
@@ -65,21 +66,35 @@ namespace Server.Plugins.FieldVisit.StageDischarge
 
             foreach (var locationInfo in sortedRecordsByLocation.Keys.OrderBy(l => l.LocationIdentifier))
             {
-                CreateVisitsAndDischargeActivities(locationInfo, sortedRecordsByLocation[locationInfo]);
+                CreateVisitsAndActivities(locationInfo, sortedRecordsByLocation[locationInfo]);
             }
         }
 
-        private void CreateVisitsAndDischargeActivities(LocationInfo location, IEnumerable<StageDischargeRecord> locationRecords)
+        private void CreateVisitsAndActivities(LocationInfo location, IEnumerable<StageDischargeRecord> locationRecords)
         {
+            var createdVisits = new List<FieldVisitInfo>();
+
             foreach (var stageDischargeRecord in locationRecords)
             {
-                var fieldVisit = CreateVisit(location, stageDischargeRecord);
+                var fieldVisit = MergeOrCreateVisit(createdVisits, location, stageDischargeRecord);
+
                 CreateDischargeActivityForVisit(fieldVisit, stageDischargeRecord);
+                CreateReadingsForVisit(fieldVisit, stageDischargeRecord);
             }
         }
 
-        private FieldVisitInfo CreateVisit(LocationInfo location, StageDischargeRecord visitRecord)
+        private FieldVisitInfo MergeOrCreateVisit(List<FieldVisitInfo> createdVisits, LocationInfo location, StageDischargeRecord visitRecord)
         {
+            var existingVisit = createdVisits
+                .SingleOrDefault(fv => fv.StartDate.Date == visitRecord.MeasurementStartDateTime.Date);
+
+            if (existingVisit != null)
+            {
+                MergeWithExistingVisit(existingVisit, visitRecord);
+
+                return existingVisit;
+            }
+
             var visitStart = visitRecord.MeasurementStartDateTime;
             var visitEnd = visitRecord.MeasurementEndDateTime;
 
@@ -89,17 +104,99 @@ namespace Server.Plugins.FieldVisit.StageDischarge
                 Party = visitRecord.Party
             };
 
-            return _fieldDataResultsAppender.AddFieldVisit(location, fieldVisitDetails);
+            var fieldVisitInfo = _fieldDataResultsAppender.AddFieldVisit(location, fieldVisitDetails);
+
+            createdVisits.Add(fieldVisitInfo);
+
+            return fieldVisitInfo;
         }
 
-        private void CreateDischargeActivityForVisit(FieldVisitInfo fieldVisit, StageDischargeRecord visitRecord)
+        private static void MergeWithExistingVisit(FieldVisitInfo existingVisit, StageDischargeRecord visitRecord)
         {
-            _fieldDataResultsAppender.AddDischargeActivity(fieldVisit, CreateDischargeActivityFromRecord(visitRecord));
+            existingVisit.FieldVisitDetails.FieldVisitPeriod = ExpandInterval(
+                existingVisit.FieldVisitDetails.FieldVisitPeriod,
+                visitRecord.MeasurementStartDateTime,
+                visitRecord.MeasurementEndDateTime);
+
+            existingVisit.FieldVisitDetails.Comments =
+                MergeUniqueComments(existingVisit.FieldVisitDetails.Comments, visitRecord.Comments);
+
+            existingVisit.FieldVisitDetails.Party =
+                MergeUniqueParties(existingVisit.FieldVisitDetails.Party, visitRecord.Party);
+        }
+
+        private static string MergeUniqueComments(params string[] values)
+        {
+            return MergeUniqueStrings("\n", values);
+        }
+
+        private static string MergeUniqueParties(params string[] values)
+        {
+            return MergeUniqueStrings(", ", values);
+        }
+
+        private static string MergeUniqueStrings(string separator, string[] values)
+        {
+            return string.Join(separator, values.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct());
+        }
+
+        private static DateTimeInterval ExpandInterval(DateTimeInterval interval, DateTimeOffset startTime, DateTimeOffset endTime)
+        {
+            var minStart = interval.Start < startTime
+                ? interval.Start
+                : startTime;
+
+            var maxEnd = interval.End > endTime
+                ? interval.End
+                : endTime;
+
+            return new DateTimeInterval(minStart, maxEnd);
+        }
+
+        private void CreateDischargeActivityForVisit(FieldVisitInfo fieldVisit, StageDischargeRecord record)
+        {
+            if (!record.Discharge.HasValue) return;
+
+            _fieldDataResultsAppender.AddDischargeActivity(fieldVisit, CreateDischargeActivityFromRecord(record));
         }
 
         private DischargeActivity CreateDischargeActivityFromRecord(StageDischargeRecord record)
         {
             return _dischargeActivityMapper.FromStageDischargeRecord(record);
+        }
+
+        private void CreateReadingsForVisit(FieldVisitInfo fieldVisit, StageDischargeRecord record)
+        {
+            var readingTime = GetHumanReadableMidpoint(
+                new DateTimeInterval(record.MeasurementEndDateTime, record.MeasurementStartDateTime));
+
+            foreach (var reading in record.Readings)
+            {
+                var parameterReading = new Reading(reading.Parameter, new Measurement(reading.Value, reading.Units))
+                {
+                    Comments = record.Comments,
+                    DateTimeOffset = readingTime
+                };
+
+                _fieldDataResultsAppender.AddReading(fieldVisit, parameterReading);
+            }
+        }
+
+        private DateTimeOffset GetHumanReadableMidpoint(DateTimeInterval interval)
+        {
+            var duration = interval.End - interval.Start;
+            var midpoint = interval.Start + TimeSpan.FromTicks(duration.Ticks / 2);
+
+            var truncatedTime = new DateTimeOffset(
+                midpoint.Year,
+                midpoint.Month,
+                midpoint.Day,
+                midpoint.Hour,
+                midpoint.Minute,
+                0,
+                midpoint.Offset);
+
+            return truncatedTime < interval.Start ? interval.Start : truncatedTime;
         }
 
         public ParseFileResult ParseFile(Stream fileStream, LocationInfo selectedLocation, IFieldDataResultsAppender fieldDataResultsAppender,

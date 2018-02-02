@@ -22,7 +22,6 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         [TestCase("StageAtStart")]
         [TestCase("StageAtEnd")]
         [TestCase("StageUnits")]
-        [TestCase("Discharge")]
         [TestCase("DischargeUnits")]
         [TestCase("ChannelName")]
         [TestCase("WidthUnits")]

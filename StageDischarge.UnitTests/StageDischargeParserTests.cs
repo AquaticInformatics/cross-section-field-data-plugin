@@ -16,7 +16,6 @@ using Server.Plugins.FieldVisit.StageDischarge.Interfaces;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.Helpers;
 using Server.Plugins.FieldVisit.StageDischarge.UnitTests.TestData;
-using Server.TestHelpers.FieldVisitTestHelpers.TestHelpers;
 
 namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
 {
@@ -33,12 +32,20 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         {
             _fixture = new Fixture();
 
-            _mockAppender = Substitute.For<IFieldDataResultsAppender>();
+            SetupMockAppender();
 
             _mockLogger = Substitute.For<ILog>();
             _csvDataPlugin = new StageDischargePlugin(new CsvDataParser<StageDischargeRecord>());
         }
 
+        private void SetupMockAppender()
+        {
+            _mockAppender = Substitute.For<IFieldDataResultsAppender>();
+
+            _mockAppender
+                .AddFieldVisit(Arg.Any<LocationInfo>(), Arg.Any<FieldVisitDetails>())
+                .Returns(x => PrivateConstructorHelper.CreateInstance<FieldVisitInfo>(x.Arg<LocationInfo>(), x.Arg<FieldVisitDetails>()));
+        }
 
         [Test]
         public void ParseFile_WithOneValidRowInCsvInputFile_ReadsAndSavesStageDischargeRecordsAndReturnsSuccess()
@@ -148,6 +155,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
                 StageDischargeRecord rRecord = _fixture.Build<StageDischargeRecord>()
                     .With(x => x.MeasurementStartDateTime, DateTime.Now.AddHours(i))
                     .With(x => x.MeasurementEndDateTime, DateTime.Now.AddHours(i * 2))
+                    .Without(x => x.Readings)
                     .Create();
                 csvFile.AddRecord(rRecord);
             }

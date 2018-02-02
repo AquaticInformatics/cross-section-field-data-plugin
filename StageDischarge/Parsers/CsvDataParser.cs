@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using FileHelpers;
 using FileHelpers.Events;
@@ -37,7 +38,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
 
         private void CreateHeaderRegex(DelimitedFileEngine<T> engine)
         {
-            var pattern = $"^\\s*{string.Join($"\\s*{engine.Options.Delimiter}\\s*", engine.Options.FieldsNames)}\\s*$";
+            var pattern = $"^\\s*{string.Join($"\\s*{engine.Options.Delimiter}\\s*", engine.Options.FieldsNames.Where(n => !n.StartsWith("Reading")))}.*$";
             HeaderRegex = new Regex(pattern, RegexOptions.IgnoreCase);
         }
 
