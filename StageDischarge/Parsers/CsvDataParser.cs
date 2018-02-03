@@ -13,10 +13,9 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
     {
         private Regex HeaderRegex { get; set; }
 
-        public double InvalidRecords { get; private set; }
-        public double ValidRecords { get; private set; }
-        public double SkippedRecords { get; private set; }
-
+        public int ValidRecords { get; private set; }
+        public int SkippedRecords { get; private set; }
+        public string[] Errors { get; private set; }
         
         public IEnumerable<T> ParseInputData(Stream inputStream)
         {
@@ -24,13 +23,20 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
             {
                 var parseEngine = CreateParserEngine();
                 CreateHeaderRegex(parseEngine);
-                return parseEngine.ReadStream(reader);
+
+                var records = parseEngine.ReadStream(reader);
+
+                Errors = parseEngine.ErrorManager.Errors
+                    .Select(e => $"Line {e.LineNumber}: {e.ExceptionInfo.Message}")
+                    .ToArray();
+
+                return records;
             }
         }
 
         private DelimitedFileEngine<T> CreateParserEngine()
         {
-            var parseEngine = new DelimitedFileEngine<T> {ErrorMode = ErrorMode.ThrowException};
+            var parseEngine = new DelimitedFileEngine<T> {ErrorMode = ErrorMode.SaveAndContinue};
             parseEngine.BeforeReadRecord += BeforeReadRecord;
             parseEngine.AfterReadRecord += AfterReadRecord;
             return parseEngine;
@@ -44,17 +50,17 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
 
         private void AfterReadRecord(EngineBase engine, AfterReadEventArgs<T> e)
         {
-            ++InvalidRecords;
             e.Record.Validate();
-            --InvalidRecords;
             ++ValidRecords;
         }
 
         private void BeforeReadRecord(EngineBase engine, BeforeReadEventArgs<T> e)
         {
-            if (!string.IsNullOrWhiteSpace(e.RecordLine) 
-                && !HeaderRegex.IsMatch(e.RecordLine) 
-                && !e.RecordLine.StartsWith(CsvParserConstants.CommentMarker))
+            var line = e.RecordLine.Trim();
+
+            if (!string.IsNullOrWhiteSpace(line) 
+                && !HeaderRegex.IsMatch(line) 
+                && !line.StartsWith(CsvParserConstants.CommentMarker))
                 return;
 
             ++SkippedRecords;

@@ -65,4 +65,11 @@
     <None Include="Readme.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>powershell mkdir '$(SolutionDir)..\deploy\$(Configuration)'
+powershell Compress-Archive -Path '$(TargetDir)*.dll', '$(ProjectDir)manifest.json' -DestinationPath '$(SolutionDir)..\deploy\$(Configuration)\$(ProjectName).zip' -Force
+powershell del '$(SolutionDir)..\deploy\$(Configuration)\$(ProjectName).plugin'
+powershell mv '$(SolutionDir)..\deploy\$(Configuration)\$(ProjectName).zip' '$(SolutionDir)..\deploy\$(Configuration)\$(ProjectName).plugin' 
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using FileHelpers;
 using FluentAssertions;
 using NUnit.Framework;
 using Server.Plugins.FieldVisit.StageDischarge.Parsers;
@@ -54,8 +53,8 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
                 new MemoryStream(
                     Encoding.ASCII.GetBytes("This is not valid data for csv processing so don't get your hopes up")))
             {
-                Action parseAction = () => _csvDataParser.ParseInputData(stream);
-                parseAction.ShouldThrow<FileHelpersException>();
+                var results = _csvDataParser.ParseInputData(stream);
+                results.Should().BeEmpty();
             }
         }
 
@@ -64,8 +63,8 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         {
             using (var stream = new MemoryStream(Encoding.ASCII.GetBytes("Nope,Not,Today\nthis,won't,work")))
             {
-                Action parseAction = () => _csvDataParser.ParseInputData(stream);
-                parseAction.ShouldThrow<FileHelpersException>();
+                var results = _csvDataParser.ParseInputData(stream);
+                results.Should().BeEmpty();
             }
         }
 

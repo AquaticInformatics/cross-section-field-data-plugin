@@ -38,66 +38,66 @@ namespace Server.Plugins.FieldVisit.StageDischarge.Parsers
         [FieldOrder(9), FieldTrim(TrimMode.Both)]
         public string DischargeUnits;
 
-        [FieldOrder(10), FieldTrim(TrimMode.Both)]
+        [FieldOrder(10), FieldTrim(TrimMode.Both), FieldOptional]
         public string ChannelName;
 
-        [FieldOrder(11), FieldTrim(TrimMode.Both)]
+        [FieldOrder(11), FieldTrim(TrimMode.Both), FieldOptional]
         public double? ChannelWidth;
         
-        [FieldOrder(12), FieldTrim(TrimMode.Both)]
+        [FieldOrder(12), FieldTrim(TrimMode.Both), FieldOptional]
         public string WidthUnits;
 
-        [FieldOrder(13), FieldTrim(TrimMode.Both)]
+        [FieldOrder(13), FieldTrim(TrimMode.Both), FieldOptional]
         public double? ChannelArea;
 
-        [FieldOrder(14), FieldTrim(TrimMode.Both)]
+        [FieldOrder(14), FieldTrim(TrimMode.Both), FieldOptional]
         public string AreaUnits;
 
-        [FieldOrder(15), FieldTrim(TrimMode.Both)]
+        [FieldOrder(15), FieldTrim(TrimMode.Both), FieldOptional]
         public double? ChannelVelocity;
 
-        [FieldOrder(16), FieldTrim(TrimMode.Both)]
+        [FieldOrder(16), FieldTrim(TrimMode.Both), FieldOptional]
         public string VelocityUnits;
 
-        [FieldOrder(17), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(17), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Party;
 
-        [FieldOrder(18), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(18), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Comments;
 
-        [FieldOrder(19), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(19), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading1Parameter;
-        [FieldOrder(20), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(20), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading1Units;
-        [FieldOrder(21), FieldTrim(TrimMode.Both)]
+        [FieldOrder(21), FieldTrim(TrimMode.Both), FieldOptional]
         public double? Reading1Value;
 
-        [FieldOrder(22), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(22), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading2Parameter;
-        [FieldOrder(23), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(23), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading2Units;
-        [FieldOrder(24), FieldTrim(TrimMode.Both)]
+        [FieldOrder(24), FieldTrim(TrimMode.Both), FieldOptional]
         public double? Reading2Value;
 
-        [FieldOrder(25), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(25), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading3Parameter;
-        [FieldOrder(26), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(26), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading3Units;
-        [FieldOrder(27), FieldTrim(TrimMode.Both)]
+        [FieldOrder(27), FieldTrim(TrimMode.Both), FieldOptional]
         public double? Reading3Value;
 
-        [FieldOrder(28), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(28), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading4Parameter;
-        [FieldOrder(29), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(29), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading4Units;
-        [FieldOrder(30), FieldTrim(TrimMode.Both)]
+        [FieldOrder(30), FieldTrim(TrimMode.Both), FieldOptional]
         public double? Reading4Value;
 
-        [FieldOrder(31), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(31), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading5Parameter;
-        [FieldOrder(32), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow)]
+        [FieldOrder(32), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Reading5Units;
-        [FieldOrder(33), FieldTrim(TrimMode.Both)]
+        [FieldOrder(33), FieldTrim(TrimMode.Both), FieldOptional]
         public double? Reading5Value;
 
         public class Reading

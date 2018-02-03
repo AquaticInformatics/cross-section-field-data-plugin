@@ -41,9 +41,15 @@ namespace Server.Plugins.FieldVisit.StageDischarge
                 {
                     return ParseFileResult.CannotParse(NoRecordsInInputFile);
                 }
-                if (_parser.InvalidRecords > 0)
+                if (_parser.Errors.Any())
                 {
-                    return ParseFileResult.SuccessfullyParsedButDataInvalid(InputFileContainsInvalidRecords);
+                    if (_parser.ValidRecords > 0)
+                    {
+                        return ParseFileResult.SuccessfullyParsedButDataInvalid(
+                            $"{InputFileContainsInvalidRecords}: {_parser.Errors.Length} errors:\n{string.Join("\n", _parser.Errors.Take(3))}");
+                    }
+
+                    return ParseFileResult.CannotParse();
                 }
 
                 logger.Info($"Parsed {_parser.ValidRecords} from input file.");
@@ -168,7 +174,7 @@ namespace Server.Plugins.FieldVisit.StageDischarge
         private void CreateReadingsForVisit(FieldVisitInfo fieldVisit, StageDischargeRecord record)
         {
             var readingTime = GetHumanReadableMidpoint(
-                new DateTimeInterval(record.MeasurementEndDateTime, record.MeasurementStartDateTime));
+                new DateTimeInterval(record.MeasurementStartDateTime, record.MeasurementEndDateTime));
 
             foreach (var reading in record.Readings)
             {

@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FieldDataPluginFramework;
 using FieldDataPluginFramework.Context;
 using FieldDataPluginFramework.DataModel;
 using FieldDataPluginFramework.DataModel.DischargeActivities;
 using FieldDataPluginFramework.Results;
+using FileHelpers;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -211,11 +213,12 @@ namespace Server.Plugins.FieldVisit.StageDischarge.UnitTests
         }
 
         [Test]
-        public void ParseFile_WithInvalidRecords_ReturnsError()
+        public void ParseFile_WithSomeInvalidRecords_ReturnsError()
         {
             var mockCsvDataParser = Substitute.For<IDataParser<StageDischargeRecord>>();
             mockCsvDataParser.ParseInputData(Arg.Any<Stream>()).Returns(_fixture.Create<IEnumerable<StageDischargeRecord>>());
-            mockCsvDataParser.InvalidRecords.Returns(5);
+            mockCsvDataParser.Errors.Returns(_fixture.CreateMany<string>().ToArray());
+            mockCsvDataParser.ValidRecords.Returns(1);
             var plugin = new StageDischargePlugin(mockCsvDataParser);
             using (var stream = new MemoryStream(Encoding.ASCII.GetBytes("Good and bad data")))
             {

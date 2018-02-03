@@ -1,5 +1,5 @@
 ﻿{
-    "PluginFolderName": "eHSNPlugin",
-    "Description": "Imports eHSN XML files into AQTS field visits",
+    "PluginFolderName": "StageDischargeReadings",
+    "Description": "Stage/discharge/reading CSV parser",
     "AssemblyQualifiedTypeName": "Server.Plugins.FieldVisit.StageDischarge.StageDischargePlugin, Server.Plugins.FieldVisit.StageDischarge"
 }
