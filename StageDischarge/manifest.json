@@ -1,5 +1,0 @@
-﻿{
-    "PluginFolderName": "StageDischargeReadings",
-    "Description": "Stage/discharge/reading CSV parser",
-    "AssemblyQualifiedTypeName": "Server.Plugins.FieldVisit.StageDischarge.StageDischargePlugin, Server.Plugins.FieldVisit.StageDischarge"
-}
