@@ -38,16 +38,16 @@ Lines that follow the `<FieldName> : <FieldValue>` pattern will not be parsed as
 
 | Field name | Data type | Required? | Description |
 | --- | --- | --- | --- |
-| **Location** | string | Y | blah. |
-| **StartDate** | Timestamp | Y | blah. |
-| **EndDate** | Timestamp | Y | blah. |
-| **Party** | string | N | blah. |
-| **Channel** | string | N | blah. |
-| **RelativeLocation** | string | N | blah. |
-| **Stage** | string | N | blah. |
-| **Unit** | string | N | blah. |
-| **StartBank** | string | N | blah. |
-| **Comment** | string | N | blah. |
+| **Location** | string | Y | The location identifier for this measurement. |
+| **StartDate** | [Timestamp](#timestamps) | Y | The starting time of the survey. |
+| **EndDate** | [Timestamp](#timestamps) | Y | The ending time of the survey. |
+| **Party** | string | N | The party performing the survey. |
+| **Channel** | string | N | The name of the channel at the location. If omitted, a value of `Main` will be used. |
+| **RelativeLocation** | string | N | A description of where the measurement was taken. If omitted, a value of `At the control` will be used. |
+| **Stage** | numeric | Y | The stage height at the time of the survey.  |
+| **Unit** | string | Y | The stage height units. |
+| **StartBank** | string | Y | The starting bank of the survey, The value must start with `Left`, `LEW`, `Right`, or `REW`. |
+| **Comment** | string | N | An optional comment. |
 
 ### CSV Header lines
 
@@ -57,10 +57,10 @@ The header line must be the 3 column names, listed in the order below, separated
 
 ### Column definitions for CSV data rows
 
-| ColumnName | Datatype | Required? | Description |
+| ColumnName | Data type | Required? | Description |
 | --- | --- | --- | --- |
-| **Distance** | double | Y | The distance from the start bank. |
-| **Elevation** | double | Y | The elevation.|
+| **Distance** | numeric | Y | The distance from the start bank. |
+| **Elevation** | numeric | Y | The elevation relative to the stage. Positive values are deeper (below the water line). Negative values are above the water line. |
 | **Comment** | string | N | An optional comment |
 
 ### Timestamps
