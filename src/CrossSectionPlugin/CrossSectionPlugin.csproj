@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CC14EEA7-79D6-4D76-9EBB-0FD348BDD260}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CrossSectionPlugin</RootNamespace>
+    <AssemblyName>CrossSectionPlugin</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FieldDataPluginFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\Aquarius.FieldDataFramework.17.4.1\lib\net47\FieldDataPluginFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="FileHelpers, Version=3.2.7.0, Culture=neutral, PublicKeyToken=3e0c08d59cc3d657, processorArchitecture=MSIL">
+      <HintPath>..\packages\FileHelpers.3.2.7\lib\net45\FileHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CrossSectionFileParser.cs" />
+    <Compile Include="Helpers\CrossSectionParserConstants.cs" />
+    <Compile Include="Helpers\DateTimeOffsetHelper.cs" />
+    <Compile Include="Helpers\DoubleHelper.cs" />
+    <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Exceptions\InvalidStartBankException.cs" />
+    <Compile Include="Helpers\StartPointTypeHelper.cs" />
+    <Compile Include="Interfaces\ICrossSectionParser.cs" />
+    <Compile Include="Interfaces\ICrossSectionMapper.cs" />
+    <Compile Include="Interfaces\ICrossSectionPointMapper.cs" />
+    <Compile Include="Interfaces\IFieldVisitHandler.cs" />
+    <Compile Include="Mappers\CrossSectionMapper.cs" />
+    <Compile Include="CrossSectionPlugin.cs" />
+    <Compile Include="Mappers\CrossSectionPointMapper.cs" />
+    <Compile Include="Exceptions\CrossSectionCsvFormatException.cs" />
+    <Compile Include="Exceptions\CrossSectionSurveyDataFormatException.cs" />
+    <Compile Include="Parsers\CrossSectionSurveyParser.cs" />
+    <Compile Include="Model\CrossSectionSurvey.cs" />
+    <Compile Include="Model\CrossSectionPoint.cs" />
+    <Compile Include="Helpers\CrossSectionDataFields.cs" />
+    <Compile Include="FieldVisitHandlers\FieldVisitHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
