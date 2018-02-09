@@ -18,7 +18,7 @@ namespace CrossSectionPlugin.UnitTests.Parsers
     [TestFixture]
     public class CrossSectionSurveyParserTests
     {
-        private const string NamespacePrefix = "Server.Plugins.FieldVisit.CrossSection.UnitTests.TestData.";
+        private const string NamespacePrefix = "CrossSectionPlugin.UnitTests.TestData.";
 
         private const string ValidCrossSectionFilePath = NamespacePrefix + "CrossSection.csv";
         private const string DuplicateMetadataCrossSectionFilePath = NamespacePrefix + "CrossSectionWithDuplicateLocationFields.csv";

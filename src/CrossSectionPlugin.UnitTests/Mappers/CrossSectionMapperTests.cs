@@ -28,8 +28,7 @@ namespace CrossSectionPlugin.UnitTests.Mappers
         [SetUp]
         public void TestSetup()
         {
-            _fixture = AutoFixtureHelper.GetCommonFixture();
-            NodaTimeFixtureRegistrar.RegisterUtcDateTime(_fixture);
+            _fixture = new Fixture();
 
             _crossSectionPoints = _fixture.CreateMany<Framework.CrossSectionPoint>().ToList();
 
