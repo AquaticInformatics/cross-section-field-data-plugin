@@ -13,7 +13,7 @@ namespace CrossSectionPlugin.Model
         [FieldOrder(2), FieldTrim(TrimMode.Both), FieldOptional]
         public double? Elevation;
 
-        [FieldOrder(3), FieldTrim(TrimMode.Both), FieldQuoted, FieldOptional]
+        [FieldOrder(3), FieldTrim(TrimMode.Both), FieldQuoted(QuoteMode.OptionalForBoth, MultilineMode.NotAllow), FieldOptional]
         public string Comment;
 
         public bool IsEmptyPoint()

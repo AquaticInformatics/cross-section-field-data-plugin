@@ -4,11 +4,76 @@
 
 An AQTS field data plugin supporting cross section measurements.
 
+## Want to install this plugin?
+
+- Download the latest release of the plugin [here](../../releases/latest)
+- Install it using the [FieldVisitPluginTool](https://github.com/AquaticInformatics/aquarius-field-data-framework/tree/master/src/FieldDataPluginTool)
+
 ## Supported CSV format
 
-The format of the CSV files supported by this plugin is described [here](src/CrossSectionPlugin)
+The supported CSV file has the following text rules:
+- UTF-8 encoding is assumed. The UTF-8 byte-order-mark of (`0xEF, 0xBB, 0xBF`) at the start of the file is completely optional.
+- Lines starting with a `#` as the first non-whitespace character are ignored as comment-lines.
+- Completely blank lines are ignored.
+- The header line (line 14 in the [example file](#example-file) below) can be repeated any number of times, and will always be ignored. The field names in the header line must match the English field names listed in the table below.
+- Leading/trailing whitespace is allowed between fields.
+- Double-quotes are only required if a field value contains a comma, or if the value must have leading/trailing whitespace.
+- Multi-line text values are not supported. (ie. the **Comment** field must be a single line)
 
-## Requirements
+### Header lines
+
+A header line does not need to appear at all in the CSV file.
+But if it does exist, it must exactly match line 5 in the [example file](#example-file) below.
+The header line must be the 18 field names, listed in the order below, separated by commas. Whitespace between column names is ignored.
+
+### Field lines
+
+### Timestamps
+
+Timestamps are specified in ISO 8601 format. Specifically the `"O"` (roundtrip) format for .NET DateTimeOffset values is used.
+
+`yyyy-MM-ddTHH:mm:ss.fffffffzzz`
+
+- The `T` character must separate the date and time portions.
+- All seven fractional seconds digits are optional. This 100 nanosecond precision is the full resolution supported by AQUARIUS Time-Series.
+- The time-zone (`zzz`) portion can either be an explicit offset in hours/minutes (`+04:00` or `-00:30`) or it can be the UTC indicator of the letter `Z`.
+- These constraints ensure that the timestamps contain no ambiguity.
+
+See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings#Roundtrip for more details.
+
+### Column definitions
+
+| ColumnName | Datatype | Required? | Description |
+| --- | --- | --- | --- |
+| **Distance** | double | Y | The distance from the start bank. |
+| **Elevation** | double | Y | The elevation.|
+| **Comment** | string | N | An optional comment |
+
+### Example file
+
+```
+AQUARIUS Cross-Section CSV v1.0
+ 
+Location: Server.Plugins.FieldVisit.CrossSection.Tests.CompleteCrossSection
+StartDate: 2001-05-08T14:32:15+07:00
+EndDate: 2001-05-08T17:12:45+07:00
+Party: Cross-Section Party
+Channel: Right overflow
+RelativeLocation: At the Gage
+Stage: 12.2
+Unit: ft
+StartBank: Left bank
+Comment: Cross-section survey comments
+ 
+Distance, Elevation, Comment
+0, 7.467,
+19.1, 6.909, "some comment"
+44.8, 6.3, "yet, another, comment"
+70.1, 5.356, another comment
+82.4, 5.287,
+```
+
+## Requirements for building the plugin from source
 
 - Requires Visual Studio 2017 (Community Edition is fine)
 - .NET 4.7 runtime
