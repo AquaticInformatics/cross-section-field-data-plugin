@@ -2,7 +2,9 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/rplg2foqo77g2kih/branch/master?svg=true)](https://ci.appveyor.com/project/SystemsAdministrator/cross-section-field-data-plugin/branch/master)
 
-An AQTS field data plugin supporting cross section measurements.
+An AQTS field data plugin to import cross section survey measurements.
+
+![Cross Section Survey](images/CrossSectionDiagram.png)
 
 ## Want to install this plugin?
 
@@ -20,13 +22,46 @@ The supported CSV file has the following text rules:
 - Double-quotes are only required if a field value contains a comma, or if the value must have leading/trailing whitespace.
 - Multi-line text values are not supported. (ie. the **Comment** field must be a single line)
 
-### Header lines
+### Starting line
 
-A header line does not need to appear at all in the CSV file.
-But if it does exist, it must exactly match line 5 in the [example file](#example-file) below.
-The header line must be the 18 field names, listed in the order below, separated by commas. Whitespace between column names is ignored.
+The first non-comment, non-blank line must be `AQUARIUS Cross-Section CSV v1.0`. Leading/trailing whitespace is ignored.
+
+If the first line does not match the expected pattern, the plugin will not attempt to parse the file.
 
 ### Field lines
+
+Lines that follow the `<FieldName> : <FieldValue>` pattern will not be parsed as CSV data rows, but will set some field values which apply to the entire cross-section measurement.
+
+- Leading/trailing whitespace is ignored
+- The whitespace separating `<FieldName>`, the colon `:`, and `<FieldValue>` is ignored.
+- The `<FieldName>`s are case-insensitive.
+
+| Field name | Data type | Required? | Description |
+| --- | --- | --- | --- |
+| **Location** | string | Y | blah. |
+| **StartDate** | Timestamp | Y | blah. |
+| **EndDate** | Timestamp | Y | blah. |
+| **Party** | string | N | blah. |
+| **Channel** | string | N | blah. |
+| **RelativeLocation** | string | N | blah. |
+| **Stage** | string | N | blah. |
+| **Unit** | string | N | blah. |
+| **StartBank** | string | N | blah. |
+| **Comment** | string | N | blah. |
+
+### CSV Header lines
+
+A header line does not need to appear at all in the CSV file.
+But if it does exist, it must exactly match line 14 in the [example file](#example-file) below.
+The header line must be the 3 column names, listed in the order below, separated by commas. Whitespace between column names is ignored.
+
+### Column definitions for CSV data rows
+
+| ColumnName | Datatype | Required? | Description |
+| --- | --- | --- | --- |
+| **Distance** | double | Y | The distance from the start bank. |
+| **Elevation** | double | Y | The elevation.|
+| **Comment** | string | N | An optional comment |
 
 ### Timestamps
 
@@ -40,14 +75,6 @@ Timestamps are specified in ISO 8601 format. Specifically the `"O"` (roundtrip) 
 - These constraints ensure that the timestamps contain no ambiguity.
 
 See https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings#Roundtrip for more details.
-
-### Column definitions
-
-| ColumnName | Datatype | Required? | Description |
-| --- | --- | --- | --- |
-| **Distance** | double | Y | The distance from the start bank. |
-| **Elevation** | double | Y | The elevation.|
-| **Comment** | string | N | An optional comment |
 
 ### Example file
 
