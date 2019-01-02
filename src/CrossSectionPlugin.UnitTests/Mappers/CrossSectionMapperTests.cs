@@ -10,7 +10,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Framework = FieldDataPluginFramework.DataModel.CrossSection;
-using CrossSectionPoint = CrossSectionPlugin.Model.CrossSectionPoint;
+using ICrossSectionPoint = CrossSectionPlugin.Model.ICrossSectionPoint;
 using CrossSectionSurvey = CrossSectionPlugin.Model.CrossSectionSurvey;
 
 namespace CrossSectionPlugin.UnitTests.Mappers
@@ -33,7 +33,7 @@ namespace CrossSectionPlugin.UnitTests.Mappers
             _crossSectionPoints = _fixture.CreateMany<Framework.CrossSectionPoint>().ToList();
 
             _mockCrossSectionPointMapper = Substitute.For<ICrossSectionPointMapper>();
-            _mockCrossSectionPointMapper.MapPoints(Arg.Any<List<CrossSectionPoint>>())
+            _mockCrossSectionPointMapper.MapPoints(Arg.Any<List<ICrossSectionPoint>>())
                 .Returns(_crossSectionPoints);
 
             _crossSectionMapper = new CrossSectionMapper(_mockCrossSectionPointMapper);
@@ -79,7 +79,7 @@ namespace CrossSectionPlugin.UnitTests.Mappers
         {
             _crossSectionMapper.MapCrossSection(_crossSectionSurvey);
 
-            _mockCrossSectionPointMapper.Received(1).MapPoints(Arg.Any<List<CrossSectionPoint>>());
+            _mockCrossSectionPointMapper.Received(1).MapPoints(Arg.Any<List<ICrossSectionPoint>>());
         }
 
         [TestCase("Unit")]

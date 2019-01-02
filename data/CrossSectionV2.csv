@@ -1,0 +1,19 @@
+﻿AQUARIUS Cross-Section CSV v2.0
+
+Location: RKB002HK
+StartDate: 2001-05-08T14:32:15+07:00
+EndDate: 2001-05-08T17:12:45+07:00
+Party: Joe Fieldtech
+Channel: Right overflow
+RelativeLocation: At the Gage
+Stage: 12.2
+Unit: ft
+StartBank: Left bank
+Comment: Used the big willow tree at the river bank as our anchor point.
+
+PointOrder, Distance, Elevation, Comment
+3, 44.8, 6.3, "yet, another, comment"
+1, 0, 7.467,
+4, 70.1, 5.356, another comment
+2, 19.1, 6.909, "some comment"
+5, 82.4, 5.287,

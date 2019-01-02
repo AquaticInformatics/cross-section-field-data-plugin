@@ -10,19 +10,23 @@ using CrossSectionPlugin.Interfaces;
 using CrossSectionPlugin.Model;
 using FileHelpers;
 using FileHelpers.Events;
+using static CrossSectionPlugin.Helpers.CrossSectionParserConstants;
+using static System.FormattableString;
 
 namespace CrossSectionPlugin.Parsers
 {
     public class CrossSectionSurveyParser : ICrossSectionParser
     {
-        private const string AquariusCrossSectionCsvHeader = CrossSectionParserConstants.Header;
+        private const string AquariusCrossSectionCsvHeader = Header;
+        public const string CannotParseFileVersion = "Cannot parse the version from the file header";
         private CrossSectionSurvey CrossSectionSurvey { get; set; }
+        private bool _isPointOrderSpecified;
 
         public CrossSectionSurvey ParseFile(Stream fileStream)
         {
             CreateCrossSectionSurvey();
 
-            CrossSectionSurvey.Points = ParseCrossSectionFile(fileStream);
+            ParseCrossSectionFile(fileStream);
 
             return CrossSectionSurvey;
         }
@@ -32,13 +36,20 @@ namespace CrossSectionPlugin.Parsers
             CrossSectionSurvey = new CrossSectionSurvey();
         }
 
-        private List<CrossSectionPoint> ParseCrossSectionFile(Stream fileStream)
+        private void ParseCrossSectionFile(Stream fileStream)
         {
             using (var reader = CreateStreamReader(fileStream))
             {
                 ParseVersionFromHeader(reader);
 
-                return ParsePointData(reader);
+                _isPointOrderSpecified = IsPointOrderSpecifiedOrInferred(reader);
+            }
+
+            fileStream.Position = 0;
+
+            using (var reader = CreateStreamReader(fileStream))
+            {
+                ParsePoints(reader);
             }
         }
 
@@ -67,7 +78,7 @@ namespace CrossSectionPlugin.Parsers
 
         private static bool IsHeaderRecord(string header)
         {
-            return header.StartsWith(AquariusCrossSectionCsvHeader, StringComparison.OrdinalIgnoreCase);
+            return header.StartsWith(AquariusCrossSectionCsvHeader, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void ParseFileVersion(string headerLine)
@@ -78,32 +89,81 @@ namespace CrossSectionPlugin.Parsers
             var versionNumber = versionNumberRegex.Match(headerLine);
 
             if (!versionNumber.Success)
-                return;
+                throw new CrossSectionSurveyDataFormatException(CannotParseFileVersion);
 
-            Version version;
-
-            if (Version.TryParse(versionNumber.Value, out version))
+            if (Version.TryParse(versionNumber.Value, out var version))
                 CrossSectionSurvey.CsvFileVersion = version;
         }
 
-        private List<CrossSectionPoint> ParsePointData(StreamReader reader)
+        private static bool IsPointOrderSpecifiedOrInferred(StreamReader reader)
         {
-            var engine = CreateCsvParser(reader);
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                if (line == null) continue;
+                var lineTokens = line.Split(CrossSectionPointDataSeparator.ToCharArray());
 
-            const int parseAllRecords = -1;
-            return engine.ReadStream(reader, parseAllRecords).ToList();
+                if (lineTokens.First().Equals("PointOrder", StringComparison.InvariantCultureIgnoreCase)) return true;
+            }
+
+            return false;
         }
 
-        private DelimitedFileEngine<CrossSectionPoint> CreateCsvParser(StreamReader reader)
+        private void ParsePoints(StreamReader reader)
         {
-            var engine = new DelimitedFileEngine<CrossSectionPoint>(reader.CurrentEncoding);
+            switch (CrossSectionSurvey.CsvFileVersion.Major)
+            {
+                case 1:
+                {
+                    if (_isPointOrderSpecified) throw new CrossSectionSurveyDataFormatException(
+                        Invariant($"{CrossSectionSurvey.CsvFileVersion} does not support \"PointOrder\" as a column"));
+                    CrossSectionSurvey.Points = ParsePointData<CrossSectionPointV1>(reader);
+                    break;
+                }
+                case 2:
+                {
+                    if (_isPointOrderSpecified)
+                    {
+                        CrossSectionSurvey.Points = ParsePointData<CrossSectionPointV2>(reader);
+                    }
+                    else
+                    {
+                        var points = ParsePointData<CrossSectionPointV1>(reader);
+                        CrossSectionSurvey.Points = ConvertV1PointsToV2(points);
+                    }
+                    break;
+                }
+                default:
+                {
+                    throw new CrossSectionSurveyDataFormatException(
+                        Invariant($"{CrossSectionSurvey.CsvFileVersion} is not a supported AQUARIUS Cross-Section file version"));
+                }
+            }
+        }
+
+        private List<ICrossSectionPoint> ParsePointData<TCrossSectionPoint>(StreamReader reader)
+            where TCrossSectionPoint : class, ICrossSectionPoint
+        {
+            var engine = CreateCsvParser<TCrossSectionPoint>(reader);
+
+            const int parseAllRecords = -1;
+            var points = engine.ReadStream(reader, parseAllRecords).ToList();
+
+            return new List<ICrossSectionPoint>(points);
+        }
+
+        private DelimitedFileEngine<TCrossSectionPoint> CreateCsvParser<TCrossSectionPoint>(StreamReader reader)
+            where TCrossSectionPoint : class, ICrossSectionPoint
+        {
+            var engine = new DelimitedFileEngine<TCrossSectionPoint>(reader.CurrentEncoding);
             engine.Options.IgnoreEmptyLines = true;
             engine.BeforeReadRecord += OnBeforeReadRecord;
 
             return engine;
         }
 
-        private void OnBeforeReadRecord(EngineBase engine, BeforeReadEventArgs<CrossSectionPoint> eventArgs)
+        private void OnBeforeReadRecord<TCrossSectionPoint>(EngineBase engine, BeforeReadEventArgs<TCrossSectionPoint> eventArgs)
+            where TCrossSectionPoint : class, ICrossSectionPoint
         {
             var line = eventArgs.RecordLine;
             eventArgs.SkipThisRecord = true;
@@ -127,7 +187,7 @@ namespace CrossSectionPlugin.Parsers
 
         private static bool IsCrossSectionSurveyData(string line)
         {
-            return line.Contains(CrossSectionParserConstants.CrossSectionDataSeparator);
+            return line.Contains(CrossSectionDataSeparator);
         }
 
         private void ParseCrossSectionSurveyData(string line)
@@ -135,14 +195,14 @@ namespace CrossSectionPlugin.Parsers
             var data = ParseCrossSectionData(line);
 
             if (CrossSectionSurvey.Fields.ContainsKey(data.Key))
-                throw new CrossSectionSurveyDataFormatException(FormattableString.Invariant($"File has duplicate {data.Key} records"));
+                throw new CrossSectionSurveyDataFormatException(Invariant($"File has duplicate {data.Key} records"));
 
             CrossSectionSurvey.Fields.Add(data.Key, data.Value);
         }
 
         private static KeyValuePair<string, string> ParseCrossSectionData(string line)
         {
-            var separatorIndex = line.IndexOf(CrossSectionParserConstants.CrossSectionDataSeparator, StringComparison.Ordinal);
+            var separatorIndex = line.IndexOf(CrossSectionDataSeparator, StringComparison.Ordinal);
 
             var field = line.Substring(0, separatorIndex).Trim();
             var data = line.Substring(separatorIndex + 1).Trim();
@@ -152,9 +212,22 @@ namespace CrossSectionPlugin.Parsers
 
         private static bool IsCrossSectionPointData(string line)
         {
-            var lineTokens = line.Split(CrossSectionParserConstants.CrossSectionPointDataSeparator.ToCharArray());
+            var lineTokens = line.Split(CrossSectionPointDataSeparator.ToCharArray());
 
             return DoubleHelper.Parse(lineTokens.FirstOrDefault()).HasValue;
+        }
+
+        private List<ICrossSectionPoint> ConvertV1PointsToV2(List<ICrossSectionPoint> points)
+        {
+            var pointOrder = 0;
+            var convertedPoints = points.OfType<CrossSectionPointV1>().Select(v1Point => new CrossSectionPointV2
+            {
+                PointOrder = ++pointOrder,
+                Distance = v1Point.Distance,
+                Elevation = v1Point.Elevation,
+                Comment = v1Point.Comment
+            }).Cast<ICrossSectionPoint>().ToList();
+            return convertedPoints;
         }
     }
 }

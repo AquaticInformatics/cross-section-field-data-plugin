@@ -1,0 +1,11 @@
+﻿AQUARIUS Cross-Section CSV v1.0
+
+Location: Server.Plugins.FieldVisit.CrossSection.Tests.V1CrossSectionWithSortOrder
+StartDate: 2001-05-08T14:32:15+07:00
+EndDate: 2001-05-08T17:12:45+07:00
+
+PointOrder, Distance, Elevation, Comment
+1, 0, 1, "comment"
+2, 2, 3,
+3, 4, 5,
+

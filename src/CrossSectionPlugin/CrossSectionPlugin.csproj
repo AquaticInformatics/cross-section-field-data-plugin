@@ -11,7 +11,7 @@
     <AssemblyName>CrossSectionPlugin</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,10 +34,11 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FieldDataPluginFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\Aquarius.FieldDataFramework.17.4.1\lib\net47\FieldDataPluginFramework.dll</HintPath>
+    <Reference Include="FieldDataPluginFramework, Version=2.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\Aquarius.FieldDataFramework.18.4.0\lib\net472\FieldDataPluginFramework.dll</HintPath>
     </Reference>
     <Reference Include="FileHelpers, Version=3.2.7.0, Culture=neutral, PublicKeyToken=3e0c08d59cc3d657, processorArchitecture=MSIL">
       <HintPath>..\packages\FileHelpers.3.2.7\lib\net45\FileHelpers.dll</HintPath>
@@ -62,22 +64,22 @@
     <Compile Include="Mappers\CrossSectionPointMapper.cs" />
     <Compile Include="Exceptions\CrossSectionCsvFormatException.cs" />
     <Compile Include="Exceptions\CrossSectionSurveyDataFormatException.cs" />
+    <Compile Include="Model\ICrossSectionPoint.cs" />
+    <Compile Include="Model\CrossSectionPointV2.cs" />
     <Compile Include="Parsers\CrossSectionSurveyParser.cs" />
     <Compile Include="Model\CrossSectionSurvey.cs" />
-    <Compile Include="Model\CrossSectionPoint.cs" />
+    <Compile Include="Model\CrossSectionPointV1.cs" />
     <Compile Include="Helpers\CrossSectionDataFields.cs" />
     <Compile Include="FieldVisitHandlers\FieldVisitHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>$(SolutionDir)packages\Aquarius.FieldDataFramework.17.4.1\tools\PluginPackager.exe $(TargetPath) /OutputPath=$(ProjectDir)deploy\$(Configuration)\$(TargetName).plugin
-$(SolutionDir)packages\Aquarius.FieldDataFramework.17.4.1\tools\PluginTester.exe /Plugin=$(TargetPath) /Data=$(SolutionDir)..\data\CrossSection.csv</PostBuildEvent>
+    <PostBuildEvent>$(SolutionDir)packages\Aquarius.FieldDataFramework.18.4.0\tools\PluginPackager.exe $(TargetPath) /OutputPath=$(ProjectDir)deploy\$(Configuration)\$(TargetName).plugin
+$(SolutionDir)packages\Aquarius.FieldDataFramework.18.4.0\tools\PluginTester.exe /Plugin=$(TargetPath) /Data=$(SolutionDir)..\data\CrossSectionV1.csv
+$(SolutionDir)packages\Aquarius.FieldDataFramework.18.4.0\tools\PluginTester.exe /Plugin=$(TargetPath) /Data=$(SolutionDir)..\data\CrossSectionV2.csv</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using CrossSectionPlugin.Model;
 using FieldDataPluginFramework.DataModel.CrossSection;
 
 namespace CrossSectionPlugin.Interfaces
 {
     public interface ICrossSectionPointMapper
     {
-        ICollection<CrossSectionPoint> MapPoints(List<Model.CrossSectionPoint> points);
+        List<CrossSectionPoint> MapPoints(List<ICrossSectionPoint> points);
     }
 }

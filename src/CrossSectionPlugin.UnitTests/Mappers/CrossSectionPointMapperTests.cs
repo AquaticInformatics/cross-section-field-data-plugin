@@ -4,100 +4,186 @@ using System.Linq;
 using CrossSectionPlugin.Exceptions;
 using CrossSectionPlugin.Interfaces;
 using CrossSectionPlugin.Mappers;
+using CrossSectionPlugin.Model;
+using CrossSectionPlugin.UnitTests.Helpers;
+using FluentAssertions;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Framework = FieldDataPluginFramework.DataModel.CrossSection;
-using CrossSectionPoint = CrossSectionPlugin.Model.CrossSectionPoint;
 
 namespace CrossSectionPlugin.UnitTests.Mappers
 {
     [TestFixture]
     public class CrossSectionPointMapperTests
     {
-        private IFixture _fixture;
-        private ICrossSectionPointMapper _crossSectionPointMapper;
+        private IFixture Fixture { get; set; }
+        private ICrossSectionPointMapper CrossSectionPointMapper { get; set; }
 
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            _fixture = new Fixture();
-            _crossSectionPointMapper = new CrossSectionPointMapper();
-        }
-
-        [Test]
-        public void MapPoints_CrossSectionsPoints_IsMappedAsExpected()
-        {
-            var points = _fixture.CreateMany<CrossSectionPoint>().ToList();
-
-            var actual = _crossSectionPointMapper.MapPoints(points);
-
-            AssertPointsMatchExpected(actual, points);
-        }
-
-        private static void AssertPointsMatchExpected(IEnumerable<Framework.CrossSectionPoint> actualPoints,
-            IEnumerable<CrossSectionPoint> expectedPoints)
-        {
-            foreach (var point in actualPoints.Zip(expectedPoints, Tuple.Create))
-            {
-                var actual = point.Item1;
-                var expectation = point.Item2;
-
-                AssertPointIsEqual(actual, expectation);
-            }
-        }
-
-        private static void AssertPointIsEqual(Framework.CrossSectionPoint actual, CrossSectionPoint expectation)
-        {
-            Assert.That(actual.Distance, Is.EqualTo(expectation.Distance));
-            Assert.That(actual.Elevation, Is.EqualTo(expectation.Elevation));
-            Assert.That(actual.Comments, Is.EqualTo(expectation.Comment));
-        }
-
-        [Test]
-        public void MapPoints_EmptyCrossSectionsPoints_EmptyPointsAreIgnored()
-        {
-            var points = new List<CrossSectionPoint> { CreateEmptyPoint(), CreateEmptyPoint(), null };
-
-            var actual = _crossSectionPointMapper.MapPoints(points);
-
-            Assert.That(actual, Is.Empty);
-        }
-
-        private static CrossSectionPoint CreateEmptyPoint()
-        {
-            return new CrossSectionPoint
-            {
-                Distance = null,
-                Elevation = null,
-                Comment = null
-            };
+            Fixture = new Fixture();
+            CrossSectionPointMapper = new CrossSectionPointMapper();
         }
 
         [Test]
         public void MapPoints_NullPointsCollection_Throws()
         {
-            TestDelegate testDelegate = () => _crossSectionPointMapper.MapPoints(null);
+            void MapPointsWithNullPointsCollection() => CrossSectionPointMapper.MapPoints(null);
 
-            Assert.That(testDelegate, Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(MapPointsWithNullPointsCollection, Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void MapPoints_InvalidPoint_Throws()
+        public void MapPoints_V1CrossSectionsPoints_IsMappedAsExpected()
         {
-            var points = new List<CrossSectionPoint> { CreateInvalidPoint() };
+            var points = CreateV1Points();
 
-            TestDelegate testDelegate = () => _crossSectionPointMapper.MapPoints(points);
+            var actual = CrossSectionPointMapper.MapPoints(points);
 
-            Assert.That(testDelegate, Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>()
+            AssertV1PointsMatchExpected(actual, points);
+        }
+
+        private List<ICrossSectionPoint> CreateV1Points()
+        {
+            return new List<ICrossSectionPoint>(Fixture.CreateMany<CrossSectionPointV1>()
+                .OrderBy(p => p.Distance)
+                .ToList());
+        }
+
+        [Test]
+        public void MapPoints_EmptyV1CrossSectionsPoints_EmptyPointsAreIgnored()
+        {
+            var points = new List<ICrossSectionPoint> { new CrossSectionPointV1(), null };
+
+            var actual = CrossSectionPointMapper.MapPoints(points);
+
+            Assert.That(actual, Is.Empty);
+        }
+
+        private void AssertV1PointsMatchExpected(List<Framework.CrossSectionPoint> actualPoints,
+            List<ICrossSectionPoint> expectedPoints)
+        {
+            actualPoints.Should().HaveCount(expectedPoints.Count);
+            for (var i = 0; i < actualPoints.Count; i++)
+            {
+                var actual = actualPoints[i];
+                var expected = expectedPoints[i] as CrossSectionPointV1;
+
+                Assert.That(expected, Is.Not.Null);
+                actual.PointOrder.Should().Be(i + 1);
+                actual.Distance.Should().Be(expected.Distance);
+                actual.Elevation.Should().Be(expected.Elevation);
+                actual.Comments.Should().Be(expected.Comment);
+                actual.Depth.Should().Be(null);
+            }
+        }
+
+        [Test]
+        public void MapPoints_V1PointWithoutDistanceAndElevation_Throws()
+        {
+            var points = new List<ICrossSectionPoint> { CreateV1PointWithoutDistanceAndElevation() };
+
+            void MapPointsWithoutRequiredFields() => CrossSectionPointMapper.MapPoints(points);
+
+            Assert.That(MapPointsWithoutRequiredFields, Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>()
                 .With.Message.Contains("must have both a Distance and Elevation"));
         }
 
-        private CrossSectionPoint CreateInvalidPoint()
+        private CrossSectionPointV1 CreateV1PointWithoutDistanceAndElevation()
         {
-            return _fixture.Build<CrossSectionPoint>()
-                .With(point => point.Distance, default(double?))
-                .With(point => point.Elevation, default(double?))
+            return Fixture.Build<CrossSectionPointV1>()
+                .With(point => point.Distance, null)
+                .With(point => point.Elevation, null)
                 .Create();
+        }
+
+        [Test]
+        public void MapPoints_V2CrossSectionsPoints_IsMappedAsExpected()
+        {
+            var points = CreateV2Points();
+
+            var actual = CrossSectionPointMapper.MapPoints(points);
+
+            AssertV2PointsMatchExpected(actual, points);
+        }
+
+        private List<ICrossSectionPoint> CreateV2Points()
+        {
+            return new List<ICrossSectionPoint>(Fixture.CreateMany<CrossSectionPointV2>()
+                .OrderBy(p => p.PointOrder)
+                .ToList());
+        }
+
+        private void AssertV2PointsMatchExpected(List<Framework.CrossSectionPoint> actualPoints,
+            List<ICrossSectionPoint> expectedPoints)
+        {
+            actualPoints.Should().HaveCount(expectedPoints.Count);
+            for (var i = 0; i < actualPoints.Count; i++)
+            {
+                var actual = actualPoints[i];
+                var expected = expectedPoints[i] as CrossSectionPointV2;
+
+                Assert.That(expected, Is.Not.Null);
+                actual.PointOrder.Should().Be(expected.PointOrder);
+                actual.Distance.Should().Be(expected.Distance);
+                actual.Elevation.Should().Be(expected.Elevation);
+                actual.Comments.Should().Be(expected.Comment);
+                actual.Depth.Should().Be(null);
+            }
+        }
+
+        [Test]
+        public void MapPoints_EmptyV2CrossSectionsPoints_EmptyPointsAreIgnored()
+        {
+            var points = new List<ICrossSectionPoint> { new CrossSectionPointV2(), null };
+
+            var actual = CrossSectionPointMapper.MapPoints(points);
+
+            Assert.That(actual, Is.Empty);
+        }
+
+        [Test]
+        public void MapPoints_V2PointWithoutPointOrderDistanceAndElevation_Throws()
+        {
+            var points = new List<ICrossSectionPoint> { CreateV2PointWithoutPointOrderDistanceAndElevation() };
+
+            void MapPointsWithoutRequiredFields() => CrossSectionPointMapper.MapPoints(points);
+
+            Assert.That(MapPointsWithoutRequiredFields, Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>()
+                .With.Message.Contains("must have PointOrder, Distance and Elevation"));
+        }
+
+        private CrossSectionPointV2 CreateV2PointWithoutPointOrderDistanceAndElevation()
+        {
+            return Fixture.Build<CrossSectionPointV2>()
+                .Without(point => point.PointOrder)
+                .Without(point => point.Distance)
+                .Without(point => point.Elevation)
+                .Create();
+        }
+
+        [Test]
+        public void MapPoints_MixOfCrossSectionPointVersions_Throws()
+        {
+            var points = CreateV1Points()
+                .Concat(CreateV2Points())
+                .ToList();
+
+            void MapMixedPointsVersions() => CrossSectionPointMapper.MapPoints(points);
+
+            Assert.That(MapMixedPointsVersions, Throws.Exception.TypeOf<InvalidCastException>());
+        }
+
+        [Test]
+        public void MapPoints_UnknownICrossSectionPoint_Throws()
+        {
+            var points = new List<ICrossSectionPoint> { new TestCrossSectionPoint() };
+
+            void MapMixedPointsVersions() => CrossSectionPointMapper.MapPoints(points);
+
+            Assert.That(MapMixedPointsVersions, Throws.Exception.TypeOf<CrossSectionCsvFormatException>()
+                .With.Message.Contains("Unsupported Cross-Section type"));
         }
     }
 }

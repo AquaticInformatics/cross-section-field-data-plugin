@@ -33,14 +33,14 @@ namespace CrossSectionPlugin.UnitTests.Helpers
             Assert.That(result, Is.Null);
         }
 
-        private readonly List<Tuple<string, double>> _doubleValueTestCases = new List<Tuple<string, double>>
+        private static readonly List<Tuple<string, double>> DoubleValueTestCases = new List<Tuple<string, double>>
         {
             Tuple.Create("1234", 1234d),
             Tuple.Create("1234.4321", 1234.4321),
             Tuple.Create("0", 0d)
         };
 
-        [TestCaseSource(nameof(_doubleValueTestCases))]
+        [TestCaseSource(nameof(DoubleValueTestCases))]
         public void Parse_ValidDoubleString_ReturnsExpectedValue(Tuple<string, double> testCases)
         {
             var value = testCases.Item1;
