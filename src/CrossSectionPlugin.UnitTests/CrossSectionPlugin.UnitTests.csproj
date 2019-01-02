@@ -11,12 +11,12 @@
     <AssemblyName>CrossSectionPlugin.UnitTests</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -27,7 +27,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -37,8 +37,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FieldDataPluginFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\Aquarius.FieldDataFramework.17.4.1\lib\net47\FieldDataPluginFramework.dll</HintPath>
+    <Reference Include="FieldDataPluginFramework, Version=2.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\Aquarius.FieldDataFramework.18.4.0\lib\net472\FieldDataPluginFramework.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.2.2.0.0\lib\net45\FluentAssertions.dll</HintPath>
@@ -60,6 +60,7 @@
     <Compile Include="Helpers\DateTimeOffsetHelperTests.cs" />
     <Compile Include="Helpers\DoubleHelperTests.cs" />
     <Compile Include="Helpers\StartPointTypeHelperTests.cs" />
+    <Compile Include="Helpers\TestCrossSectionPoint.cs" />
     <Compile Include="Mappers\CrossSectionMapperTests.cs" />
     <Compile Include="Mappers\CrossSectionPointMapperTests.cs" />
     <Compile Include="Model\CrossSectionSurveyTests.cs" />
@@ -79,7 +80,12 @@
     <EmbeddedResource Include="TestData\CrossSectionWithNegativeValues.csv" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EmbeddedResource Include="TestData\V1CrossSectionWithPointOrder.csv" />
+    <EmbeddedResource Include="TestData\V2CrossSection.csv" />
+    <EmbeddedResource Include="TestData\V2CrossSectionWithoutPointOrder.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

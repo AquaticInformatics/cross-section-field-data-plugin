@@ -23,6 +23,9 @@ namespace CrossSectionPlugin.UnitTests.Parsers
         private const string ValidCrossSectionFilePath = NamespacePrefix + "CrossSection.csv";
         private const string DuplicateMetadataCrossSectionFilePath = NamespacePrefix + "CrossSectionWithDuplicateLocationFields.csv";
         private const string NegativeValuesFilePath = NamespacePrefix + "CrossSectionWithNegativeValues.csv";
+        private const string V1FileWithPointOrderFilePath = NamespacePrefix + "V1CrossSectionWithPointOrder.csv";
+        private const string V2CrossSectionFilePath = NamespacePrefix + "V2CrossSection.csv";
+        private const string V2WithoutPointOrderFilePath = NamespacePrefix + "V2CrossSectionWithoutPointOrder.csv";
 
         private Stream _stream;
 
@@ -48,19 +51,20 @@ namespace CrossSectionPlugin.UnitTests.Parsers
         {
             _stream = new MemoryStream(_fixture.Create<byte[]>());
 
-            TestDelegate testDelegate =
-                () => _crossSectionParser.ParseFile(_stream);
+            void ParseWithNonCrossSectionFile() => _crossSectionParser.ParseFile(_stream);
 
-            Assert.That(testDelegate,
+            Assert.That(ParseWithNonCrossSectionFile,
                 Throws.Exception.TypeOf<CrossSectionCsvFormatException>().With.Message.Contains("not an AQUARIUS Cross-Section"));
         }
 
         private static readonly IEnumerable<string> ValidFileHeaders = new[]
         {
-            CrossSectionParserConstants.Header,
-            CrossSectionParserConstants.Header.ToLowerInvariant(),
-            CrossSectionParserConstants.Header.ToUpperInvariant(),
-            CrossSectionParserConstants.Header + "Some Other Text"
+            CrossSectionParserConstants.Header + " " + CrossSectionParserConstants.DefaultVersion,
+            CrossSectionParserConstants.Header + CrossSectionParserConstants.DefaultVersion,
+            CrossSectionParserConstants.Header.ToLowerInvariant() + " " + CrossSectionParserConstants.DefaultVersion,
+            CrossSectionParserConstants.Header.ToUpperInvariant() + " " + CrossSectionParserConstants.DefaultVersion,
+            CrossSectionParserConstants.Header + CrossSectionParserConstants.DefaultVersion + "Some Other Text",
+            CrossSectionParserConstants.Header + "Some Other Text" + CrossSectionParserConstants.DefaultVersion
         };
 
         [TestCaseSource(nameof(ValidFileHeaders))]
@@ -81,9 +85,8 @@ namespace CrossSectionPlugin.UnitTests.Parsers
         private static readonly IEnumerable<TestCaseData> VersionTests = new[]
         {
             new TestCaseData("v1.2.5"),
-            new TestCaseData("55.4"),
-            new TestCaseData("version2.24.5.4"),
-            new TestCaseData("0.0.0")
+            new TestCaseData("1.4"),
+            new TestCaseData("version2.24.5.4")
         };
 
         [TestCaseSource(nameof(VersionTests))]
@@ -97,15 +100,28 @@ namespace CrossSectionPlugin.UnitTests.Parsers
         }
 
         [Test]
-        public void ParseFile_UnknownHeaderVersionString_SetsVersionToDefault()
+        public void ParseFile_UnknownHeaderVersionString_Throws()
         {
-            var expectedVersion = new Version(CrossSectionParserConstants.DefaultVersion);
 
             _stream = SetupMemoryStreamWithText(CrossSectionParserConstants.Header + "versionTwoPointThree");
 
-            var parsedResults = _crossSectionParser.ParseFile(_stream);
+            void ParseWithUnknownCrossSectionFileVersion() => _crossSectionParser.ParseFile(_stream);
 
-            parsedResults.CsvFileVersion.Should().Be(expectedVersion);
+            Assert.That(ParseWithUnknownCrossSectionFileVersion,
+                Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>()
+                    .With.Message.EqualTo(CrossSectionSurveyParser.CannotParseFileVersion));
+        }
+
+        [Test]
+        public void ParseFile_MissingVersionFromHeaderString_Throws()
+        {
+            _stream = SetupMemoryStreamWithText(CrossSectionParserConstants.Header);
+
+            void ParseWithMissingCrossSectionFileVersion() => _crossSectionParser.ParseFile(_stream);
+
+            Assert.That(ParseWithMissingCrossSectionFileVersion,
+                Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>()
+                    .With.Message.EqualTo(CrossSectionSurveyParser.CannotParseFileVersion));
         }
 
         [Test]
@@ -124,14 +140,13 @@ namespace CrossSectionPlugin.UnitTests.Parsers
         }
 
         [Test]
-        public void ParseFile_FileHasDuplicateMetadataRecords_ThrowsException()
+        public void ParseFile_FileHasDuplicateLocationRecords_ThrowsException()
         {
             _stream = GetTestFile(DuplicateMetadataCrossSectionFilePath);
 
-            TestDelegate testDelegate =
-                () => _crossSectionParser.ParseFile(_stream);
+            void ParseFileWithDuplicateLocationRecords() => _crossSectionParser.ParseFile(_stream);
 
-            Assert.That(testDelegate,
+            Assert.That(ParseFileWithDuplicateLocationRecords,
                 Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>().With.Message.Contains("File has duplicate Location records"));
         }
 
@@ -159,9 +174,9 @@ namespace CrossSectionPlugin.UnitTests.Parsers
             AssertPointsMatchesExpected(result.Points, expectedPoints);
         }
 
-        private static List<CrossSectionPoint> CreateExpectedCrossSectionPoints()
+        private static List<CrossSectionPointV1> CreateExpectedCrossSectionPoints()
         {
-            return new List<CrossSectionPoint>
+            return new List<CrossSectionPointV1>
             {
                 CreatePoint(0, 7.467),
                 CreatePoint(19.1, 6.909, "some comment"),
@@ -171,14 +186,14 @@ namespace CrossSectionPlugin.UnitTests.Parsers
             };
         }
 
-        private static CrossSectionPoint CreatePoint(double distance, double elevation)
+        private static CrossSectionPointV1 CreatePoint(double distance, double elevation)
         {
             return CreatePoint(distance, elevation, string.Empty);
         }
 
-        private static CrossSectionPoint CreatePoint(double distance, double elevation, string comment)
+        private static CrossSectionPointV1 CreatePoint(double distance, double elevation, string comment)
         {
-            return new CrossSectionPoint
+            return new CrossSectionPointV1
             {
                 Distance = distance,
                 Elevation = elevation,
@@ -186,18 +201,18 @@ namespace CrossSectionPlugin.UnitTests.Parsers
             };
         }
 
-        private static void AssertPointsMatchesExpected(List<CrossSectionPoint> actualPoints, List<CrossSectionPoint> expectedPoints)
+        private static void AssertPointsMatchesExpected(List<ICrossSectionPoint> actualPoints, List<CrossSectionPointV1> expectedPoints)
         {
             foreach (var point in actualPoints.Zip(expectedPoints, Tuple.Create))
             {
-                var actual = point.Item1;
+                var actual = point.Item1 as CrossSectionPointV1;
                 var expectation = point.Item2;
 
                 AssertPointIsEqual(actual, expectation);
             }
         }
 
-        private static void AssertPointIsEqual(CrossSectionPoint actual, CrossSectionPoint expectation)
+        private static void AssertPointIsEqual(CrossSectionPointV1 actual, CrossSectionPointV1 expectation)
         {
             Assert.That(actual.Distance, Is.EqualTo(expectation.Distance));
             Assert.That(actual.Elevation, Is.EqualTo(expectation.Elevation));
@@ -216,15 +231,91 @@ namespace CrossSectionPlugin.UnitTests.Parsers
             AssertPointsMatchesExpected(result.Points, expectedPoints);
         }
 
-        private static List<CrossSectionPoint> CreateExpectedNegativeCrossSectionPoints()
+        private static List<CrossSectionPointV1> CreateExpectedNegativeCrossSectionPoints()
         {
-            return new List<CrossSectionPoint>
+            return new List<CrossSectionPointV1>
             {
                 CreatePoint(-1.5, -6),
                 CreatePoint(-1.2, -6.905),
                 CreatePoint(0, -2.1),
                 CreatePoint(1, -1.4),
                 CreatePoint(2.2, 2)
+            };
+        }
+
+        [Test]
+        public void ParseFile_VersionOneFileWithPointOrderColumn_Throws()
+        {
+            _stream = GetTestFile(V1FileWithPointOrderFilePath);
+
+            void ParseV1FileWithPointOrderColumn() => _crossSectionParser.ParseFile(_stream);
+
+            Assert.That(ParseV1FileWithPointOrderColumn,
+                Throws.Exception.TypeOf<CrossSectionSurveyDataFormatException>().With.Message.Contains("does not support \"PointOrder\" as a column"));
+        }
+
+        [Test]
+        public void ParseFile_VersionTwoFile_CreatesExpected()
+        {
+            var expectedCrossSectionFields = TestData.TestHelpers.CreateExpectedCrossSectionFields();
+            var expectedPoints = CreateExpectedV2Points();
+
+            _stream = GetTestFile(V2CrossSectionFilePath);
+
+            var result = _crossSectionParser.ParseFile(_stream);
+
+            AssertCrossSectionMatchesExpected(result, expectedCrossSectionFields, expectedPoints);
+        }
+
+        private static List<CrossSectionPointV2> CreateExpectedV2Points()
+        {
+            return new List<CrossSectionPointV2>
+            {
+                new CrossSectionPointV2 { PointOrder = 2, Distance = 2, Elevation = 1, Comment = "comment" },
+                new CrossSectionPointV2 { PointOrder = 1, Distance = 3, Elevation = 4, Comment = string.Empty },
+                new CrossSectionPointV2 { PointOrder = 3, Distance = 4, Elevation = 5, Comment = string.Empty }
+            };
+        }
+
+        private static void AssertCrossSectionMatchesExpected(CrossSectionSurvey result,
+            IDictionary<string, string> expectedCrossSectionFields, List<CrossSectionPointV2> expectedPoints)
+        {
+            result.Fields.ShouldBeEquivalentTo(expectedCrossSectionFields);
+
+            result.Points.Should().HaveCount(expectedPoints.Count);
+            for (var i = 0; i < result.Points.Count; i++)
+            {
+                var actual = result.Points[i] as CrossSectionPointV2;
+                var expected = expectedPoints[i];
+
+                Assert.That(actual, Is.Not.Null);
+                actual.PointOrder.Should().Be(expected.PointOrder);
+                actual.Distance.Should().Be(expected.Distance);
+                actual.Elevation.Should().Be(expected.Elevation);
+                actual.Comment.Should().Be(expected.Comment);
+            }
+        }
+
+        [Test]
+        public void ParseFile_VersionTwoFileWithoutPointOrder_CreatesExpected()
+        {
+            var expectedCrossSectionFields = TestData.TestHelpers.CreateExpectedCrossSectionFields();
+            var expectedPoints = CreateExpectedV2PointsWithInferredPointOrder();
+
+            _stream = GetTestFile(V2WithoutPointOrderFilePath);
+
+            var result = _crossSectionParser.ParseFile(_stream);
+
+            AssertCrossSectionMatchesExpected(result, expectedCrossSectionFields, expectedPoints);
+        }
+
+        private static List<CrossSectionPointV2> CreateExpectedV2PointsWithInferredPointOrder()
+        {
+            return new List<CrossSectionPointV2>
+            {
+                new CrossSectionPointV2 { PointOrder = 1, Distance = 3, Elevation = 4, Comment = string.Empty },
+                new CrossSectionPointV2 { PointOrder = 2, Distance = 2, Elevation = 1, Comment = "comment" },
+                new CrossSectionPointV2 { PointOrder = 3, Distance = 4, Elevation = 5, Comment = string.Empty }
             };
         }
     }

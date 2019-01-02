@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CrossSectionPlugin.Exceptions;
 using CrossSectionPlugin.Helpers;
+using static System.FormattableString;
 
 namespace CrossSectionPlugin.Model
 {
@@ -11,14 +12,14 @@ namespace CrossSectionPlugin.Model
         {
             CsvFileVersion = new Version(CrossSectionParserConstants.DefaultVersion);
             Fields = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            Points = new List<CrossSectionPoint>();
+            Points = new List<ICrossSectionPoint>();
         }
 
         public Version CsvFileVersion { get; set; }
 
         public IDictionary<string, string> Fields { get; set; }
 
-        public List<CrossSectionPoint> Points { get; set; }
+        public List<ICrossSectionPoint> Points { get; set; }
 
         public string GetFieldValue(string field)
         {
@@ -30,7 +31,7 @@ namespace CrossSectionPlugin.Model
                 return Fields[field];
             }
 
-            throw new CrossSectionCsvFormatException(FormattableString.Invariant($"Field '{field}' was not found in the file."));
+            throw new CrossSectionCsvFormatException(Invariant($"Field '{field}' was not found in the file."));
         }
 
         public string GetFieldValueWithDefault(string field, string defaultValue)

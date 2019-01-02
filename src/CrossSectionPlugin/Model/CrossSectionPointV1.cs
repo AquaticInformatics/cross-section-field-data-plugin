@@ -4,8 +4,8 @@ using FileHelpers;
 
 namespace CrossSectionPlugin.Model
 {
-    [DelimitedRecord(CrossSectionParserConstants.CrossSectionPointDataSeparator), IgnoreFirst(1)]
-    public class CrossSectionPoint
+    [DelimitedRecord(CrossSectionParserConstants.CrossSectionPointDataSeparator)]
+    public class CrossSectionPointV1 : ICrossSectionPoint
     {
         [FieldOrder(1), FieldTrim(TrimMode.Both), FieldOptional]
         public double? Distance;
